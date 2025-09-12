@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Vendor Registration')
+@section('title', 'Supplier Registration')
 
 @section('content')
 <div class="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
@@ -23,11 +23,11 @@
         <!-- Form Container -->
         <div class="bg-white/10 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
             <div class="px-8 py-6 backdrop-blur-sm border-b border-white/10">
-                <h2 class="text-2xl font-semibold text-slate-200">Vendor Application Form</h2>
+                <h2 class="text-2xl font-semibold text-slate-200">Supplier Application Form</h2>
                 <p class="text-slate-300 mt-2">Please complete all required fields marked with *</p>
             </div>
 
-            <form method="POST" action="{{ route('vendor.store') }}" enctype="multipart/form-data" class="px-8 py-6">
+            <form method="POST" action="{{ route('supplier.store') }}" enctype="multipart/form-data" class="px-8 py-6">
                 @csrf
 
                 <!-- Contact Information Section -->

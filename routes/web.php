@@ -20,12 +20,12 @@ Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // Public registration routes
-Route::get('/vendors', [PublicVendorController::class, 'create'])->name('vendor.register');
-Route::post('/vendors', [PublicVendorController::class, 'store'])->name('vendor.store');
-Route::get('/vendor/thank-you/{id}', [PublicVendorController::class, 'thankYou'])->name('vendor.thank-you');
+Route::get('/suppliers', [PublicVendorController::class, 'create'])->name('supplier.register');
+Route::post('/suppliers', [PublicVendorController::class, 'store'])->name('supplier.store');
+Route::get('/supplier/thank-you/{id}', [PublicVendorController::class, 'thankYou'])->name('supplier.thank-you');
 
-Route::get('/clients', [PublicClientController::class, 'create'])->name('client.register');
-Route::post('/clients', [PublicClientController::class, 'store'])->name('client.store');
+Route::get('/client', [PublicClientController::class, 'create'])->name('client.register');
+Route::post('/client', [PublicClientController::class, 'store'])->name('client.store');
 Route::get('/client/thank-you/{id}', [PublicClientController::class, 'thankYou'])->name('client.thank-you');
 
 // Admin routes (protected by admin middleware)
