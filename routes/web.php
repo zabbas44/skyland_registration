@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\VendorController;
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\PublicVendorController;
 use App\Http\Controllers\PublicClientController;
+use App\Http\Controllers\EmailTestController;
 
 // Redirect root to login
 Route::get('/', function () {
@@ -34,4 +35,9 @@ Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function ()
     Route::post('vendors/{vendor}/contact', [VendorController::class, 'contact'])->name('vendors.contact');
     Route::resource('clients', ClientController::class);
     Route::post('clients/{client}/contact', [ClientController::class, 'contact'])->name('clients.contact');
+    
+    // Email Testing Routes
+    Route::get('/email/test', [EmailTestController::class, 'showTestForm'])->name('email.test');
+    Route::post('/email/send-test', [EmailTestController::class, 'sendTestEmail'])->name('email.send-test');
+    Route::post('/email/test-connection', [EmailTestController::class, 'testConnection'])->name('email.test-connection');
 });
