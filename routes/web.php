@@ -20,8 +20,8 @@ Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // Public registration routes
-Route::get('/suppliers', [PublicVendorController::class, 'create'])->name('supplier.register');
-Route::post('/suppliers', [PublicVendorController::class, 'store'])->name('supplier.store');
+Route::get('/supplier', [PublicVendorController::class, 'create'])->name('supplier.register');
+Route::post('/supplier', [PublicVendorController::class, 'store'])->name('supplier.store');
 Route::get('/supplier/thank-you/{id}', [PublicVendorController::class, 'thankYou'])->name('supplier.thank-you');
 
 Route::get('/client', [PublicClientController::class, 'create'])->name('client.register');

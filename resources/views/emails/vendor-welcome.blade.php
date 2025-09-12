@@ -385,7 +385,7 @@
 
                 <!-- Action Buttons -->
                 <div class="action-buttons">
-                    <a href="http://localhost:8000/suppliers" class="action-button register-button">
+                    <a href="http://localhost:8000/supplier" class="action-button register-button">
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                         </svg>
