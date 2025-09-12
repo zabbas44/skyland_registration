@@ -1241,7 +1241,7 @@
 
                 <!-- Navigation -->
                 <div class="flex justify-between mt-8">
-                    <button type="button" id="prev-btn" class="px-6 py-3 bg-slate-600 text-white rounded-lg hover:bg-slate-500 transition-colors duration-200 hidden">
+                    <button type="button" id="prev-btn" class="px-6 py-3 bg-slate-600 text-white rounded-lg hover:bg-slate-500 transition-colors duration-200 opacity-50 cursor-not-allowed" disabled>
                         Previous
                     </button>
                     <button type="button" id="next-btn" class="px-6 py-3 text-white rounded-lg transition-colors duration-200" style="background-color: rgb(255,94,20);" onmouseover="this.style.backgroundColor='rgb(230,80,15)'" onmouseout="this.style.backgroundColor='rgb(255,94,20)'">
@@ -1921,9 +1921,13 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Update navigation buttons
         if (currentStep === 1) {
-            prevBtn.classList.add('hidden');
+            prevBtn.disabled = true;
+            prevBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            prevBtn.classList.remove('hover:bg-slate-500');
         } else {
-            prevBtn.classList.remove('hidden');
+            prevBtn.disabled = false;
+            prevBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            prevBtn.classList.add('hover:bg-slate-500');
         }
         
         if (currentStep === totalSteps) {
