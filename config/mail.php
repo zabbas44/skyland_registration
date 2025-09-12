@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'default' => 'smtp',
+    'default' => env('MAIL_MAILER', 'smtp'),
 
     /*
     |--------------------------------------------------------------------------
@@ -40,15 +40,15 @@ return [
         'smtp' => [
             'transport' => 'smtp',
             'scheme' => null,
-            'url' => null,
-            'host' => 'smtp.office365.com',
-            'port' => 587,
-            'username' => 'info@skylandconstruction.com',
-            'password' => '31358@Sky',
+            'url' => env('MAIL_URL'),
+            'host' => env('MAIL_HOST', 'smtp.office365.com'),
+            'port' => env('MAIL_PORT', 587),
+            'encryption' => env('MAIL_ENCRYPTION', 'tls'),
+            'username' => env('MAIL_USERNAME'),
+            'password' => env('MAIL_PASSWORD'),
             'timeout' => null,
             'auth_mode' => null,
-            'encryption' => 'tls',
-            'local_domain' => 'localhost',
+            'local_domain' => env('MAIL_EHLO_DOMAIN', parse_url(env('APP_URL', 'http://localhost'), PHP_URL_HOST)),
         ],
 
         'ses' => [
@@ -113,8 +113,8 @@ return [
     */
 
     'from' => [
-        'address' => 'info@skylandconstruction.com',
-        'name' => 'Sky Land Construction',
+        'address' => env('MAIL_FROM_ADDRESS', 'info@skylandconstruction.com'),
+        'name' => env('MAIL_FROM_NAME', 'Sky Land Construction'),
     ],
 
 ];

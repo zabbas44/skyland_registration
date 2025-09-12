@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Client;
 use App\Mail\ClientRegistrationNotification;
+use App\Mail\ClientWelcomeEmail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
@@ -121,13 +122,18 @@ class PublicClientController extends Controller
         // Create the client
         $client = Client::create($validated);
 
-        // Send email notification to admin
+        // Send email notifications
         try {
+            // Send notification to admin
             Mail::to('zabbas44@gmail.com') // Your admin email
                 ->send(new ClientRegistrationNotification($client));
+            
+            // Send welcome email to client
+            Mail::to($client->email)
+                ->send(new ClientWelcomeEmail($client));
         } catch (\Exception $e) {
             // Log the error but don't fail the registration
-            \Log::error('Failed to send client registration notification: ' . $e->getMessage());
+            \Log::error('Failed to send client registration emails: ' . $e->getMessage());
         }
 
         // Redirect to thank you page
