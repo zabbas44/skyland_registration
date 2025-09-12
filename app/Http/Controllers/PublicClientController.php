@@ -17,7 +17,7 @@ class PublicClientController extends Controller
      */
     public function create()
     {
-        return view('public.client-registration');
+        return view('public.client-registration-new');
     }
 
     /**

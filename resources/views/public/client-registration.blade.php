@@ -14,7 +14,7 @@
                 <img src="{{ asset('logo-light-trimmed.webp') }}" alt="Sky Land Construction" class="w-40 h-auto mx-auto">
             </div>
             <br/>
-            <h1 class="text-4xl font-extrabold text-white mb-4 tracking-tight font-['Inter',_'system-ui',_sans-serif]">Client Registration</h1>
+            <h1 class="text-5xl font-bold text-white mb-4 tracking-wide" style="font-family: Teko, sans-serif;">Client Registration</h1>
             <p class="text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed">
                 Register today to request quotations, schedule site visits, and seamlessly manage your projects with <span class="text-orange-400">Sky Land Construction</span>.
             </p>
