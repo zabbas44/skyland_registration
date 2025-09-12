@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Vendor;
+use App\Mail\VendorRegistrationNotification;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class PublicVendorController extends Controller
@@ -81,6 +83,15 @@ class PublicVendorController extends Controller
 
         // Create the vendor
         $vendor = Vendor::create($validated);
+
+        // Send email notification to admin
+        try {
+            Mail::to('zabbas44@gmail.com') // Your admin email
+                ->send(new VendorRegistrationNotification($vendor));
+        } catch (\Exception $e) {
+            // Log the error but don't fail the registration
+            \Log::error('Failed to send vendor registration notification: ' . $e->getMessage());
+        }
 
         // Redirect to thank you page
         return redirect()->route('vendor.thank-you', ['id' => $vendor->id])

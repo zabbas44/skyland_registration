@@ -46,6 +46,16 @@
                     Vendors
                 </a>
             </div>
+            
+            <div class="px-3">
+                <a href="{{ route('admin.email.test') }}" 
+                   class="group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-300 {{ request()->routeIs('admin.email.*') ? 'bg-yellow-500/20 text-yellow-200 shadow-lg backdrop-blur-sm border border-yellow-400/30' : 'text-slate-300 hover:bg-white/10 hover:text-white hover:backdrop-blur-sm hover:border hover:border-white/20' }}">
+                    <svg class="w-5 h-5 mr-3 transition-transform duration-300 group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    </svg>
+                    Email Test
+                </a>
+            </div>
         </nav>
     </div>
 
