@@ -8,6 +8,7 @@ use App\Mail\VendorRegistrationNotification;
 use App\Mail\VendorWelcomeEmail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class PublicVendorController extends Controller
 {
@@ -88,7 +89,7 @@ class PublicVendorController extends Controller
         // Send email notifications
         try {
             // Send notification to admin
-            Mail::to('zabbas44@gmail.com') // Your admin email
+            Mail::to('info@skylandconstruction.com') // Admin email for system notifications
                 ->send(new VendorRegistrationNotification($vendor));
             
             // Send welcome email to vendor
@@ -96,7 +97,7 @@ class PublicVendorController extends Controller
                 ->send(new VendorWelcomeEmail($vendor));
         } catch (\Exception $e) {
             // Log the error but don't fail the registration
-            \Log::error('Failed to send vendor registration emails: ' . $e->getMessage());
+            Log::error('Failed to send vendor registration emails: ' . $e->getMessage());
         }
 
         // Redirect to thank you page

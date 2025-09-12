@@ -8,6 +8,7 @@ use App\Mail\ClientRegistrationNotification;
 use App\Mail\ClientWelcomeEmail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class PublicClientController extends Controller
 {
@@ -125,7 +126,7 @@ class PublicClientController extends Controller
         // Send email notifications
         try {
             // Send notification to admin
-            Mail::to('zabbas44@gmail.com') // Your admin email
+            Mail::to('info@skylandconstruction.com') // Admin email for system notifications
                 ->send(new ClientRegistrationNotification($client));
             
             // Send welcome email to client
@@ -133,7 +134,7 @@ class PublicClientController extends Controller
                 ->send(new ClientWelcomeEmail($client));
         } catch (\Exception $e) {
             // Log the error but don't fail the registration
-            \Log::error('Failed to send client registration emails: ' . $e->getMessage());
+            Log::error('Failed to send client registration emails: ' . $e->getMessage());
         }
 
         // Redirect to thank you page

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to Sky Land Construction - {{ $client->full_name }}</title>
+    <title>New Vendor Registration - {{ $vendor->first_name }} {{ $vendor->last_name }}</title>
     <style>
         * {
             margin: 0;
@@ -13,7 +13,7 @@
         
         body {
             font-family: 'Inter', 'system-ui', sans-serif;
-            background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%);
+            background: linear-gradient(135deg, #f0fdf4 0%, #dbeafe 100%);
             min-height: 100vh;
             padding: 48px 16px;
             line-height: 1.6;
@@ -38,13 +38,13 @@
         .success-icon {
             width: 128px;
             height: 128px;
-            background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+            background: linear-gradient(135deg, #22c55e 0%, #3b82f6 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 32px;
-            box-shadow: 0 20px 25px -5px rgba(168, 85, 247, 0.3);
+            box-shadow: 0 20px 25px -5px rgba(34, 197, 94, 0.3);
         }
         
         .success-icon svg {
@@ -75,7 +75,7 @@
             margin-bottom: 32px;
         }
         
-        .client-name {
+        .vendor-name {
             color: #111827;
             font-weight: 600;
         }
@@ -143,8 +143,8 @@
             flex-shrink: 0;
             width: 32px;
             height: 32px;
-            background: #ede9fe;
-            color: #7c3aed;
+            background: #dbeafe;
+            color: #2563eb;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -168,7 +168,7 @@
         
         /* Services Section */
         .services-section {
-            background: #fdf4ff;
+            background: #f0fdf4;
             border-radius: 8px;
             padding: 24px;
             margin-bottom: 32px;
@@ -182,7 +182,7 @@
         
         /* Contact Section */
         .contact-section {
-            background: #fdf4ff;
+            background: #dbeafe;
             border-radius: 8px;
             padding: 24px;
             margin-bottom: 32px;
@@ -216,12 +216,12 @@
         }
         
         .email-button {
-            background: #7c3aed;
+            background: #2563eb;
             color: white;
         }
         
         .phone-button {
-            background: #ec4899;
+            background: #16a34a;
             color: white;
         }
         
@@ -236,12 +236,11 @@
             margin-right: 8px;
         }
         
-        /* Pro Tips Section */
-        .tips-section {
+        /* Follow-up Information */
+        .followup-section {
             background: #dbeafe;
             border-radius: 8px;
             padding: 24px;
-            margin-bottom: 32px;
             text-align: left;
         }
         
@@ -254,11 +253,9 @@
         }
         
         .tips-list li {
-            padding: 8px 0;
+            padding: 4px 0;
             position: relative;
             padding-left: 24px;
-            display: flex;
-            align-items: flex-start;
         }
         
         .tips-list li::before {
@@ -267,59 +264,52 @@
             font-weight: bold;
             position: absolute;
             left: 0;
-            margin-top: 2px;
         }
         
-        /* Action Buttons */
-        .action-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            align-items: center;
-            margin-bottom: 32px;
-        }
-        
-        .action-button {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 12px 24px;
+        /* Admin Note */
+        .admin-note {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
             border-radius: 8px;
+            padding: 16px;
+            margin-top: 32px;
+            text-align: left;
+        }
+        
+        .admin-note h4 {
+            color: #92400e;
+            font-weight: 600;
+            margin-bottom: 8px;
             font-size: 0.875rem;
+        }
+        
+        .admin-note p {
+            color: #451a03;
+            font-size: 0.875rem;
+            margin-bottom: 8px;
+        }
+        
+        .admin-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        
+        .admin-button {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
             font-weight: 500;
             text-decoration: none;
-            transition: all 0.2s;
-            min-width: 200px;
-        }
-        
-        .register-button {
-            background: #4b5563;
             color: white;
         }
         
-        .vendor-button {
+        .view-button {
             background: #3b82f6;
-            color: white;
         }
         
-        .action-button:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        
-        .action-button svg {
-            width: 20px;
-            height: 20px;
-            margin-right: 8px;
-        }
-        
-        /* Additional Information */
-        .additional-info {
-            margin-top: 32px;
-            font-size: 0.875rem;
-            color: #4b5563;
-            text-align: center;
-            line-height: 1.6;
+        .contact-button-admin {
+            background: #059669;
         }
         
         /* Responsive */
@@ -332,7 +322,7 @@
                 padding: 32px 24px;
             }
             
-            .contact-buttons, .action-buttons {
+            .contact-buttons {
                 flex-direction: column;
             }
             
@@ -354,10 +344,10 @@
 
             <!-- Main Content -->
             <div class="main-card">
-                <h1 class="main-title">🎉 Welcome to Our Client Family!</h1>
+                <h1 class="main-title">🎉 New Vendor Registered!</h1>
                 
                 <div class="welcome-text">
-                    Thank you for registering with us, <span class="client-name">{{ $client->full_name }}</span>!
+                    <span class="vendor-name">{{ $vendor->first_name }} {{ $vendor->last_name }}</span> from <strong>{{ $vendor->company_name }}</strong> has just registered as a new vendor.
                 </div>
 
                 <!-- Registration Details -->
@@ -366,110 +356,170 @@
                     <div class="details-grid">
                         <div class="detail-item">
                             <span class="detail-label">Registration ID:</span>
-                            <span class="detail-value">#CLT{{ str_pad($client->id, 6, '0', STR_PAD_LEFT) }}</span>
+                            <span class="detail-value">#VND{{ str_pad($vendor->id, 6, '0', STR_PAD_LEFT) }}</span>
                         </div>
                         <div class="detail-item">
                             <span class="detail-label">Date:</span>
-                            <span class="detail-value">{{ $client->created_at->format('F j, Y') }}</span>
+                            <span class="detail-value">{{ $vendor->created_at->format('F j, Y') }}</span>
                         </div>
                         <div class="detail-item">
-                            <span class="detail-label">Client Type:</span>
-                            <span class="detail-value">{{ $client->client_type }}</span>
+                            <span class="detail-label">Contact Person:</span>
+                            <span class="detail-value">{{ $vendor->first_name }} {{ $vendor->last_name }}</span>
                         </div>
                         <div class="detail-item">
-                            <span class="detail-label">Email:</span>
-                            <span class="detail-value">{{ $client->email }}</span>
+                            <span class="detail-label">Designation:</span>
+                            <span class="detail-value">{{ $vendor->contact_designation ?? 'Not provided' }}</span>
                         </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Contact Email:</span>
+                            <span class="detail-value">{{ $vendor->contact_email }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Contact Mobile:</span>
+                            <span class="detail-value">{{ $vendor->contact_mobile }}</span>
+                        </div>
+                        <div class="detail-item full-width">
+                            <span class="detail-label">Company Name:</span>
+                            <span class="detail-value">{{ $vendor->company_name }}</span>
+                        </div>
+                        @if($vendor->business_type)
+                        <div class="detail-item">
+                            <span class="detail-label">Business Type:</span>
+                            <span class="detail-value">{{ $vendor->business_type }}</span>
+                        </div>
+                        @endif
+                        @if($vendor->nature_of_business)
+                        <div class="detail-item">
+                            <span class="detail-label">Nature of Business:</span>
+                            <span class="detail-value">{{ $vendor->nature_of_business }}</span>
+                        </div>
+                        @endif
+                        @if($vendor->year_of_establishment)
+                        <div class="detail-item">
+                            <span class="detail-label">Established:</span>
+                            <span class="detail-value">{{ $vendor->year_of_establishment }}</span>
+                        </div>
+                        @endif
+                        @if($vendor->trade_license_number)
+                        <div class="detail-item">
+                            <span class="detail-label">Trade License:</span>
+                            <span class="detail-value">{{ $vendor->trade_license_number }}</span>
+                        </div>
+                        @endif
+                        @if($vendor->address)
+                        <div class="detail-item full-width">
+                            <span class="detail-label">Address:</span>
+                            <span class="detail-value">{{ $vendor->address }}</span>
+                        </div>
+                        @endif
+                        @if($vendor->website)
+                        <div class="detail-item full-width">
+                            <span class="detail-label">Website:</span>
+                            <span class="detail-value">{{ $vendor->website }}</span>
+                        </div>
+                        @endif
                     </div>
                 </div>
 
                 <!-- What Happens Next -->
                 <div class="next-steps">
-                    <h3 class="section-title">What Happens Next?</h3>
+                    <h3 class="section-title">Recommended Next Steps</h3>
                     <div class="steps-list">
                         <div class="step-item">
                             <div class="step-number">1</div>
                             <div class="step-content">
-                                <h4>Application Review</h4>
-                                <p>Our team will review your registration and project requirements within 24-48 hours.</p>
+                                <h4>Review Application</h4>
+                                <p>Review the vendor's registration details and submitted documents within 2-3 business days.</p>
                             </div>
                         </div>
                         
                         <div class="step-item">
                             <div class="step-number">2</div>
                             <div class="step-content">
-                                <h4>Initial Consultation</h4>
-                                <p>We'll schedule a consultation call to understand your needs better and discuss next steps.</p>
+                                <h4>Document Verification</h4>
+                                <p>Verify the submitted documents (business license, tax certificates, company profile).</p>
                             </div>
                         </div>
                         
                         <div class="step-item">
                             <div class="step-number">3</div>
                             <div class="step-content">
-                                <h4>Proposal & Collaboration</h4>
-                                <p>You'll receive a detailed proposal and we'll begin our collaborative journey together.</p>
+                                <h4>Approval & Onboarding</h4>
+                                <p>Once approved, provide vendor portal access and send partnership agreement.</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
+                @if($vendor->preferred_payment_method || $vendor->bank_name)
+                <!-- Financial Information -->
+                <div class="services-section">
+                    <h3 class="section-title">Financial Information</h3>
+                    <div class="services-content">
+                        @if($vendor->preferred_payment_method)
+                        <p><strong>Preferred Payment Method:</strong> {{ $vendor->preferred_payment_method }}</p>
+                        @endif
+                        @if($vendor->bank_name)
+                        <p><strong>Bank:</strong> {{ $vendor->bank_name }}</p>
+                        @endif
+                        @if($vendor->bank_branch)
+                        <p><strong>Branch:</strong> {{ $vendor->bank_branch }}</p>
+                        @endif
+                        @if($vendor->bank_account_number)
+                        <p><strong>Account Number:</strong> {{ $vendor->bank_account_number }}</p>
+                        @endif
+                        @if($vendor->iban)
+                        <p><strong>IBAN:</strong> {{ $vendor->iban }}</p>
+                        @endif
+                    </div>
+                </div>
+                @endif
 
                 <!-- Contact Information -->
                 <div class="contact-section">
-                    <h3 class="section-title">Get In Touch</h3>
+                    <h3 class="section-title">Vendor Contact Information</h3>
                     <p class="contact-subtitle">
-                        Our team is here to help you succeed. Feel free to reach out if you have any questions or need immediate assistance.
+                        Reach out to {{ $vendor->first_name }} {{ $vendor->last_name }} using the contact details below.
                     </p>
                     <div class="contact-buttons">
-                        <a href="mailto:info@skylandconstruction.com" class="contact-button email-button">
+                        <a href="mailto:{{ $vendor->contact_email }}" class="contact-button email-button">
                             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                             </svg>
-                            Email Our Team
+                            Email Vendor
                         </a>
-                        <a href="tel:+97172435757" class="contact-button phone-button">
+                        @if($vendor->contact_mobile)
+                        <a href="tel:{{ $vendor->contact_mobile }}" class="contact-button phone-button">
                             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
                             </svg>
-                            Schedule a Call
+                            Call Vendor
                         </a>
+                        @endif
                     </div>
                 </div>
 
-                <!-- Pro Tips for New Clients -->
-                <div class="tips-section">
-                    <h3 class="section-title">💡 Pro Tips for New Clients</h3>
+                <!-- Follow-up Information -->
+                <div class="followup-section">
+                    <h3 class="section-title">💡 Pro Tips for Vendor Engagement</h3>
                     <ul class="tips-list">
-                        <li>Keep your contact information updated for smooth communication</li>
-                        <li>Prepare any additional project documents or requirements you may have</li>
-                        <li>Check your email regularly for updates and important communications</li>
-                        <li>Feel free to reach out with questions - we're here to help you succeed</li>
+                        <li>Respond within 2-3 business days to show professionalism</li>
+                        <li>Verify all submitted documents for authenticity</li>
+                        <li>Check trade license validity and business registration status</li>
+                        <li>Conduct initial capability assessment based on their business type</li>
+                        <li>Set up a vendor profile in the system once approved</li>
                     </ul>
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="action-buttons">
-                    <a href="https://registration.skylandconstruction.com/client" class="action-button register-button">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                        </svg>
-                        Register Another Project
-                    </a>
-                    <a href="https://registration.skylandconstruction.com/supplier" class="action-button vendor-button">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                        </svg>
-                        Become a Supplier
-                    </a>
                 </div>
             </div>
 
-            <!-- Additional Information -->
-            <div class="additional-info">
-                <p>
-                    Welcome to our community! We're excited to work with you and help bring your projects to life. 
-                    Your success is our priority, and we're committed to providing exceptional service.
-                </p>
+            <!-- Admin Action Note -->
+            <div class="admin-note">
+                <h4>🔧 Admin Panel Actions</h4>
+                <p>You can view this vendor's full profile and contact them directly through the admin panel.</p>
+                <div class="admin-actions">
+                    <a href="http://localhost:8000/admin/vendors/{{ $vendor->id }}" class="admin-button view-button">View Profile</a>
+                    <a href="http://localhost:8000/admin/vendors" class="admin-button contact-button-admin">Manage Vendors</a>
+                </div>
             </div>
         </div>
     </div>

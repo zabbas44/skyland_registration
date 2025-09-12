@@ -302,10 +302,10 @@
 
             <!-- Main Content -->
             <div class="main-card">
-                <h1 class="main-title">🎉 Registration Successful!</h1>
+                <h1 class="main-title">🎉 Welcome to Our Vendor Family!</h1>
                 
                 <div class="welcome-text">
-                    Thank you for registering as a vendor with us, <span class="vendor-name">{{ $vendor->first_name }} {{ $vendor->last_name }}</span>!
+                    Thank you for registering with us, <span class="vendor-name">{{ $vendor->first_name }} {{ $vendor->last_name }}</span>!
                 </div>
 
                 <!-- Registration Details -->
@@ -321,8 +321,8 @@
                             <span class="detail-value">{{ $vendor->created_at->format('F j, Y') }}</span>
                         </div>
                         <div class="detail-item">
-                            <span class="detail-label">Company:</span>
-                            <span class="detail-value">{{ $vendor->company_name }}</span>
+                            <span class="detail-label">Business Type:</span>
+                            <span class="detail-value">{{ $vendor->business_type }}</span>
                         </div>
                         <div class="detail-item">
                             <span class="detail-label">Contact Email:</span>
@@ -385,13 +385,13 @@
 
                 <!-- Action Buttons -->
                 <div class="action-buttons">
-                    <a href="http://localhost:8000/supplier" class="action-button register-button">
+                    <a href="https://registration.skylandconstruction.com/supplier" class="action-button register-button">
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                         </svg>
                         Register Another Supplier
                     </a>
-                    <a href="http://localhost:8000/client" class="action-button client-button">
+                    <a href="https://registration.skylandconstruction.com/client" class="action-button client-button">
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                         </svg>
