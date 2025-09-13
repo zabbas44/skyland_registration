@@ -13,8 +13,9 @@ class VerifyCsrfToken extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-        // Temporarily exclude client registration for testing
+        // Temporarily exclude registration routes for testing
         '/client',
+        '/supplier',
     ];
 
     /**
