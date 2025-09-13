@@ -138,7 +138,9 @@ class PublicClientController extends Controller
             // Create the client
             $client = Client::create($clientData);
 
-            // Create user account for client
+            // Create user account for client (temporarily disabled until migration runs on production)
+            // TODO: Enable after running migration on production server
+            /*
             $user = User::create([
                 'name' => $validated['name'],
                 'email' => $validated['client_email'],
@@ -147,6 +149,7 @@ class PublicClientController extends Controller
                 'client_id' => $client->id,
                 'is_admin' => false,
             ]);
+            */
 
             // Send email notifications
             $emailsSent = false;
