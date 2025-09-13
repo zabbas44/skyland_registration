@@ -67,6 +67,27 @@
             transform: perspective(1000px) rotateX(2deg);
             transition: all 0.3s ease;
             z-index: 1;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        /* Custom scrollbar for the container */
+        .form-3d-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .form-3d-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+        
+        .form-3d-container::-webkit-scrollbar-thumb {
+            background: rgba(255, 94, 20, 0.6);
+            border-radius: 4px;
+        }
+        
+        .form-3d-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 94, 20, 0.8);
         }
 
         .form-3d-container::before {
@@ -240,101 +261,85 @@
                 <!-- Conversations List -->
                 <div class="space-y-6">
                     @foreach($conversations as $conversation)
-                        <div class="conversation-item bg-slate-700/50 rounded-xl p-6 fade-in border border-slate-600/50 {{ !$conversation->client_read ? 'ring-2 ring-orange-400/50' : '' }}">
+                        <div class="conversation-item bg-slate-700/50 rounded-lg p-3 fade-in border border-slate-600/50 {{ !$conversation->client_read ? 'ring-1 ring-orange-400/50' : '' }}">
                             <!-- Conversation Header -->
-                            <div class="flex items-center justify-between mb-4">
-                                <div class="flex items-center gap-4">
-                                    <div class="w-12 h-12 bg-gradient-to-r from-purple-400 to-blue-400 rounded-full flex items-center justify-center">
-                                        <span class="text-white font-semibold">A</span>
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-8 h-8 bg-gradient-to-r from-purple-400 to-blue-400 rounded-full flex items-center justify-center">
+                                        <span class="text-white font-medium text-sm">A</span>
                                     </div>
                                     <div>
-                                        <h3 class="font-semibold text-white">SKYLAND Administration</h3>
-                                        <p class="text-sm text-slate-300">
-                                            {{ $conversation->admin_sent_at->format('M j, Y g:i A') }}
+                                        <h3 class="font-medium text-white text-sm">SKYLAND Administration</h3>
+                                        <p class="text-xs text-slate-300">
+                                            {{ $conversation->admin_sent_at->format('M j, g:i A') }}
                                         </p>
                                     </div>
                                 </div>
-                                <div class="flex items-center gap-2">
+                                <div class="flex items-center gap-1">
                                     @if(!$conversation->client_read)
-                                        <span class="bg-orange-500 text-white text-xs px-2 py-1 rounded-full">New</span>
+                                        <span class="bg-orange-500 text-white text-xs px-1.5 py-0.5 rounded-full">New</span>
                                     @endif
-                                    <span class="text-xs px-2 py-1 rounded-full {{ $conversation->hasReply() ? 'bg-green-500/20 text-green-300' : 'bg-yellow-500/20 text-yellow-300' }}">
+                                    <span class="text-xs px-1.5 py-0.5 rounded-full {{ $conversation->hasReply() ? 'bg-green-500/20 text-green-300' : 'bg-yellow-500/20 text-yellow-300' }}">
                                         {{ $conversation->hasReply() ? 'Replied' : 'Pending Reply' }}
                                     </span>
                                 </div>
                             </div>
                             
                             <!-- Subject -->
-                            <h4 class="font-medium text-white text-lg mb-4">{{ $conversation->subject }}</h4>
+                            <h4 class="font-medium text-white text-base mb-2">{{ $conversation->subject }}</h4>
                             
                             <!-- Admin Message -->
-                            <div class="message-received rounded-2xl p-4 mb-4 max-w-4xl">
-                                <div class="text-sm font-medium mb-2">📨 Message from SKYLAND:</div>
-                                <div class="whitespace-pre-wrap">{{ $conversation->admin_message }}</div>
+                            <div class="message-received rounded-lg p-2 mb-2 max-w-2xl">
+                                <div class="text-xs font-medium mb-1">📨 Message from SKYLAND:</div>
+                                <div class="whitespace-pre-wrap text-sm">{{ Str::limit($conversation->admin_message, 100) }}</div>
                                 
                                 @if($conversation->admin_attachments && count($conversation->admin_attachments) > 0)
-                                    <div class="mt-3 space-y-1">
-                                        <div class="text-sm font-medium">📎 Attachments:</div>
-                                        @foreach($conversation->getFormattedAdminAttachments() as $index => $attachment)
-                                            <div class="flex items-center gap-2 bg-black/5 rounded-lg p-2">
-                                                <span>📄</span>
-                                                <span class="text-sm">{{ $attachment['name'] }}</span>
-                                                <a href="{{ route('email-conversations.download', ['conversation' => $conversation, 'type' => 'admin', 'index' => $index]) }}" class="text-blue-600 hover:text-blue-800 text-sm ml-auto">Download</a>
-                                            </div>
-                                        @endforeach
+                                    <div class="mt-2">
+                                        <div class="text-xs font-medium">📎 {{ count($conversation->admin_attachments) }} attachment(s)</div>
                                     </div>
                                 @endif
                             </div>
                             
                             <!-- Your Reply -->
                             @if($conversation->hasReply())
-                                <div class="message-sent rounded-2xl p-4 mb-4 max-w-4xl ml-auto">
-                                    <div class="text-sm font-medium mb-2">📤 Your Reply:</div>
-                                    <div class="whitespace-pre-wrap">{{ $conversation->client_reply }}</div>
+                                <div class="message-sent rounded-lg p-2 mb-2 max-w-2xl ml-auto">
+                                    <div class="text-xs font-medium mb-1">📤 Your Reply:</div>
+                                    <div class="whitespace-pre-wrap text-sm">{{ Str::limit($conversation->client_reply, 100) }}</div>
                                     
                                     @if($conversation->client_attachments && count($conversation->client_attachments) > 0)
-                                        <div class="mt-3 space-y-1">
-                                            <div class="text-sm font-medium">📎 Attachments:</div>
-                                            @foreach($conversation->getFormattedClientAttachments() as $index => $attachment)
-                                                <div class="flex items-center gap-2 bg-black/10 rounded-lg p-2">
-                                                    <span>📄</span>
-                                                    <span class="text-sm">{{ $attachment['name'] }}</span>
-                                                    <a href="{{ route('email-conversations.download', ['conversation' => $conversation, 'type' => 'client', 'index' => $index]) }}" class="text-blue-200 hover:text-white text-sm ml-auto">Download</a>
-                                                </div>
-                                            @endforeach
+                                        <div class="mt-2">
+                                            <div class="text-xs font-medium">📎 {{ count($conversation->client_attachments) }} attachment(s)</div>
                                         </div>
                                     @endif
                                     
-                                    <div class="text-xs mt-2 text-right opacity-70">
-                                        {{ $conversation->client_replied_at ? $conversation->client_replied_at->format('M j, Y g:i A') : '' }}
+                                    <div class="text-xs mt-1 text-right opacity-70">
+                                        {{ $conversation->client_replied_at ? $conversation->client_replied_at->format('M j, g:i A') : '' }}
                                     </div>
                                 </div>
                             @endif
                             
                             <!-- Reply Form -->
                             @if(!$conversation->hasReply())
-                                <div class="mt-6">
-                                    <h5 class="font-medium text-white mb-4" style="color: rgb(255,94,20);">💬 Reply to this message:</h5>
+                                <div class="mt-3">
+                                    <h5 class="font-medium text-white mb-2 text-sm" style="color: rgb(255,94,20);">💬 Reply:</h5>
                                     
-                                    <form class="reply-form space-y-4" data-conversation-id="{{ $conversation->id }}">
+                                    <form class="reply-form space-y-3" data-conversation-id="{{ $conversation->id }}">
                                         <div>
-                                            <label class="block text-sm font-medium text-slate-300 mb-2">Your Reply</label>
-                                            <textarea name="reply" rows="4" class="w-full px-4 py-3 rounded-lg text-white resize-none" placeholder="Type your reply..." required></textarea>
+                                            <textarea name="reply" rows="3" class="w-full px-3 py-2 rounded-lg text-white resize-none text-sm" placeholder="Type your reply..." required></textarea>
                                         </div>
                                         
                                         <div>
-                                            <label class="block text-sm font-medium text-slate-300 mb-2">Attachments (Optional)</label>
-                                            <input type="file" name="attachments[]" multiple class="w-full px-4 py-3 rounded-lg text-white" accept="*/*">
-                                            <p class="text-sm text-slate-400 mt-2">Max 10MB per file</p>
+                                            <input type="file" name="attachments[]" multiple class="w-full px-3 py-2 rounded-lg text-white text-sm" accept="*/*">
+                                            <p class="text-xs text-slate-400 mt-1">Max 10MB per file</p>
                                         </div>
                                         
-                                        <div class="flex justify-end gap-3">
+                                        <div class="flex justify-end gap-2">
                                             @if(!$conversation->client_read)
-                                                <button type="button" onclick="markAsRead({{ $conversation->id }})" class="px-4 py-2 bg-slate-600 hover:bg-slate-500 text-white rounded-lg transition-colors">
+                                                <button type="button" onclick="markAsRead({{ $conversation->id }})" class="px-3 py-1 bg-slate-600 hover:bg-slate-500 text-white rounded text-xs">
                                                     ✓ Mark as Read
                                                 </button>
                                             @endif
-                                            <button type="submit" class="px-6 py-3 text-white rounded-lg font-medium">
+                                            <button type="submit" class="px-4 py-2 text-white rounded font-medium text-sm">
                                                 📤 Send Reply
                                             </button>
                                         </div>
@@ -343,8 +348,8 @@
                             @else
                                 <!-- Mark as Read Button -->
                                 @if(!$conversation->client_read)
-                                    <div class="flex justify-end mt-4">
-                                        <button onclick="markAsRead({{ $conversation->id }})" class="px-4 py-2 bg-slate-600 hover:bg-slate-500 text-white rounded-lg transition-colors text-sm">
+                                    <div class="flex justify-end mt-2">
+                                        <button onclick="markAsRead({{ $conversation->id }})" class="px-3 py-1 bg-slate-600 hover:bg-slate-500 text-white rounded text-xs">
                                             ✓ Mark as Read
                                         </button>
                                     </div>
