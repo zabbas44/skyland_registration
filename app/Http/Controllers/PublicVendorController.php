@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Vendor;
+use App\Models\User;
 use App\Mail\VendorRegistrationNotification;
 use App\Mail\VendorWelcomeEmail;
 use Illuminate\Support\Facades\Mail;
@@ -128,6 +129,16 @@ class PublicVendorController extends Controller
 
             // Create the vendor
             $vendor = Vendor::create($vendorData);
+
+            // Create user account for vendor
+            $user = User::create([
+                'name' => $validated['full_name'],
+                'email' => $validated['email'],
+                'password' => $validated['password'], // Will be hashed by User model
+                'user_type' => 'supplier',
+                'supplier_id' => $vendor->id,
+                'is_admin' => false,
+            ]);
 
             // Send email notifications
             $emailsSent = false;

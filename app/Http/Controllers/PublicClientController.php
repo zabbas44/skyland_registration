@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Client;
+use App\Models\User;
 use App\Mail\ClientRegistrationNotification;
 use App\Mail\ClientWelcomeEmail;
 use Illuminate\Support\Facades\Mail;
@@ -136,6 +137,16 @@ class PublicClientController extends Controller
 
             // Create the client
             $client = Client::create($clientData);
+
+            // Create user account for client
+            $user = User::create([
+                'name' => $validated['name'],
+                'email' => $validated['client_email'],
+                'password' => $validated['password'], // Will be hashed by User model
+                'user_type' => 'client',
+                'client_id' => $client->id,
+                'is_admin' => false,
+            ]);
 
             // Send email notifications
             $emailsSent = false;

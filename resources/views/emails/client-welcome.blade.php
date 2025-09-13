@@ -383,6 +383,27 @@
                     </div>
                 </div>
 
+                <!-- Login Instructions -->
+                <div class="services-section">
+                    <h3 class="section-title">🔐 Your Client Dashboard Access</h3>
+                    <div class="services-content">
+                        <p style="margin-bottom: 16px;"><strong>Great news!</strong> We've created a personal dashboard account for you where you can:</p>
+                        <ul style="margin: 16px 0; padding-left: 20px;">
+                            <li>View your registration details</li>
+                            <li>Track your project status</li>
+                            <li>Access important documents</li>
+                            <li>Communicate with our team</li>
+                        </ul>
+                        <div style="background: #f3f4f6; padding: 16px; border-radius: 8px; margin: 16px 0;">
+                            <p><strong>Login Instructions:</strong></p>
+                            <p>📧 <strong>Email:</strong> {{ $client->email }}</p>
+                            <p>🔑 <strong>Password:</strong> Use the password you created during registration</p>
+                            <p>🌐 <strong>Login URL:</strong> <a href="https://registration.skylandconstruction.com/login" style="color: #7c3aed;">https://registration.skylandconstruction.com/login</a></p>
+                        </div>
+                        <p><em>Keep these credentials safe and secure. You can change your password after logging in.</em></p>
+                    </div>
+                </div>
+
                 <!-- What Happens Next -->
                 <div class="next-steps">
                     <h3 class="section-title">What Happens Next?</h3>

@@ -29,6 +29,9 @@ Route::get('/csrf-token', function () {
     return response()->json(['csrf_token' => csrf_token()]);
 });
 
+// Dashboard route
+Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
+
 Route::get('/client', [PublicClientController::class, 'create'])->name('client.register');
 Route::post('/client', [PublicClientController::class, 'store'])->name('client.store');
 Route::get('/client/thank-you/{id}', [PublicClientController::class, 'thankYou'])->name('client.thank-you');
