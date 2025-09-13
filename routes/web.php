@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\PublicVendorController;
 use App\Http\Controllers\PublicClientController;
 use App\Http\Controllers\EmailTestController;
+use App\Http\Controllers\EmailConversationController;
 
 // Redirect root to login
 Route::get('/', function () {
@@ -48,28 +49,14 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/vendors/{vendor}/send-email', [App\Http\Controllers\Admin\EmailController::class, 'sendToVendor'])->name('vendors.send-email');
 });
 
-// Chat routes - requires authentication
-Route::middleware(['auth'])->prefix('chat')->name('chat.')->group(function () {
-    Route::get('/', [App\Http\Controllers\ChatController::class, 'index'])->name('index');
-    Route::get('/conversations/{conversation}/messages', [App\Http\Controllers\ChatController::class, 'getMessages'])->name('messages');
-    Route::post('/send', [App\Http\Controllers\ChatController::class, 'sendMessage'])->name('send');
-    Route::post('/upload-attachment', [App\Http\Controllers\ChatController::class, 'uploadAttachment'])->name('upload-attachment');
-    Route::get('/download/{attachment}', [App\Http\Controllers\ChatController::class, 'downloadAttachment'])->name('download-attachment');
-    Route::post('/messages/{message}/edit', [App\Http\Controllers\ChatController::class, 'editMessage'])->name('edit-message');
-    Route::post('/conversations/{conversation}/mark-read', [App\Http\Controllers\ChatController::class, 'markAsRead'])->name('mark-read');
-    Route::get('/entities', [App\Http\Controllers\ChatController::class, 'getEntities'])->name('entities');
-    
-    // Debug route for testing
-    Route::get('/test-entities', function() {
-        $clients = App\Models\Client::select('id', 'full_name', 'email', 'status')->get();
-        $vendors = App\Models\Vendor::select('id', 'company_name', 'contact_email', 'status')->get();
-        return response()->json([
-            'clients' => $clients,
-            'vendors' => $vendors,
-            'user' => Auth::user(),
-            'is_admin' => Auth::user() ? Auth::user()->isAdmin() : false
-        ]);
-    })->name('test-entities');
+// Email Conversations routes (protected by auth middleware)
+Route::middleware('auth')->prefix('email-conversations')->name('email-conversations.')->group(function () {
+    Route::get('/', [EmailConversationController::class, 'index'])->name('index');
+    Route::post('/send', [EmailConversationController::class, 'sendFromAdmin'])->name('send');
+    Route::post('/{conversation}/reply', [EmailConversationController::class, 'reply'])->name('reply');
+    Route::post('/{conversation}/mark-read', [EmailConversationController::class, 'markAsRead'])->name('mark-read');
+    Route::get('/entities', [EmailConversationController::class, 'getEntities'])->name('entities');
+    Route::get('/{conversation}/download/{type}/{index}', [EmailConversationController::class, 'downloadAttachment'])->name('download');
 });
 
 Route::get('/client', [PublicClientController::class, 'create'])->name('client.register');

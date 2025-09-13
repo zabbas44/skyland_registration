@@ -15,18 +15,16 @@
                         Supplier ID: #SUP{{ str_pad($supplier->id, 6, '0', STR_PAD_LEFT) }}
                     </span>
                     
-                    @if($supplier->status === 'approved')
-                    <!-- Chat Button for Approved Suppliers -->
-                    <a href="{{ route('chat.index') }}" 
+                    <!-- Email Conversations Button -->
+                    <a href="{{ route('email-conversations.index') }}" 
                        class="relative px-4 py-2 bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white rounded-lg transition-colors flex items-center space-x-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                         </svg>
-                        <span>Chat</span>
+                        <span>Email Conversations</span>
                         <!-- Unread messages indicator (optional - you can implement this later) -->
                         {{-- <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span> --}}
                     </a>
-                    @endif
                     
                     <form method="POST" action="{{ route('logout') }}" class="inline">
                         @csrf
