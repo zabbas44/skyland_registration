@@ -14,6 +14,20 @@
                     <span class="px-3 py-1 bg-green-500 text-white rounded-full text-sm font-medium">
                         Client ID: #CLT{{ str_pad($client->id, 6, '0', STR_PAD_LEFT) }}
                     </span>
+                    
+                    @if($client->status === 'approved')
+                    <!-- Chat Button for Approved Clients -->
+                    <a href="{{ route('chat.index') }}" 
+                       class="relative px-4 py-2 bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white rounded-lg transition-colors flex items-center space-x-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                        </svg>
+                        <span>Chat</span>
+                        <!-- Unread messages indicator (optional - you can implement this later) -->
+                        {{-- <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span> --}}
+                    </a>
+                    @endif
+                    
                     <form method="POST" action="{{ route('logout') }}" class="inline">
                         @csrf
                         <button type="submit" class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors">

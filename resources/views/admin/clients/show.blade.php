@@ -373,12 +373,32 @@
                 @if($communications->count() > 0)
                     <div class="space-y-3">
                         @foreach($communications as $comm)
-                            <div class="text-sm">
-                                <p class="font-medium text-gray-900">{{ $comm->subject }}</p>
-                                <p class="text-gray-500">{{ $comm->sent_at->format('M j, Y g:i A') }}</p>
-                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium {{ $comm->status === 'sent' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                    {{ ucfirst($comm->status) }}
-                                </span>
+                            <div class="text-sm border-b border-gray-200 pb-3 last:border-b-0">
+                                <div class="flex items-start justify-between">
+                                    <div class="flex-1">
+                                        <p class="font-medium text-gray-900">{{ $comm->subject }}</p>
+                                        <p class="text-gray-600 text-xs mt-1">{{ Str::limit($comm->message_preview, 100) }}</p>
+                                        <div class="flex items-center mt-2 space-x-2">
+                                            <p class="text-gray-500 text-xs">{{ $comm->sent_at->format('M j, Y g:i A') }}</p>
+                                            @if($comm->adminUser)
+                                                <span class="text-gray-400 text-xs">by {{ $comm->adminUser->name }}</span>
+                                            @endif
+                                        </div>
+                                        @if($comm->hasAttachments())
+                                            <div class="mt-1">
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs bg-blue-100 text-blue-800">
+                                                    <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
+                                                    </svg>
+                                                    {{ $comm->attachment_count }} file(s)
+                                                </span>
+                                            </div>
+                                        @endif
+                                    </div>
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium {{ $comm->status === 'sent' ? 'bg-green-100 text-green-800' : ($comm->status === 'failed' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800') }}">
+                                        {{ ucfirst($comm->status) }}
+                                    </span>
+                                </div>
                             </div>
                         @endforeach
                     </div>
@@ -390,34 +410,65 @@
     </div>
 </div>
 
-<!-- Contact Modal -->
+<!-- Enhanced Contact Modal with Attachments -->
 <div id="contactModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
-    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+    <div class="relative top-10 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
         <div class="mt-3">
-            <h3 class="text-lg font-medium text-gray-900 text-center mb-4">Contact Client</h3>
-            <form method="POST" action="{{ route('admin.clients.contact', $client) }}">
+            <h3 class="text-lg font-medium text-gray-900 text-center mb-4">Send Email to Client</h3>
+            <form id="contactForm" method="POST">
                 @csrf
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-2">To:</label>
-                    <input type="text" value="{{ $client->email }}" readonly 
+                    <input type="text" value="{{ $client->full_name }} ({{ $client->email }})" readonly 
                            class="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md text-sm">
                 </div>
                 <div class="mb-4">
-                    <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">Subject:</label>
-                    <input type="text" name="subject" id="subject" required
+                    <label for="contactSubject" class="block text-sm font-medium text-gray-700 mb-2">Subject:</label>
+                    <input type="text" name="subject" id="contactSubject" required
                            class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <div class="mb-4">
-                    <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Message:</label>
-                    <textarea name="message" id="message" rows="4" required
-                              class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                    <label for="contactMessage" class="block text-sm font-medium text-gray-700 mb-2">Message:</label>
+                    <textarea name="message" id="contactMessage" rows="6" required
+                              class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="Type your message here..."></textarea>
                 </div>
+                
+                <!-- Attachments Section -->
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Attachments (Optional):</label>
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-4">
+                        <div class="text-center">
+                            <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                                <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            <div class="mt-4">
+                                <label for="fileInput" class="cursor-pointer">
+                                    <span class="mt-2 block text-sm font-medium text-gray-900">
+                                        Click to upload files or drag and drop
+                                    </span>
+                                    <span class="mt-1 block text-xs text-gray-500">
+                                        Max 10MB per file. Multiple files allowed.
+                                    </span>
+                                </label>
+                                <input id="fileInput" name="files[]" type="file" class="hidden" multiple>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- File List -->
+                    <div id="fileList" class="mt-3 space-y-2 hidden">
+                        <h4 class="text-sm font-medium text-gray-700">Selected Files:</h4>
+                        <div id="fileItems"></div>
+                    </div>
+                </div>
+                
                 <div class="flex justify-end space-x-3">
                     <button type="button" onclick="closeContactModal()" 
                             class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 text-sm">
                         Cancel
                     </button>
-                    <button type="submit" 
+                    <button type="submit" id="sendEmailBtn"
                             class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm">
                         Send Email
                     </button>
@@ -461,12 +512,22 @@
 
 @push('scripts')
 <script>
+    let uploadedFiles = [];
+    let uploadCounter = 0;
+
     function openContactModal() {
         document.getElementById('contactModal').classList.remove('hidden');
+        // Clear form
+        document.getElementById('contactForm').reset();
+        uploadedFiles = [];
+        document.getElementById('fileList').classList.add('hidden');
+        document.getElementById('fileItems').innerHTML = '';
     }
 
     function closeContactModal() {
         document.getElementById('contactModal').classList.add('hidden');
+        // Clean up uploaded files
+        uploadedFiles = [];
     }
 
     // Close modal when clicking outside
@@ -474,6 +535,218 @@
         if (e.target === this) {
             closeContactModal();
         }
+    });
+
+    // File Upload Functionality
+    document.getElementById('fileInput').addEventListener('change', function(e) {
+        const files = Array.from(e.target.files);
+        files.forEach(file => uploadFile(file));
+    });
+
+    // Drag and drop functionality
+    const dropZone = document.querySelector('.border-dashed');
+    
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, unhighlight, false);
+    });
+
+    function highlight(e) {
+        dropZone.classList.add('border-blue-400', 'bg-blue-50');
+    }
+
+    function unhighlight(e) {
+        dropZone.classList.remove('border-blue-400', 'bg-blue-50');
+    }
+
+    dropZone.addEventListener('drop', handleDrop, false);
+
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = Array.from(dt.files);
+        files.forEach(file => uploadFile(file));
+    }
+
+    function uploadFile(file) {
+        const tempId = 'file_' + (++uploadCounter);
+        const maxSize = 10 * 1024 * 1024; // 10MB
+
+        if (file.size > maxSize) {
+            alert('File size must be less than 10MB: ' + file.name);
+            return;
+        }
+
+        // Create file item in UI
+        const fileItem = createFileItem(tempId, file.name, file.size, 'uploading');
+        document.getElementById('fileItems').appendChild(fileItem);
+        document.getElementById('fileList').classList.remove('hidden');
+
+        // Upload file
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('temp_id', tempId);
+        formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+
+        fetch('{{ route("admin.email.upload-attachment") }}', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                uploadedFiles.push(data.file_info);
+                updateFileItem(tempId, 'uploaded', data.file_info.formatted_size);
+            } else {
+                updateFileItem(tempId, 'error', 'Upload failed');
+            }
+        })
+        .catch(error => {
+            console.error('Upload error:', error);
+            updateFileItem(tempId, 'error', 'Upload failed');
+        });
+    }
+
+    function createFileItem(tempId, fileName, fileSize, status) {
+        const div = document.createElement('div');
+        div.id = `file-${tempId}`;
+        div.className = 'flex items-center justify-between p-2 bg-gray-50 rounded border';
+        
+        const sizeText = formatFileSize(fileSize);
+        const statusClass = status === 'uploading' ? 'text-blue-600' : status === 'uploaded' ? 'text-green-600' : 'text-red-600';
+        const statusText = status === 'uploading' ? 'Uploading...' : status === 'uploaded' ? 'Uploaded' : 'Failed';
+        
+        div.innerHTML = `
+            <div class="flex items-center">
+                <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <div>
+                    <div class="text-sm font-medium text-gray-900">${fileName}</div>
+                    <div class="text-xs text-gray-500">${sizeText}</div>
+                </div>
+            </div>
+            <div class="flex items-center">
+                <span class="text-xs ${statusClass} mr-2">${statusText}</span>
+                ${status !== 'uploading' ? `<button onclick="removeFile('${tempId}')" class="text-red-600 hover:text-red-800 text-xs">Remove</button>` : ''}
+            </div>
+        `;
+        
+        return div;
+    }
+
+    function updateFileItem(tempId, status, sizeOrError) {
+        const fileItem = document.getElementById(`file-${tempId}`);
+        if (!fileItem) return;
+
+        const statusClass = status === 'uploaded' ? 'text-green-600' : 'text-red-600';
+        const statusText = status === 'uploaded' ? 'Uploaded' : 'Failed';
+        
+        const statusSpan = fileItem.querySelector('.text-xs.text-blue-600, .text-xs.text-green-600, .text-xs.text-red-600');
+        if (statusSpan) {
+            statusSpan.className = `text-xs ${statusClass} mr-2`;
+            statusSpan.textContent = statusText;
+        }
+
+        // Add remove button if not uploading
+        if (status !== 'uploading') {
+            const buttonContainer = fileItem.querySelector('.flex.items-center:last-child');
+            if (!buttonContainer.querySelector('button')) {
+                buttonContainer.innerHTML += `<button onclick="removeFile('${tempId}')" class="text-red-600 hover:text-red-800 text-xs ml-2">Remove</button>`;
+            }
+        }
+    }
+
+    function removeFile(tempId) {
+        // Remove from uploaded files array
+        uploadedFiles = uploadedFiles.filter(file => file.temp_id !== tempId);
+        
+        // Remove from UI
+        const fileItem = document.getElementById(`file-${tempId}`);
+        if (fileItem) {
+            fileItem.remove();
+        }
+        
+        // Hide file list if no files
+        if (uploadedFiles.length === 0) {
+            document.getElementById('fileList').classList.add('hidden');
+        }
+    }
+
+    function formatFileSize(bytes) {
+        const units = ['B', 'KB', 'MB', 'GB'];
+        let size = bytes;
+        let unitIndex = 0;
+        
+        while (size >= 1024 && unitIndex < units.length - 1) {
+            size /= 1024;
+            unitIndex++;
+        }
+        
+        return Math.round(size * 100) / 100 + ' ' + units[unitIndex];
+    }
+
+    // Handle email form submission
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const submitBtn = document.getElementById('sendEmailBtn');
+        const originalText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending...';
+        
+        const formData = new FormData();
+        formData.append('subject', document.getElementById('contactSubject').value);
+        formData.append('message', document.getElementById('contactMessage').value);
+        formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+        
+        // Add attachments
+        if (uploadedFiles.length > 0) {
+            formData.append('attachments', JSON.stringify(uploadedFiles));
+        }
+        
+        fetch('{{ route("admin.clients.send-email", $client) }}', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                closeContactModal();
+                // Reload page to show updated communications
+                window.location.reload();
+            } else {
+                alert(data.message || 'Failed to send email');
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            }
+        })
+        .catch(error => {
+            console.error('Email sending error:', error);
+            alert('An error occurred while sending the email');
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+        });
     });
 
     // Approval Modal Functions

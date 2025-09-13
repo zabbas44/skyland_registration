@@ -41,6 +41,22 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Vendor approval routes
     Route::post('/vendors/{vendor}/approve', [App\Http\Controllers\Admin\ApprovalController::class, 'approveVendor'])->name('vendors.approve');
     Route::post('/vendors/{vendor}/reject', [App\Http\Controllers\Admin\ApprovalController::class, 'rejectVendor'])->name('vendors.reject');
+    
+    // Email routes
+    Route::post('/upload-attachment', [App\Http\Controllers\Admin\EmailController::class, 'uploadAttachment'])->name('email.upload-attachment');
+    Route::post('/clients/{client}/send-email', [App\Http\Controllers\Admin\EmailController::class, 'sendToClient'])->name('clients.send-email');
+    Route::post('/vendors/{vendor}/send-email', [App\Http\Controllers\Admin\EmailController::class, 'sendToVendor'])->name('vendors.send-email');
+});
+
+// Chat routes - requires authentication
+Route::middleware(['auth'])->prefix('chat')->name('chat.')->group(function () {
+    Route::get('/', [App\Http\Controllers\ChatController::class, 'index'])->name('index');
+    Route::get('/conversations/{conversation}/messages', [App\Http\Controllers\ChatController::class, 'getMessages'])->name('messages');
+    Route::post('/send', [App\Http\Controllers\ChatController::class, 'sendMessage'])->name('send');
+    Route::post('/upload-attachment', [App\Http\Controllers\ChatController::class, 'uploadAttachment'])->name('upload-attachment');
+    Route::get('/download/{attachment}', [App\Http\Controllers\ChatController::class, 'downloadAttachment'])->name('download-attachment');
+    Route::post('/messages/{message}/edit', [App\Http\Controllers\ChatController::class, 'editMessage'])->name('edit-message');
+    Route::post('/conversations/{conversation}/mark-read', [App\Http\Controllers\ChatController::class, 'markAsRead'])->name('mark-read');
 });
 
 Route::get('/client', [PublicClientController::class, 'create'])->name('client.register');

@@ -75,4 +75,28 @@ class CommunicationLog extends Model
     {
         return $query->where('created_at', '>=', now()->subDays($days));
     }
+
+    /**
+     * Get the attachments for this communication.
+     */
+    public function attachments()
+    {
+        return $this->hasMany(EmailAttachment::class);
+    }
+
+    /**
+     * Check if this communication has attachments.
+     */
+    public function hasAttachments(): bool
+    {
+        return $this->attachments()->exists();
+    }
+
+    /**
+     * Get the count of attachments.
+     */
+    public function getAttachmentCountAttribute(): int
+    {
+        return $this->attachments()->count();
+    }
 }
