@@ -64,65 +64,64 @@ class PublicVendorController extends Controller
                 'consent_agreement' => 'required|accepted',
             ]);
 
-            // Handle file uploads
+            // Map form fields to database columns for compatibility
+            $vendorData = [
+                // Basic contact information
+                'contact_email' => $validated['email'],
+                'contact_designation' => $validated['designation'],
+                'contact_mobile' => $validated['mobile_country_code'] . ' ' . $validated['mobile_number'],
+                
+                // Split full_name into first_name and last_name for database compatibility
+                'first_name' => explode(' ', $validated['full_name'], 2)[0],
+                'last_name' => isset(explode(' ', $validated['full_name'], 2)[1]) ? explode(' ', $validated['full_name'], 2)[1] : '',
+                
+                // Company information
+                'company_name' => $validated['company_name'],
+                'business_type' => $validated['business_type'],
+                'company_contact_person' => $validated['contact_person'],
+                'company_designation' => $validated['designation'],
+                'company_email' => $validated['company_email'],
+                'company_phone' => $validated['landline_country_code'] . ' ' . $validated['landline_number'],
+                'address' => $validated['company_address'],
+                'website' => $validated['company_website'],
+                
+                // Financial & Banking Details
+                'preferred_payment_method' => 'Bank Transfer', // Default since form has payment_terms
+                'bank_name' => $validated['bank_name'],
+                'iban' => $validated['iban'],
+                'swift_code' => $validated['swift_code'],
+                'tax_id' => $validated['vat_registration_no'],
+                
+                // Required fields with defaults
+                'trade_license_number' => $validated['vat_registration_no'], // Use VAT as trade license for now
+                'nature_of_business' => $validated['business_type'],
+                'year_of_establishment' => date('Y'), // Default to current year
+                'accepted_payment_terms' => $validated['payment_terms'] === '30_days' ? '30' : ($validated['payment_terms'] === '60_days' ? '60' : '90'),
+                'worked_with_us_before' => false,
+                'has_legal_dispute' => false,
+                'bank_branch' => $validated['branch_address'],
+                
+                // Handle file uploads with correct field names
+                'trade_license_path' => null, // Will be set below if uploaded
+                'vat_certificate_path' => null, // Will be set below if uploaded  
+                'company_profile_path' => null, // Will be set below if uploaded
+            ];
+            
+            // Handle file uploads with correct database column names
             if ($request->hasFile('business_license')) {
-                $validated['business_license_path'] = $request->file('business_license')->store('vendor-documents', 'public');
+                $vendorData['trade_license_path'] = $request->file('business_license')->store('vendor-documents', 'public');
             }
             
             if ($request->hasFile('vat_certificate')) {
-                $validated['vat_certificate_path'] = $request->file('vat_certificate')->store('vendor-documents', 'public');
+                $vendorData['vat_certificate_path'] = $request->file('vat_certificate')->store('vendor-documents', 'public');
             }
             
             if ($request->hasFile('company_profile')) {
-                $validated['company_profile_path'] = $request->file('company_profile')->store('vendor-documents', 'public');
+                $vendorData['company_profile_path'] = $request->file('company_profile')->store('vendor-documents', 'public');
             }
-
-            // Hash the password
-            $validated['password'] = bcrypt($validated['password']);
-            
-            // Map new form fields to database fields
-            $validated['contact_email'] = $validated['email'];
-            $validated['contact_designation'] = $validated['designation'];
-            $validated['contact_mobile'] = $validated['mobile_country_code'] . ' ' . $validated['mobile_number'];
-            $validated['contact_company_name'] = $validated['landline_country_code'] . ' ' . $validated['landline_number']; // Note: Using contact_company_name for landline storage
-            $validated['company_contact_person'] = $validated['contact_person'];
-            $validated['address'] = $validated['company_address'];
-            $validated['website'] = $validated['company_website'];
-            
-            // Split full_name into first_name and last_name for database compatibility
-            $nameParts = explode(' ', $validated['full_name'], 2);
-            $validated['first_name'] = $nameParts[0];
-            $validated['last_name'] = isset($nameParts[1]) ? $nameParts[1] : '';
-            
-            // Map vat_certificate to tax_certificate for database compatibility
-            if (isset($validated['vat_certificate_path'])) {
-                $validated['tax_certificate_path'] = $validated['vat_certificate_path'];
-                unset($validated['vat_certificate_path']);
-            }
-            
-            // Map VAT registration number to tax_id for database compatibility
-            $validated['tax_id'] = $validated['vat_registration_no'];
-            
-            // Remove form-specific fields that don't match database columns
-            unset(
-                $validated['full_name'],
-                $validated['email'], 
-                $validated['designation'],
-                $validated['mobile_country_code'],
-                $validated['mobile_number'],
-                $validated['landline_country_code'],
-                $validated['landline_number'],
-                $validated['contact_person'],
-                $validated['company_address'],
-                $validated['company_website'],
-                $validated['emirates'],
-                $validated['country'],
-                $validated['vat_registration_no'],
-                $validated['consent_agreement']
-            );
 
             // Create the vendor
-            $vendor = Vendor::create($validated);
+            $vendor = Vendor::create($vendorData);
 
             // Send email notifications
             $emailsSent = false;
