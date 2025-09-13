@@ -16,10 +16,7 @@ use Illuminate\Support\Str;
 
 class ChatController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+    // Middleware will be applied via routes instead of constructor
 
     /**
      * Show chat interface
