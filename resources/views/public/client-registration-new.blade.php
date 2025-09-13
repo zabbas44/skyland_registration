@@ -2209,6 +2209,95 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // Handle form submission
+    document.getElementById('wizard-form').addEventListener('submit', function(e) {
+        e.preventDefault(); // Prevent default form submission
+        console.log('Form submission triggered via AJAX');
+        
+        // Validate final step before submitting
+        if (currentStep === totalSteps && !validateCurrentStep()) {
+            console.log('Final validation failed, preventing submission');
+            return false;
+        }
+        
+        // Show loading state
+        const submitBtn = document.getElementById('submit-btn');
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Submitting...';
+        submitBtn.disabled = true;
+        
+        // Prepare form data
+        const formData = new FormData(this);
+        
+        // Send AJAX request
+        fetch(this.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => Promise.reject(err));
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Form submitted successfully:', data);
+            
+            // Clear saved form data on successful submission
+            const STORAGE_KEY = 'client_registration_form_data';
+            const CURRENT_STEP_KEY = 'client_registration_current_step';
+            localStorage.removeItem(STORAGE_KEY);
+            localStorage.removeItem(CURRENT_STEP_KEY);
+            console.log('Form data cleared');
+            
+            // Show success modal
+            showSuccessModal();
+        })
+        .catch(error => {
+            console.error('Form submission error:', error);
+            
+            // Reset button state
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+            
+            // Show error message
+            let errorMessage = 'There was an error submitting your registration. Please try again.';
+            if (error.errors) {
+                // Handle validation errors
+                const firstError = Object.values(error.errors)[0];
+                if (firstError && firstError[0]) {
+                    errorMessage = firstError[0];
+                }
+            } else if (error.message) {
+                errorMessage = error.message;
+            }
+            
+            // Show error notification
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-4 rounded-lg shadow-lg z-50 max-w-md';
+            errorDiv.innerHTML = `
+                <div class="flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span>${errorMessage}</span>
+                </div>
+            `;
+            document.body.appendChild(errorDiv);
+            
+            // Remove error message after 5 seconds
+            setTimeout(() => {
+                if (errorDiv && errorDiv.parentNode) {
+                    errorDiv.remove();
+                }
+            }, 5000);
+        });
+    });
+
 });
 
 // Password visibility toggle function
@@ -2261,95 +2350,6 @@ function closeSuccessModal() {
         window.location.href = '/';
     }, 300);
 }
-
-// Handle form submission
-document.getElementById('wizard-form').addEventListener('submit', function(e) {
-    e.preventDefault(); // Prevent default form submission
-    console.log('Form submission triggered via AJAX');
-    
-    // Validate final step before submitting
-    if (currentStep === totalSteps && !validateCurrentStep()) {
-        console.log('Final validation failed, preventing submission');
-        return false;
-    }
-    
-    // Show loading state
-    const submitBtn = document.getElementById('submit-btn');
-    const originalText = submitBtn.textContent;
-    submitBtn.textContent = 'Submitting...';
-    submitBtn.disabled = true;
-    
-    // Prepare form data
-    const formData = new FormData(this);
-    
-    // Send AJAX request
-    fetch(this.action, {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest',
-            'Accept': 'application/json'
-        }
-    })
-    .then(response => {
-        if (!response.ok) {
-            return response.json().then(err => Promise.reject(err));
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log('Form submitted successfully:', data);
-        
-        // Clear saved form data on successful submission
-        const STORAGE_KEY = 'client_registration_form_data';
-        const CURRENT_STEP_KEY = 'client_registration_current_step';
-        localStorage.removeItem(STORAGE_KEY);
-        localStorage.removeItem(CURRENT_STEP_KEY);
-        console.log('Form data cleared');
-        
-        // Show success modal
-        showSuccessModal();
-    })
-    .catch(error => {
-        console.error('Form submission error:', error);
-        
-        // Reset button state
-        submitBtn.textContent = originalText;
-        submitBtn.disabled = false;
-        
-        // Show error message
-        let errorMessage = 'There was an error submitting your registration. Please try again.';
-        if (error.errors) {
-            // Handle validation errors
-            const firstError = Object.values(error.errors)[0];
-            if (firstError && firstError[0]) {
-                errorMessage = firstError[0];
-            }
-        } else if (error.message) {
-            errorMessage = error.message;
-        }
-        
-        // Show error notification
-        const errorDiv = document.createElement('div');
-        errorDiv.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-4 rounded-lg shadow-lg z-50 max-w-md';
-        errorDiv.innerHTML = `
-            <div class="flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                <span>${errorMessage}</span>
-            </div>
-        `;
-        document.body.appendChild(errorDiv);
-        
-        // Remove error message after 5 seconds
-        setTimeout(() => {
-            if (errorDiv && errorDiv.parentNode) {
-                errorDiv.remove();
-            }
-        }, 5000);
-    });
-});
 
 // Close modal when clicking outside
 document.getElementById('success-modal').addEventListener('click', function(e) {
