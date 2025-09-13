@@ -29,8 +29,8 @@ Route::get('/csrf-token', function () {
     return response()->json(['csrf_token' => csrf_token()]);
 });
 
-// Dashboard route
-Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
+// Dashboard route - requires authentication
+Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->middleware('auth')->name('dashboard');
 
 Route::get('/client', [PublicClientController::class, 'create'])->name('client.register');
 Route::post('/client', [PublicClientController::class, 'store'])->name('client.store');
