@@ -42,8 +42,9 @@ class ChatConversation extends Model
 
     /**
      * Get the entity (client or vendor) for this conversation.
+     * This is a helper method that returns the actual related model.
      */
-    public function entity()
+    public function getEntity()
     {
         if ($this->entity_type === 'client') {
             return $this->client;
@@ -52,6 +53,23 @@ class ChatConversation extends Model
         }
         
         return null;
+    }
+    
+    /**
+     * Get the entity relationship (for eager loading).
+     * This returns the appropriate relationship based on entity_type.
+     */
+    public function entity()
+    {
+        // Return the appropriate relationship for eager loading
+        if ($this->entity_type === 'client') {
+            return $this->client();
+        } elseif ($this->entity_type === 'vendor') {
+            return $this->vendor();
+        }
+        
+        // Return a dummy relationship to avoid null errors
+        return $this->belongsTo(Client::class, 'entity_id')->whereRaw('1 = 0');
     }
 
     /**
@@ -123,7 +141,7 @@ class ChatConversation extends Model
             return $this->title;
         }
 
-        $entity = $this->entity();
+        $entity = $this->getEntity();
         if ($this->entity_type === 'client') {
             return $entity ? $entity->full_name : 'Unknown Client';
         } elseif ($this->entity_type === 'vendor') {
@@ -138,7 +156,7 @@ class ChatConversation extends Model
      */
     public function isEntityApproved(): bool
     {
-        $entity = $this->entity();
+        $entity = $this->getEntity();
         return $entity && $entity->status === 'approved';
     }
 

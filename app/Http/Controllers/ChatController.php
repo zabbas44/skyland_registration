@@ -27,7 +27,7 @@ class ChatController extends Controller
         
         // Get conversations based on user type
         if ($user->isAdmin()) {
-            $conversations = ChatConversation::with(['entity', 'lastMessageBy'])
+            $conversations = ChatConversation::with(['client', 'vendor', 'lastMessageBy'])
                 ->active()
                 ->orderBy('last_message_at', 'desc')
                 ->get();
@@ -42,7 +42,7 @@ class ChatController extends Controller
                 return view('chat.not-approved');
             }
             
-            $conversations = ChatConversation::with(['entity', 'lastMessageBy'])
+            $conversations = ChatConversation::with(['client', 'vendor', 'lastMessageBy'])
                 ->where('entity_type', $entityType)
                 ->where('entity_id', $entityId)
                 ->active()
@@ -350,7 +350,7 @@ class ChatController extends Controller
     {
         try {
             $sender = $message->sender;
-            $entity = $conversation->entity();
+            $entity = $conversation->getEntity();
             
             if ($sender->isAdmin()) {
                 // Admin sent message to client/vendor
