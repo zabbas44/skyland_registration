@@ -15,17 +15,6 @@
     @else
         <!-- Fallback to CDN for development/servers without build assets -->
         <script src="https://cdn.tailwindcss.com"></script>
-        <script>
-            tailwind.config = {
-                theme: {
-                    extend: {
-                        fontFamily: {
-                            sans: ['Inter', 'system-ui', 'sans-serif'],
-                        }
-                    }
-                }
-            }
-        </script>
     @endif
     
     <!-- Custom Styles -->
@@ -354,7 +343,8 @@
                         <p>Drop files here or click to browse</p>
                         <p class="text-sm">Max 10MB per file</p>
                     </div>
-                    <input type="file" id="file-input" multiple class="hidden" accept="*/*">
+                    <label for="file-input" class="sr-only">Upload files</label>
+                    <input type="file" id="file-input" name="attachments" multiple class="hidden" accept="*/*">
                 </div>
                 
                 <!-- Attached Files Preview -->
@@ -368,7 +358,9 @@
                 <form id="message-form" class="flex items-end gap-3">
                     <div class="flex-1">
                         <div class="relative">
+                            <label for="message-input" class="sr-only">Type your message</label>
                             <textarea id="message-input" 
+                                      name="message"
                                       rows="1" 
                                       placeholder="Type a message..." 
                                       class="w-full p-4 pr-16 bg-white/90 rounded-2xl border-0 focus:ring-2 focus:ring-blue-400 resize-none max-h-32"
@@ -574,8 +566,8 @@
             
             <form id="newChatForm">
                 <div class="mb-4">
-                    <label class="block text-white/80 mb-2">Select Type</label>
-                    <select id="entityType" class="w-full p-3 rounded-xl bg-white/90 border-0 focus:ring-2 focus:ring-blue-400">
+                    <label for="entityType" class="block text-white/80 mb-2">Select Type</label>
+                    <select id="entityType" name="entityType" class="w-full p-3 rounded-xl bg-white/90 border-0 focus:ring-2 focus:ring-blue-400">
                         <option value="">Choose...</option>
                         <option value="client">Client</option>
                         <option value="vendor">Vendor</option>
@@ -583,8 +575,8 @@
                 </div>
                 
                 <div class="mb-6">
-                    <label class="block text-white/80 mb-2">Select Person</label>
-                    <select id="entitySelect" class="w-full p-3 rounded-xl bg-white/90 border-0 focus:ring-2 focus:ring-blue-400" disabled>
+                    <label for="entitySelect" class="block text-white/80 mb-2">Select Person</label>
+                    <select id="entitySelect" name="entitySelect" class="w-full p-3 rounded-xl bg-white/90 border-0 focus:ring-2 focus:ring-blue-400" disabled>
                         <option value="">Select type first...</option>
                     </select>
                 </div>
@@ -592,6 +584,9 @@
                 <div class="flex gap-3">
                     <button type="button" onclick="hideNewChatModal()" class="flex-1 px-4 py-3 glass-dark text-white rounded-xl hover:bg-white/20 transition-colors">
                         Cancel
+                    </button>
+                    <button type="button" onclick="testDropdown()" class="px-3 py-3 bg-yellow-500 text-white rounded-xl hover:bg-yellow-600 transition-colors">
+                        Test
                     </button>
                     <button type="submit" class="flex-1 px-4 py-3 bg-gradient-to-r from-blue-500 to-green-500 text-white rounded-xl hover:from-blue-600 hover:to-green-600 transition-colors">
                         Start Chat
@@ -615,6 +610,12 @@
         
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('Page loaded. User info:', {
+                name: '{{ $user->name ?? "Unknown" }}',
+                email: '{{ $user->email ?? "Unknown" }}',
+                isAdmin: {{ $user->isAdmin() ? 'true' : 'false' }}
+            });
+            
             setupEventListeners();
             if (currentConversationId) {
                 loadMessages(currentConversationId);
@@ -622,14 +623,36 @@
             
             // Auto-resize textarea
             const messageInput = document.getElementById('message-input');
-            messageInput.addEventListener('input', function() {
-                this.style.height = 'auto';
-                this.style.height = Math.min(this.scrollHeight, 128) + 'px';
-            });
+            if (messageInput) {
+                messageInput.addEventListener('input', function() {
+                    this.style.height = 'auto';
+                    this.style.height = Math.min(this.scrollHeight, 128) + 'px';
+                });
+            }
             
             // Load entities for new chat modal (admin only)
             @if($user->isAdmin())
-            loadEntitiesForNewChat();
+            console.log('User is admin, checking for modal elements...');
+            
+            // Use setTimeout to ensure DOM is fully loaded
+            setTimeout(() => {
+                const entityType = document.getElementById('entityType');
+                const entitySelect = document.getElementById('entitySelect');
+                
+                if (entityType && entitySelect) {
+                    console.log('Modal elements found, loading entities for new chat');
+                    loadEntitiesForNewChat();
+                } else {
+                    console.log('Modal elements not found yet, will try again when modal opens');
+                }
+            }, 100);
+            @else
+            console.log('User is not admin:', {
+                name: '{{ $user->name ?? "Unknown" }}',
+                email: '{{ $user->email ?? "Unknown" }}',
+                user_type: '{{ $user->user_type ?? "null" }}',
+                is_admin: {{ $user->is_admin ?? 'false' }}
+            });
             @endif
         });
         
@@ -674,7 +697,12 @@
             });
             
             fileDropZone.addEventListener('drop', handleDrop, false);
-            fileDropZone.addEventListener('click', () => document.getElementById('file-input').click());
+            fileDropZone.addEventListener('click', () => {
+                const fileInput = document.getElementById('file-input');
+                if (fileInput) {
+                    fileInput.click();
+                }
+            });
         }
         
         // Load conversation
@@ -990,10 +1018,29 @@
             });
         }
         
-        @if($user->isAdmin())
-        // Admin-specific functions
+        // Admin-specific functions (always load for debugging)
         function showNewChatModal() {
             document.getElementById('newChatModal').classList.remove('hidden');
+            
+            // Set up dropdown functionality when modal opens
+            setTimeout(() => {
+                const entityType = document.getElementById('entityType');
+                const entitySelect = document.getElementById('entitySelect');
+                
+                if (entityType && entitySelect) {
+                    console.log('Modal opened, setting up dropdown functionality');
+                    
+                    // Remove any existing event listeners
+                    entityType.removeEventListener('change', handleEntityTypeChange);
+                    
+                    // Add the event listener
+                    entityType.addEventListener('change', handleEntityTypeChange);
+                    
+                    console.log('Dropdown event listener attached');
+                } else {
+                    console.error('Modal elements still not found after opening modal');
+                }
+            }, 50);
         }
         
         function hideNewChatModal() {
@@ -1013,58 +1060,12 @@
             }
             
             console.log('Setting up entity type change listener');
-            
-            entityType.addEventListener('change', async function() {
-                console.log('Entity type changed to:', this.value);
-                
-                if (!this.value) {
-                    entitySelect.disabled = true;
-                    entitySelect.innerHTML = '<option value="">Select type first...</option>';
-                    return;
-                }
-                
-                // Show loading state
-                entitySelect.disabled = true;
-                entitySelect.innerHTML = '<option value="">Loading...</option>';
-                
-                try {
-                    console.log('Fetching entities for type:', this.value);
-                    const response = await fetch(`/chat/entities?type=${this.value}`, {
-                        headers: {
-                            'X-CSRF-TOKEN': csrfToken,
-                            'Accept': 'application/json'
-                        }
-                    });
-                    
-                    console.log('Response status:', response.status);
-                    
-                    if (response.ok) {
-                        const entities = await response.json();
-                        console.log('Received entities:', entities);
-                        
-                        entitySelect.innerHTML = '<option value="">Choose...</option>';
-                        
-                        if (entities && entities.length > 0) {
-                            entities.forEach(entity => {
-                                const name = this.value === 'client' ? entity.full_name : entity.company_name;
-                                const option = `<option value="${entity.id}">${name} (${entity.status})</option>`;
-                                entitySelect.innerHTML += option;
-                            });
-                            entitySelect.disabled = false;
-                        } else {
-                            entitySelect.innerHTML = '<option value="">No data available</option>';
-                        }
-                    } else {
-                        console.error('Failed to load entities:', response.statusText);
-                        const errorText = await response.text();
-                        console.error('Error response:', errorText);
-                        entitySelect.innerHTML = '<option value="">Error loading data</option>';
-                    }
-                } catch (error) {
-                    console.error('Error loading entities:', error);
-                    entitySelect.innerHTML = '<option value="">Network error</option>';
-                }
+            console.log('Elements found:', {
+                entityType: !!entityType,
+                entitySelect: !!entitySelect
             });
+            
+            entityType.addEventListener('change', handleEntityTypeChange);
         }
         
         document.getElementById('newChatForm').addEventListener('submit', async function(e) {
@@ -1104,7 +1105,88 @@
                 alert('Failed to start conversation');
             }
         });
-        @endif
+        
+        // Handle entity type change (extracted for reuse)
+        async function handleEntityTypeChange() {
+            const entitySelect = document.getElementById('entitySelect');
+            
+            console.log('Entity type changed to:', this.value);
+            
+            if (!this.value) {
+                entitySelect.disabled = true;
+                entitySelect.innerHTML = '<option value="">Select type first...</option>';
+                return;
+            }
+            
+            // Show loading state
+            entitySelect.disabled = true;
+            entitySelect.innerHTML = '<option value="">Loading...</option>';
+            
+            try {
+                console.log('Fetching entities for type:', this.value);
+                const response = await fetch(`/chat/entities?type=${this.value}`, {
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                console.log('Response status:', response.status);
+                
+                if (response.ok) {
+                    const entities = await response.json();
+                    console.log('Received entities:', entities);
+                    
+                    entitySelect.innerHTML = '<option value="">Choose...</option>';
+                    
+                    if (entities && entities.length > 0) {
+                        entities.forEach(entity => {
+                            const name = this.value === 'client' ? entity.full_name : entity.company_name;
+                            const option = `<option value="${entity.id}">${name} (${entity.status})</option>`;
+                            entitySelect.innerHTML += option;
+                        });
+                        entitySelect.disabled = false;
+                    } else {
+                        entitySelect.innerHTML = '<option value="">No data available</option>';
+                    }
+                } else {
+                    console.error('Failed to load entities:', response.statusText);
+                    const errorText = await response.text();
+                    console.error('Error response:', errorText);
+                    entitySelect.innerHTML = '<option value="">Error loading data</option>';
+                }
+            } catch (error) {
+                console.error('Error loading entities:', error);
+                entitySelect.innerHTML = '<option value="">Network error</option>';
+            }
+        }
+        
+        // Test function for debugging dropdown
+        function testDropdown() {
+            console.log('=== DROPDOWN TEST ===');
+            
+            const entityType = document.getElementById('entityType');
+            const entitySelect = document.getElementById('entitySelect');
+            
+            console.log('Elements:', {
+                entityType: entityType,
+                entitySelect: entitySelect,
+                entityTypeValue: entityType ? entityType.value : 'null',
+                entitySelectDisabled: entitySelect ? entitySelect.disabled : 'null'
+            });
+            
+            if (entityType && entitySelect) {
+                // Force set client type and trigger change
+                entityType.value = 'client';
+                console.log('Set entityType to client, triggering change event...');
+                
+                // Manually trigger the change event
+                const event = new Event('change');
+                entityType.dispatchEvent(event);
+            } else {
+                console.error('Elements not found!');
+            }
+        }
         
         // Real-time updates (simplified polling for now)
         setInterval(() => {

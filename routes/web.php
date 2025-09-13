@@ -58,6 +58,18 @@ Route::middleware(['auth'])->prefix('chat')->name('chat.')->group(function () {
     Route::post('/messages/{message}/edit', [App\Http\Controllers\ChatController::class, 'editMessage'])->name('edit-message');
     Route::post('/conversations/{conversation}/mark-read', [App\Http\Controllers\ChatController::class, 'markAsRead'])->name('mark-read');
     Route::get('/entities', [App\Http\Controllers\ChatController::class, 'getEntities'])->name('entities');
+    
+    // Debug route for testing
+    Route::get('/test-entities', function() {
+        $clients = App\Models\Client::select('id', 'full_name', 'email', 'status')->get();
+        $vendors = App\Models\Vendor::select('id', 'company_name', 'contact_email', 'status')->get();
+        return response()->json([
+            'clients' => $clients,
+            'vendors' => $vendors,
+            'user' => Auth::user(),
+            'is_admin' => Auth::user() ? Auth::user()->isAdmin() : false
+        ]);
+    })->name('test-entities');
 });
 
 Route::get('/client', [PublicClientController::class, 'create'])->name('client.register');
