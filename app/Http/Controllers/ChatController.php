@@ -310,6 +310,30 @@ class ChatController extends Controller
     }
 
     /**
+     * Get entities for new chat modal (Admin only)
+     */
+    public function getEntities(Request $request)
+    {
+        $user = Auth::user();
+        
+        if (!$user->isAdmin()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+        
+        $type = $request->get('type');
+        
+        if ($type === 'client') {
+            $entities = Client::select('id', 'full_name', 'email', 'status')->get();
+            return response()->json($entities);
+        } elseif ($type === 'vendor') {
+            $entities = Vendor::select('id', 'company_name', 'contact_email', 'status')->get();
+            return response()->json($entities);
+        }
+        
+        return response()->json(['error' => 'Invalid type'], 400);
+    }
+
+    /**
      * Send message notification email
      */
     private function sendMessageNotification($conversation, $message)

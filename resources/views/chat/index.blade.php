@@ -9,8 +9,8 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Compiled CSS -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     
     <!-- Custom Styles -->
     <style>
@@ -620,23 +620,30 @@
         // Setup event listeners
         function setupEventListeners() {
             // Message form submission
-            document.getElementById('message-form').addEventListener('submit', handleMessageSubmit);
+            const messageForm = document.getElementById('message-form');
+            if (messageForm) {
+                messageForm.addEventListener('submit', handleMessageSubmit);
+            }
             
             // File input change
-            document.getElementById('file-input').addEventListener('change', handleFileSelect);
+            const fileInput = document.getElementById('file-input');
+            if (fileInput) {
+                fileInput.addEventListener('change', handleFileSelect);
+            }
             
             // Click outside to close emoji picker
             document.addEventListener('click', function(e) {
                 const emojiPicker = document.getElementById('emoji-picker');
                 const emojiButton = e.target.closest('button[onclick="toggleEmojiPicker()"]');
                 
-                if (!emojiButton && !emojiPicker.contains(e.target)) {
+                if (emojiPicker && !emojiButton && !emojiPicker.contains(e.target)) {
                     emojiPicker.classList.remove('show');
                 }
             });
             
             // Drag and drop for files
             const fileDropZone = document.getElementById('file-upload-area');
+            if (!fileDropZone) return;
             
             ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
                 fileDropZone.addEventListener(eventName, preventDefaults, false);
@@ -992,7 +999,7 @@
                 }
                 
                 try {
-                    const response = await fetch(`/admin/${this.value}s`, {
+                    const response = await fetch(`/chat/entities?type=${this.value}`, {
                         headers: {
                             'X-CSRF-TOKEN': csrfToken,
                             'Accept': 'application/json'
@@ -1009,9 +1016,13 @@
                         });
                         
                         entitySelect.disabled = false;
+                    } else {
+                        console.error('Failed to load entities:', response.statusText);
+                        entitySelect.innerHTML = '<option value="">Error loading data</option>';
                     }
                 } catch (error) {
                     console.error('Error loading entities:', error);
+                    entitySelect.innerHTML = '<option value="">Error loading data</option>';
                 }
             });
         }

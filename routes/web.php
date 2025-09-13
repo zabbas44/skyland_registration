@@ -57,6 +57,7 @@ Route::middleware(['auth'])->prefix('chat')->name('chat.')->group(function () {
     Route::get('/download/{attachment}', [App\Http\Controllers\ChatController::class, 'downloadAttachment'])->name('download-attachment');
     Route::post('/messages/{message}/edit', [App\Http\Controllers\ChatController::class, 'editMessage'])->name('edit-message');
     Route::post('/conversations/{conversation}/mark-read', [App\Http\Controllers\ChatController::class, 'markAsRead'])->name('mark-read');
+    Route::get('/entities', [App\Http\Controllers\ChatController::class, 'getEntities'])->name('entities');
 });
 
 Route::get('/client', [PublicClientController::class, 'create'])->name('client.register');
