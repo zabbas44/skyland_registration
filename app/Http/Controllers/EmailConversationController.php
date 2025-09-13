@@ -288,18 +288,63 @@ class EmailConversationController extends Controller
             if ($type === 'admin_to_client') {
                 // Send to client/vendor
                 $entity = $conversation->getEntity();
-                if ($entity && $entity->email) {
-                    Mail::to($entity->email)->send(new EmailConversationNotification($conversation, 'new_message'));
+                $email = $conversation->getEntityEmail();
+                
+                if ($entity && $email) {
+                    Log::info('Sending email notification to client/vendor', [
+                        'conversation_id' => $conversation->id,
+                        'recipient' => $email,
+                        'entity_name' => $conversation->getEntityName(),
+                        'subject' => $conversation->subject
+                    ]);
+                    
+                    Mail::to($email)->send(new EmailConversationNotification($conversation, 'new_message'));
+                    
+                    Log::info('Email notification sent successfully to client/vendor', [
+                        'conversation_id' => $conversation->id,
+                        'recipient' => $email
+                    ]);
+                } else {
+                    Log::warning('Cannot send email - no valid recipient found', [
+                        'conversation_id' => $conversation->id,
+                        'entity_exists' => $entity ? 'yes' : 'no',
+                        'email_exists' => $email ? 'yes' : 'no'
+                    ]);
                 }
             } elseif ($type === 'client_to_admin') {
                 // Send to admin
                 $adminUsers = User::where('is_admin', true)->get();
+                
+                if ($adminUsers->isEmpty()) {
+                    Log::warning('No admin users found for email notification', [
+                        'conversation_id' => $conversation->id
+                    ]);
+                    return;
+                }
+                
+                Log::info('Sending email notification to admins', [
+                    'conversation_id' => $conversation->id,
+                    'admin_count' => $adminUsers->count(),
+                    'admins' => $adminUsers->pluck('email')->toArray(),
+                    'subject' => $conversation->subject
+                ]);
+                
                 foreach ($adminUsers as $admin) {
                     Mail::to($admin->email)->send(new EmailConversationNotification($conversation, 'reply_received'));
                 }
+                
+                Log::info('Email notifications sent successfully to all admins', [
+                    'conversation_id' => $conversation->id,
+                    'admin_count' => $adminUsers->count()
+                ]);
             }
         } catch (\Exception $e) {
-            Log::error('Email notification failed: ' . $e->getMessage());
+            Log::error('Email notification failed', [
+                'conversation_id' => $conversation->id,
+                'type' => $type,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
             // Don't throw exception - email conversation should still work
         }
     }
