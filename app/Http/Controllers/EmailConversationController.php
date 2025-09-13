@@ -28,7 +28,7 @@ class EmailConversationController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->get();
             
-            return view('email-conversations.admin', compact('conversations'));
+            return view('email-conversations.admin', compact('conversations', 'user'));
         } else {
             // Client/Vendor sees their own conversations
             if ($user->isClient()) {
@@ -43,7 +43,7 @@ class EmailConversationController extends Controller
                 $conversations = collect();
             }
             
-            return view('email-conversations.client', compact('conversations'));
+            return view('email-conversations.client', compact('conversations', 'user'));
         }
     }
 
