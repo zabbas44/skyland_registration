@@ -88,11 +88,16 @@ class Client extends Model
         'iban',
         'swift_code',
         'created_source',
+        'status',
+        'status_reason',
+        'status_updated_at',
+        'status_updated_by',
     ];
 
     protected $casts = [
         'core_services' => 'array',
         'services_required' => 'array',
+        'status_updated_at' => 'datetime',
     ];
 
     /**
@@ -143,5 +148,63 @@ class Client extends Model
     public function isTradeLicenseRequired(): bool
     {
         return in_array($this->client_type, ['Corporate', 'Government', 'NGOs']);
+    }
+
+    /**
+     * Get the user who updated the status.
+     */
+    public function statusUpdatedBy()
+    {
+        return $this->belongsTo(User::class, 'status_updated_by');
+    }
+
+    /**
+     * Check if client is approved.
+     */
+    public function isApproved(): bool
+    {
+        return $this->status === 'approved';
+    }
+
+    /**
+     * Check if client is rejected.
+     */
+    public function isRejected(): bool
+    {
+        return $this->status === 'rejected';
+    }
+
+    /**
+     * Check if client is pending.
+     */
+    public function isPending(): bool
+    {
+        return $this->status === 'pending';
+    }
+
+    /**
+     * Get status display name.
+     */
+    public function getStatusDisplayAttribute(): string
+    {
+        return match($this->status) {
+            'pending' => 'Under Review',
+            'approved' => 'Approved',
+            'rejected' => 'Rejected',
+            default => 'Unknown'
+        };
+    }
+
+    /**
+     * Get status color class for UI.
+     */
+    public function getStatusColorAttribute(): string
+    {
+        return match($this->status) {
+            'pending' => 'yellow',
+            'approved' => 'green',
+            'rejected' => 'red',
+            default => 'gray'
+        };
     }
 }

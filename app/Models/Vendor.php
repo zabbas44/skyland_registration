@@ -52,12 +52,17 @@ class Vendor extends Model
         'worked_with_us_before',
         'has_legal_dispute',
         'created_source',
+        'status',
+        'status_reason',
+        'status_updated_at',
+        'status_updated_by',
     ];
 
     protected $casts = [
         'worked_with_us_before' => 'boolean',
         'has_legal_dispute' => 'boolean',
         'year_of_establishment' => 'integer',
+        'status_updated_at' => 'datetime',
     ];
 
     /**
@@ -92,5 +97,63 @@ class Vendor extends Model
     public function scopeByBusinessType($query, $type)
     {
         return $query->where('business_type', $type);
+    }
+
+    /**
+     * Get the user who updated the status.
+     */
+    public function statusUpdatedBy()
+    {
+        return $this->belongsTo(User::class, 'status_updated_by');
+    }
+
+    /**
+     * Check if vendor is approved.
+     */
+    public function isApproved(): bool
+    {
+        return $this->status === 'approved';
+    }
+
+    /**
+     * Check if vendor is rejected.
+     */
+    public function isRejected(): bool
+    {
+        return $this->status === 'rejected';
+    }
+
+    /**
+     * Check if vendor is pending.
+     */
+    public function isPending(): bool
+    {
+        return $this->status === 'pending';
+    }
+
+    /**
+     * Get status display name.
+     */
+    public function getStatusDisplayAttribute(): string
+    {
+        return match($this->status) {
+            'pending' => 'Under Review',
+            'approved' => 'Approved',
+            'rejected' => 'Rejected',
+            default => 'Unknown'
+        };
+    }
+
+    /**
+     * Get status color class for UI.
+     */
+    public function getStatusColorAttribute(): string
+    {
+        return match($this->status) {
+            'pending' => 'yellow',
+            'approved' => 'green',
+            'rejected' => 'red',
+            default => 'gray'
+        };
     }
 }
