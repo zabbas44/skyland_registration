@@ -316,7 +316,14 @@ class ChatController extends Controller
     {
         $user = Auth::user();
         
+        Log::info('getEntities called', [
+            'user_id' => $user->id,
+            'is_admin' => $user->isAdmin(),
+            'type' => $request->get('type')
+        ]);
+        
         if (!$user->isAdmin()) {
+            Log::warning('Non-admin user tried to access entities', ['user_id' => $user->id]);
             return response()->json(['error' => 'Unauthorized'], 403);
         }
         
@@ -324,12 +331,15 @@ class ChatController extends Controller
         
         if ($type === 'client') {
             $entities = Client::select('id', 'full_name', 'email', 'status')->get();
+            Log::info('Retrieved clients', ['count' => $entities->count()]);
             return response()->json($entities);
         } elseif ($type === 'vendor') {
             $entities = Vendor::select('id', 'company_name', 'contact_email', 'status')->get();
+            Log::info('Retrieved vendors', ['count' => $entities->count()]);
             return response()->json($entities);
         }
         
+        Log::error('Invalid type requested', ['type' => $type]);
         return response()->json(['error' => 'Invalid type'], 400);
     }
 

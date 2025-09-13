@@ -9,8 +9,24 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Compiled CSS -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <!-- CSS - Try Vite first, fallback to CDN -->
+    @if(file_exists(public_path('build/manifest.json')))
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @else
+        <!-- Fallback to CDN for development/servers without build assets -->
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        fontFamily: {
+                            sans: ['Inter', 'system-ui', 'sans-serif'],
+                        }
+                    }
+                }
+            }
+        </script>
+    @endif
     
     <!-- Custom Styles -->
     <style>
@@ -991,14 +1007,28 @@
             const entityType = document.getElementById('entityType');
             const entitySelect = document.getElementById('entitySelect');
             
+            if (!entityType || !entitySelect) {
+                console.error('Entity dropdown elements not found');
+                return;
+            }
+            
+            console.log('Setting up entity type change listener');
+            
             entityType.addEventListener('change', async function() {
+                console.log('Entity type changed to:', this.value);
+                
                 if (!this.value) {
                     entitySelect.disabled = true;
                     entitySelect.innerHTML = '<option value="">Select type first...</option>';
                     return;
                 }
                 
+                // Show loading state
+                entitySelect.disabled = true;
+                entitySelect.innerHTML = '<option value="">Loading...</option>';
+                
                 try {
+                    console.log('Fetching entities for type:', this.value);
                     const response = await fetch(`/chat/entities?type=${this.value}`, {
                         headers: {
                             'X-CSRF-TOKEN': csrfToken,
@@ -1006,23 +1036,33 @@
                         }
                     });
                     
+                    console.log('Response status:', response.status);
+                    
                     if (response.ok) {
                         const entities = await response.json();
+                        console.log('Received entities:', entities);
+                        
                         entitySelect.innerHTML = '<option value="">Choose...</option>';
                         
-                        entities.forEach(entity => {
-                            const name = this.value === 'client' ? entity.full_name : entity.company_name;
-                            entitySelect.innerHTML += `<option value="${entity.id}">${name} (${entity.status})</option>`;
-                        });
-                        
-                        entitySelect.disabled = false;
+                        if (entities && entities.length > 0) {
+                            entities.forEach(entity => {
+                                const name = this.value === 'client' ? entity.full_name : entity.company_name;
+                                const option = `<option value="${entity.id}">${name} (${entity.status})</option>`;
+                                entitySelect.innerHTML += option;
+                            });
+                            entitySelect.disabled = false;
+                        } else {
+                            entitySelect.innerHTML = '<option value="">No data available</option>';
+                        }
                     } else {
                         console.error('Failed to load entities:', response.statusText);
+                        const errorText = await response.text();
+                        console.error('Error response:', errorText);
                         entitySelect.innerHTML = '<option value="">Error loading data</option>';
                     }
                 } catch (error) {
                     console.error('Error loading entities:', error);
-                    entitySelect.innerHTML = '<option value="">Error loading data</option>';
+                    entitySelect.innerHTML = '<option value="">Network error</option>';
                 }
             });
         }
