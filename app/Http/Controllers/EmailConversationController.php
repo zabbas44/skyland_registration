@@ -126,8 +126,22 @@ class EmailConversationController extends Controller
     {
         $user = Auth::user();
         
+        Log::info('Reply method called', [
+            'conversation_id' => $conversation->id,
+            'user_id' => $user->id,
+            'user_type' => $user->user_type,
+            'client_id' => $user->client_id ?? null,
+            'supplier_id' => $user->supplier_id ?? null,
+            'conversation_client_id' => $conversation->client_id,
+            'conversation_vendor_id' => $conversation->vendor_id
+        ]);
+        
         // Check if user can reply to this conversation
         if (!$this->canUserAccessConversation($user, $conversation)) {
+            Log::error('User cannot access conversation', [
+                'user_id' => $user->id,
+                'conversation_id' => $conversation->id
+            ]);
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
@@ -170,8 +184,13 @@ class EmailConversationController extends Controller
             ]);
 
         } catch (\Exception $e) {
-            Log::error('Reply sending failed: ' . $e->getMessage());
-            return response()->json(['error' => 'Failed to send reply'], 500);
+            Log::error('Reply sending failed: ' . $e->getMessage(), [
+                'conversation_id' => $conversation->id,
+                'user_id' => $user->id,
+                'user_type' => $user->user_type,
+                'exception' => $e->getTraceAsString()
+            ]);
+            return response()->json(['error' => 'Failed to send reply: ' . $e->getMessage()], 500);
         }
     }
 

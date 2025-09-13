@@ -235,7 +235,7 @@
     </style>
 </head>
 <body class="min-h-screen bg-slate-900 py-8 px-4 sm:px-6 lg:px-8 page-3d-background">
-    <div class="max-w-5xl mx-auto">
+    <div class="max-w-3xl mx-auto">
         <!-- Header - Same style as registration forms -->
         <div class="flex items-center mb-8">
             <div class="w-16 h-16 flex items-center justify-center mr-4">
