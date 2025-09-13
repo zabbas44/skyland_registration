@@ -501,14 +501,7 @@
         <!-- Help Text -->
         <div class="mt-8 text-center">
             <p class="text-slate-300">
-                Need help with your application? 
-                 <a href="mailto:info@skylandconstruction.com" class="text-orange-400 hover:text-orange-300 underline">
-                    Email our team
-                </a>
-                 or call us at 
-                 <a href="tel:+97172435757" class="text-orange-400 hover:text-orange-300 underline">
-                    +971 7243 5757
-                </a>
+                Need help with your application? <a href="mailto:info@skylandconstruction.com" class="text-orange-400 hover:text-orange-300 underline">Email our team</a> or call us at <a href="tel:+97172435757" class="text-orange-400 hover:text-orange-300 underline">+971 7243 5757</a>
             </p>
         </div>
     </div>

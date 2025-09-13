@@ -1255,7 +1255,7 @@
                 <!-- Help Section -->
                 <div class="mt-6 text-center">
                     <p class="text-slate-400 text-sm">
-                        Need help? Email <a href="mailto:info@skylandconstruction.com" style="color: rgb(255,94,20);" onmouseover="this.style.color='rgb(255,120,50)'" onmouseout="this.style.color='rgb(255,94,20)'">info@skylandconstruction.com</a>
+                        Need help with your application? <a href="mailto:info@skylandconstruction.com" style="color: rgb(255,94,20);" onmouseover="this.style.color='rgb(255,120,50)'" onmouseout="this.style.color='rgb(255,94,20)'">Email our team</a> or call us at <a href="tel:+97172435757" style="color: rgb(255,94,20);" onmouseover="this.style.color='rgb(255,120,50)'" onmouseout="this.style.color='rgb(255,94,20)'">+971 7243 5757</a>
                     </p>
                 </div>
             </form>

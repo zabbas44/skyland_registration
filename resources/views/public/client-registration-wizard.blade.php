@@ -405,7 +405,7 @@
                 <!-- Help Section -->
                 <div class="mt-6 text-center">
                     <p class="text-slate-400 text-sm">
-                        Need help? Email <a href="mailto:info@skylandconstruction.com" class="text-teal-400 hover:text-teal-300">info@skylandconstruction.com</a>
+                        Need help with your application? <a href="mailto:info@skylandconstruction.com" class="text-orange-400 hover:text-orange-300">Email our team</a> or call us at <a href="tel:+97172435757" class="text-orange-400 hover:text-orange-300">+971 7243 5757</a>
                     </p>
                 </div>
             </form>

@@ -261,6 +261,13 @@
                             Next
                         </button>
                     </div>
+
+                    <!-- Help Text -->
+                    <div class="mt-6 text-center">
+                        <p class="text-slate-400 text-sm">
+                            Need help with your application? <a href="mailto:info@skylandconstruction.com" class="text-orange-400 hover:text-orange-300">Email our team</a> or call us at <a href="tel:+97172435757" class="text-orange-400 hover:text-orange-300">+971 7243 5757</a>
+                        </p>
+                    </div>
                 </div>
 
                 <!-- Step 2: Company Information -->
@@ -454,6 +461,13 @@
                             Next
                         </button>
                     </div>
+
+                    <!-- Help Text -->
+                    <div class="mt-6 text-center">
+                        <p class="text-slate-400 text-sm">
+                            Need help with your application? <a href="mailto:info@skylandconstruction.com" class="text-orange-400 hover:text-orange-300">Email our team</a> or call us at <a href="tel:+97172435757" class="text-orange-400 hover:text-orange-300">+971 7243 5757</a>
+                        </p>
+                    </div>
                 </div>
 
                 <!-- Step 3: Legal & Compliance -->
@@ -498,6 +512,13 @@
                         <button type="button" id="next-btn-3" class="px-6 py-3 text-white rounded-lg transition-colors duration-200" style="background-color: rgb(255,94,20);" onmouseover="this.style.backgroundColor='rgb(230,80,15)'" onmouseout="this.style.backgroundColor='rgb(255,94,20)'">
                             Next
                         </button>
+                    </div>
+
+                    <!-- Help Text -->
+                    <div class="mt-6 text-center">
+                        <p class="text-slate-400 text-sm">
+                            Need help with your application? <a href="mailto:info@skylandconstruction.com" class="text-orange-400 hover:text-orange-300">Email our team</a> or call us at <a href="tel:+97172435757" class="text-orange-400 hover:text-orange-300">+971 7243 5757</a>
+                        </p>
                     </div>
                 </div>
 
@@ -559,6 +580,13 @@
                         <button type="button" id="next-btn-4" class="px-6 py-3 text-white rounded-lg transition-colors duration-200" style="background-color: rgb(255,94,20);" onmouseover="this.style.backgroundColor='rgb(230,80,15)'" onmouseout="this.style.backgroundColor='rgb(255,94,20)'">
                             Next
                         </button>
+                    </div>
+
+                    <!-- Help Text -->
+                    <div class="mt-6 text-center">
+                        <p class="text-slate-400 text-sm">
+                            Need help with your application? <a href="mailto:info@skylandconstruction.com" class="text-orange-400 hover:text-orange-300">Email our team</a> or call us at <a href="tel:+97172435757" class="text-orange-400 hover:text-orange-300">+971 7243 5757</a>
+                        </p>
                     </div>
                 </div>
 
@@ -635,17 +663,15 @@
                             Submit Vendor Application
                         </button>
                     </div>
+
+                    <!-- Help Text -->
+                    <div class="mt-6 text-center">
+                        <p class="text-slate-400 text-sm">
+                            Need help with your application? <a href="mailto:info@skylandconstruction.com" class="text-orange-400 hover:text-orange-300">Email our team</a> or call us at <a href="tel:+97172435757" class="text-orange-400 hover:text-orange-300">+971 7243 5757</a>
+                        </p>
+                    </div>
                 </div>
             </form>
-        </div>
-        
-        <!-- Help Section -->
-        <div class="mt-8 text-center text-slate-400">
-            <p>Need help with your application? 
-                <a href="mailto:info@skylandconstruction.com" class="text-orange-400 hover:text-orange-300">Email our team</a> 
-                or call us at 
-                <a href="tel:+97172435757" class="text-orange-400 hover:text-orange-300">+971 7243 5757</a>
-            </p>
         </div>
     </div>
 </div>
