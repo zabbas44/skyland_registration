@@ -2226,8 +2226,30 @@ document.addEventListener('DOMContentLoaded', function() {
         submitBtn.textContent = 'Submitting...';
         submitBtn.disabled = true;
         
-        // Prepare form data
+        // Prepare form data (includes CSRF token from @csrf directive)
         const formData = new FormData(this);
+        
+        // Debug: Check if CSRF token is included in FormData
+        console.log('FormData entries:');
+        let tokenFoundInFormData = false;
+        for (let [key, value] of formData.entries()) {
+            if (key === '_token') {
+                console.log('CSRF token in FormData:', key, '=', value);
+                tokenFoundInFormData = true;
+            }
+        }
+        
+        // Fallback: If token not in FormData, add it manually
+        if (!tokenFoundInFormData) {
+            const metaToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+            const inputToken = document.querySelector('input[name="_token"]')?.value;
+            const csrfToken = metaToken || inputToken;
+            
+            console.log('Token not found in FormData, adding manually:', csrfToken);
+            if (csrfToken) {
+                formData.append('_token', csrfToken);
+            }
+        }
         
         // Send AJAX request
         fetch(this.action, {
@@ -2235,9 +2257,7 @@ document.addEventListener('DOMContentLoaded', function() {
             body: formData,
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
-                'Accept': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || 
-                               document.querySelector('input[name="_token"]')?.value
+                'Accept': 'application/json'
             }
         })
         .then(response => {
