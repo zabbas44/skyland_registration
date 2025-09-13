@@ -25,7 +25,8 @@ class PublicClientController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        try {
+            $validated = $request->validate([
             // Account Information (Step 1)
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:clients,email|max:255',
@@ -136,6 +137,7 @@ class PublicClientController extends Controller
         $client = Client::create($validated);
 
         // Send email notifications
+        $emailsSent = false;
         try {
             // Send notification to admin
             Mail::to('info@skylandconstruction.com') // Admin email for system notifications
@@ -144,14 +146,54 @@ class PublicClientController extends Controller
             // Send welcome email to client
             Mail::to($client->email)
                 ->send(new ClientWelcomeEmail($client));
+                
+            $emailsSent = true;
+            Log::info('Client registration emails sent successfully for client ID: ' . $client->id);
         } catch (\Exception $e) {
             // Log the error but don't fail the registration
             Log::error('Failed to send client registration emails: ' . $e->getMessage());
         }
 
-        // Redirect to thank you page
+        // Handle AJAX requests
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Thank you for your client registration! We will review your application and contact you soon.',
+                'client_id' => $client->id,
+                'emails_sent' => $emailsSent
+            ]);
+        }
+
+        // Redirect to thank you page for non-AJAX requests
         return redirect()->route('client.thank-you', ['id' => $client->id])
                          ->with('success', 'Thank you for your client registration! We will review your application and contact you soon.');
+                         
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Handle validation errors for AJAX requests
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Please correct the errors in your form.',
+                    'errors' => $e->errors()
+                ], 422);
+            }
+            
+            // Re-throw for non-AJAX requests (normal form handling)
+            throw $e;
+        } catch (\Exception $e) {
+            // Handle general errors
+            Log::error('Client registration error: ' . $e->getMessage());
+            
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'An error occurred while processing your registration. Please try again.'
+                ], 500);
+            }
+            
+            // Re-throw for non-AJAX requests
+            throw $e;
+        }
     }
 
     /**
