@@ -753,6 +753,8 @@
             messages.forEach(message => {
                 const messageElement = createMessageElement(message);
                 messagesList.appendChild(messageElement);
+                // Track the highest message ID for real-time updates
+                lastMessageId = Math.max(lastMessageId, message.id);
             });
             
             scrollToBottom();
@@ -1188,12 +1190,56 @@
             }
         }
         
-        // Real-time updates (simplified polling for now)
-        setInterval(() => {
-            if (currentConversationId) {
-                loadMessages(currentConversationId);
+        // Real-time updates (smart polling - only new messages)
+        let lastMessageId = 0;
+        let pollInterval;
+        
+        function startPolling() {
+            if (pollInterval) clearInterval(pollInterval);
+            
+            pollInterval = setInterval(async () => {
+                if (currentConversationId) {
+                    await checkForNewMessages();
+                }
+            }, 3000); // Poll every 3 seconds
+        }
+        
+        async function checkForNewMessages() {
+            try {
+                const response = await fetch(`/chat/conversations/${currentConversationId}/messages`, {
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    const newMessages = data.messages.filter(msg => msg.id > lastMessageId);
+                    
+                    if (newMessages.length > 0) {
+                        // Add only new messages instead of refreshing all
+                        newMessages.forEach(message => {
+                            const messageElement = createMessageElement(message);
+                            document.getElementById('messages-list').appendChild(messageElement);
+                            lastMessageId = Math.max(lastMessageId, message.id);
+                        });
+                        scrollToBottom();
+                        
+                        // Update conversation preview in sidebar
+                        if (newMessages.length > 0) {
+                            const lastMessage = newMessages[newMessages.length - 1];
+                            updateConversationPreview(currentConversationId, lastMessage);
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error checking for new messages:', error);
             }
-        }, 5000); // Poll every 5 seconds
+        }
+        
+        // Start polling when page loads
+        startPolling();
     </script>
 </body>
 </html>

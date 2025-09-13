@@ -33,10 +33,18 @@ class ChatController extends Controller
                 ->get();
         } else {
             // For clients/vendors, only show their own conversation if approved
-            $entityType = $user->isClient() ? 'client' : 'vendor';
-            $entityId = $user->isClient() ? $user->client_id : $user->supplier_id;
-            
-            $entity = $entityType === 'client' ? Client::find($entityId) : Vendor::find($entityId);
+            if ($user->isClient()) {
+                $entityType = 'client';
+                $entityId = $user->client_id;
+                $entity = Client::find($entityId);
+            } elseif ($user->isSupplier()) {
+                $entityType = 'vendor';
+                $entityId = $user->supplier_id;
+                $entity = Vendor::find($entityId);
+            } else {
+                // User is not linked to any entity
+                return view('chat.not-approved');
+            }
             
             if (!$entity || $entity->status !== 'approved') {
                 return view('chat.not-approved');
@@ -73,11 +81,9 @@ class ChatController extends Controller
         
         $messages = $conversation->messages()
             ->with(['sender', 'attachments'])
-            ->latest()
+            ->orderBy('created_at', 'asc')
             ->take(50)
-            ->get()
-            ->reverse()
-            ->values();
+            ->get();
         
         // Mark as read
         $userType = $user->isAdmin() ? 'admin' : 'client';
@@ -180,8 +186,13 @@ class ChatController extends Controller
         $recipientType = $user->isAdmin() ? 'client' : 'admin';
         $conversation->incrementUnreadCount($recipientType);
         
-        // Send email notification
-        $this->sendMessageNotification($conversation, $message);
+        // Send email notification (async - don't block chat)
+        try {
+            $this->sendMessageNotification($conversation, $message);
+        } catch (\Exception $e) {
+            // Log error but don't break chat functionality
+            Log::error('Email notification failed: ' . $e->getMessage());
+        }
         
         return response()->json([
             'success' => true,
@@ -198,8 +209,15 @@ class ChatController extends Controller
             return true;
         }
         
-        $entityType = $user->isClient() ? 'client' : 'vendor';
-        $entityId = $user->isClient() ? $user->client_id : $user->supplier_id;
+        if ($user->isClient() && $user->client_id) {
+            $entityType = 'client';
+            $entityId = $user->client_id;
+        } elseif ($user->isSupplier() && $user->supplier_id) {
+            $entityType = 'vendor';
+            $entityId = $user->supplier_id;
+        } else {
+            return false; // User not properly linked to entity
+        }
         
         return $conversation->entity_type === $entityType && $conversation->entity_id === $entityId;
     }
