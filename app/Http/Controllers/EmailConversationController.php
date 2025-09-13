@@ -233,21 +233,21 @@ class EmailConversationController extends Controller
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
-        $clients = Client::select('id', 'name', 'email', 'status')->get()->map(function ($client) {
+        $clients = Client::select('id', 'full_name', 'email', 'status')->get()->map(function ($client) {
             return [
                 'id' => $client->id,
-                'name' => $client->name,
+                'name' => $client->full_name,
                 'email' => $client->email,
                 'status' => $client->status,
                 'type' => 'client'
             ];
         });
 
-        $vendors = Vendor::select('id', 'name', 'email', 'status')->get()->map(function ($vendor) {
+        $vendors = Vendor::select('id', 'first_name', 'last_name', 'contact_email', 'status')->get()->map(function ($vendor) {
             return [
                 'id' => $vendor->id,
-                'name' => $vendor->name,
-                'email' => $vendor->email,
+                'name' => $vendor->first_name . ' ' . $vendor->last_name,
+                'email' => $vendor->contact_email,
                 'status' => $vendor->status,
                 'type' => 'vendor'
             ];

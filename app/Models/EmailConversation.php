@@ -72,7 +72,17 @@ class EmailConversation extends Model
     public function getEntityName()
     {
         $entity = $this->getEntity();
-        return $entity ? $entity->name : 'Unknown';
+        if (!$entity) {
+            return 'Unknown';
+        }
+        
+        if ($this->client_id) {
+            // Client entity
+            return $entity->full_name ?? 'Unknown Client';
+        } else {
+            // Vendor entity  
+            return ($entity->first_name . ' ' . $entity->last_name) ?? 'Unknown Vendor';
+        }
     }
 
     /**
@@ -81,7 +91,17 @@ class EmailConversation extends Model
     public function getEntityEmail()
     {
         $entity = $this->getEntity();
-        return $entity ? $entity->email : null;
+        if (!$entity) {
+            return null;
+        }
+        
+        if ($this->client_id) {
+            // Client entity
+            return $entity->email ?? null;
+        } else {
+            // Vendor entity
+            return $entity->contact_email ?? null;
+        }
     }
 
     /**
