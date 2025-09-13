@@ -8,22 +8,22 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
-use App\Models\Client;
+use App\Models\Vendor;
 
-class ClientStatusUpdate extends Mailable
+class VendorStatusUpdate extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $client;
+    public $vendor;
     public $status;
     public $reason;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(Client $client, string $status, ?string $reason = null)
+    public function __construct(Vendor $vendor, string $status, ?string $reason = null)
     {
-        $this->client = $client;
+        $this->vendor = $vendor;
         $this->status = $status;
         $this->reason = $reason;
     }
@@ -34,9 +34,9 @@ class ClientStatusUpdate extends Mailable
     public function envelope(): Envelope
     {
         $subject = match($this->status) {
-            'approved' => 'Great News! Your Registration Has Been Approved',
-            'rejected' => 'Update on Your Registration Application',
-            default => 'Registration Status Update'
+            'approved' => 'Congratulations! Your Supplier Registration Has Been Approved',
+            'rejected' => 'Update on Your Supplier Registration Application',
+            default => 'Supplier Registration Status Update'
         };
 
         return new Envelope(
@@ -50,7 +50,7 @@ class ClientStatusUpdate extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.client-status-update',
+            view: 'emails.vendor-status-update',
         );
     }
 

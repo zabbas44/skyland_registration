@@ -24,6 +24,104 @@
             </div>
         </div>
 
+        <!-- Status Card -->
+        <div class="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-6 mb-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-xl font-semibold text-white mb-2">Registration Status</h2>
+                    <div class="flex items-center space-x-3">
+                        <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium
+                            @if($supplier->status === 'approved') bg-green-500/20 text-green-400 border border-green-500/30
+                            @elseif($supplier->status === 'rejected') bg-red-500/20 text-red-400 border border-red-500/30
+                            @else bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 @endif">
+                            @if($supplier->status === 'approved')
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                {{ $supplier->status_display }}
+                            @elseif($supplier->status === 'rejected')
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                                {{ $supplier->status_display }}
+                            @else
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                {{ $supplier->status_display }}
+                            @endif
+                        </span>
+                        @if($supplier->status_updated_at)
+                            <span class="text-sm text-slate-400">
+                                Updated: {{ $supplier->status_updated_at->format('M j, Y g:i A') }}
+                            </span>
+                        @endif
+                    </div>
+                </div>
+                
+                @if($supplier->status === 'approved')
+                    <div class="text-right">
+                        <div class="text-green-400 text-2xl mb-1">🤝</div>
+                        <p class="text-sm text-green-400 font-medium">Welcome Partner!</p>
+                    </div>
+                @elseif($supplier->status === 'rejected')
+                    <div class="text-right">
+                        <div class="text-red-400 text-2xl mb-1">📞</div>
+                        <p class="text-sm text-red-400 font-medium">Please contact us</p>
+                    </div>
+                @else
+                    <div class="text-right">
+                        <div class="text-yellow-400 text-2xl mb-1">⏳</div>
+                        <p class="text-sm text-yellow-400 font-medium">Review in progress</p>
+                    </div>
+                @endif
+            </div>
+            
+            @if($supplier->status_reason)
+                <div class="mt-4 p-4 bg-white/5 rounded-lg border border-white/10">
+                    <h4 class="text-sm font-medium text-white mb-2">
+                        @if($supplier->status === 'approved') Admin Notes:
+                        @elseif($supplier->status === 'rejected') Reason for Status:
+                        @else Additional Information: @endif
+                    </h4>
+                    <p class="text-sm text-slate-300 leading-relaxed">{{ $supplier->status_reason }}</p>
+                </div>
+            @endif
+
+            @if($supplier->status === 'approved')
+                <div class="mt-4 p-4 bg-green-500/10 rounded-lg border border-green-500/20">
+                    <h4 class="text-sm font-medium text-green-400 mb-2">🚀 Partnership Benefits</h4>
+                    <ul class="text-sm text-slate-300 space-y-1">
+                        <li>• Access to our construction projects and tenders</li>
+                        <li>• Priority consideration for relevant projects</li>
+                        <li>• Streamlined procurement processes</li>
+                        <li>• Business growth opportunities</li>
+                    </ul>
+                </div>
+            @elseif($supplier->status === 'rejected')
+                <div class="mt-4 p-4 bg-red-500/10 rounded-lg border border-red-500/20">
+                    <h4 class="text-sm font-medium text-red-400 mb-2">📞 Procurement Team Contact</h4>
+                    <p class="text-sm text-slate-300 mb-2">Please reach out to discuss your application:</p>
+                    <ul class="text-sm text-slate-300 space-y-1">
+                        <li>• Email: procurement@skylandconstruction.com</li>
+                        <li>• Phone: +971 XX XXX XXXX</li>
+                        <li>• We're here to help with your application</li>
+                    </ul>
+                </div>
+            @else
+                <div class="mt-4 p-4 bg-yellow-500/10 rounded-lg border border-yellow-500/20">
+                    <h4 class="text-sm font-medium text-yellow-400 mb-2">⏳ What's Next?</h4>
+                    <p class="text-sm text-slate-300 mb-2">Our procurement team is reviewing your application:</p>
+                    <ul class="text-sm text-slate-300 space-y-1">
+                        <li>• We're verifying your business credentials</li>
+                        <li>• Reviewing submitted documentation</li>
+                        <li>• You'll receive email notification once complete</li>
+                        <li>• Typical review time: 2-3 business days</li>
+                    </ul>
+                </div>
+            @endif
+        </div>
+
         <!-- Registration Details Card -->
         <div class="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-6 mb-8">
             <h2 class="text-2xl font-semibold text-white mb-6">Registration Details</h2>

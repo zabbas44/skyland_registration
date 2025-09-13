@@ -181,14 +181,103 @@
                     <div>
                         <dt class="text-sm font-medium text-gray-500">Status</dt>
                         <dd class="mt-1">
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                Active
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                @if($vendor->status === 'approved') bg-green-100 text-green-800
+                                @elseif($vendor->status === 'rejected') bg-red-100 text-red-800
+                                @else bg-yellow-100 text-yellow-800 @endif">
+                                {{ $vendor->status_display }}
                             </span>
                         </dd>
                     </div>
+                    @if($vendor->status_updated_at)
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500">Status Updated</dt>
+                            <dd class="mt-1 text-sm text-gray-900">{{ $vendor->status_updated_at->format('F j, Y g:i A') }}</dd>
+                        </div>
+                    @endif
+                    @if($vendor->statusUpdatedBy)
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500">Updated By</dt>
+                            <dd class="mt-1 text-sm text-gray-900">{{ $vendor->statusUpdatedBy->name }}</dd>
+                        </div>
+                    @endif
+                    @if($vendor->status_reason)
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500">Reason</dt>
+                            <dd class="mt-1 text-sm text-gray-900">{{ $vendor->status_reason }}</dd>
+                        </div>
+                    @endif
                 </dl>
             </div>
         </div>
+
+        <!-- Approval Actions -->
+        @if($vendor->status === 'pending')
+            <div class="bg-white shadow rounded-lg">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h3 class="text-lg font-medium text-gray-900">Approval Actions</h3>
+                </div>
+                <div class="px-6 py-4 space-y-4">
+                    <div class="flex flex-col space-y-3">
+                        <button onclick="openApprovalModal('approve')" 
+                                class="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            Approve Vendor
+                        </button>
+                        
+                        <button onclick="openApprovalModal('reject')" 
+                                class="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                            Reject Vendor
+                        </button>
+                    </div>
+                </div>
+            </div>
+        @elseif($vendor->status === 'approved')
+            <div class="bg-white shadow rounded-lg">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h3 class="text-lg font-medium text-gray-900">Approval Actions</h3>
+                </div>
+                <div class="px-6 py-4">
+                    <div class="text-center">
+                        <div class="text-green-600 mb-2">
+                            <svg class="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                        </div>
+                        <p class="text-sm font-medium text-green-800">Vendor Approved</p>
+                        <button onclick="openApprovalModal('reject')" 
+                                class="mt-3 w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                            Change to Rejected
+                        </button>
+                    </div>
+                </div>
+            </div>
+        @elseif($vendor->status === 'rejected')
+            <div class="bg-white shadow rounded-lg">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h3 class="text-lg font-medium text-gray-900">Approval Actions</h3>
+                </div>
+                <div class="px-6 py-4">
+                    <div class="text-center">
+                        <div class="text-red-600 mb-2">
+                            <svg class="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </div>
+                        <p class="text-sm font-medium text-red-800">Vendor Rejected</p>
+                        <button onclick="openApprovalModal('approve')" 
+                                class="mt-3 w-full bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                            Change to Approved
+                        </button>
+                    </div>
+                </div>
+            </div>
+        @endif
 
         <!-- Recent Communications -->
         <div class="bg-white shadow rounded-lg">
@@ -260,6 +349,37 @@
         </div>
     </div>
 </div>
+
+<!-- Approval Modal -->
+<div id="approvalModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3">
+            <h3 id="approvalModalTitle" class="text-lg font-medium text-gray-900 text-center mb-4"></h3>
+            <form id="approvalForm" method="POST">
+                @csrf
+                <div class="mb-4">
+                    <label for="reason" class="block text-sm font-medium text-gray-700 mb-2">
+                        <span id="reasonLabel">Reason:</span>
+                    </label>
+                    <textarea name="reason" id="reason" rows="4" 
+                              class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="Enter reason for this action..."></textarea>
+                    <p class="text-xs text-gray-500 mt-1">This reason will be included in the email notification to the vendor.</p>
+                </div>
+                <div class="flex justify-end space-x-3">
+                    <button type="button" onclick="closeApprovalModal()" 
+                            class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 text-sm">
+                        Cancel
+                    </button>
+                    <button type="submit" id="approvalSubmitBtn"
+                            class="px-4 py-2 rounded-md text-white text-sm font-medium">
+                        Confirm
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @endsection
 
 @push('scripts')
@@ -277,6 +397,89 @@
         if (e.target === this) {
             closeContactModal();
         }
+    });
+
+    // Approval Modal Functions
+    function openApprovalModal(action) {
+        const modal = document.getElementById('approvalModal');
+        const form = document.getElementById('approvalForm');
+        const title = document.getElementById('approvalModalTitle');
+        const reasonLabel = document.getElementById('reasonLabel');
+        const submitBtn = document.getElementById('approvalSubmitBtn');
+        const reasonField = document.getElementById('reason');
+        
+        if (action === 'approve') {
+            title.textContent = 'Approve Vendor Registration';
+            reasonLabel.textContent = 'Approval Notes (Optional):';
+            submitBtn.textContent = 'Approve Vendor';
+            submitBtn.className = 'px-4 py-2 bg-green-600 hover:bg-green-700 rounded-md text-white text-sm font-medium';
+            form.action = '{{ route("admin.vendors.approve", $vendor) }}';
+            reasonField.required = false;
+            reasonField.placeholder = 'Add any notes about the approval (optional)...';
+        } else {
+            title.textContent = 'Reject Vendor Registration';
+            reasonLabel.textContent = 'Rejection Reason (Required):';
+            submitBtn.textContent = 'Reject Vendor';
+            submitBtn.className = 'px-4 py-2 bg-red-600 hover:bg-red-700 rounded-md text-white text-sm font-medium';
+            form.action = '{{ route("admin.vendors.reject", $vendor) }}';
+            reasonField.required = true;
+            reasonField.placeholder = 'Please provide a reason for rejection...';
+        }
+        
+        // Clear previous reason
+        reasonField.value = '';
+        
+        modal.classList.remove('hidden');
+    }
+
+    function closeApprovalModal() {
+        document.getElementById('approvalModal').classList.add('hidden');
+    }
+
+    // Close approval modal when clicking outside
+    document.getElementById('approvalModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeApprovalModal();
+        }
+    });
+
+    // Handle form submission with AJAX for better UX
+    document.getElementById('approvalForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const submitBtn = document.getElementById('approvalSubmitBtn');
+        const originalText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Processing...';
+        
+        const formData = new FormData(this);
+        
+        fetch(this.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Show success message and reload page
+                alert(data.message);
+                window.location.reload();
+            } else {
+                alert(data.message || 'An error occurred. Please try again.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+        });
     });
 </script>
 @endpush

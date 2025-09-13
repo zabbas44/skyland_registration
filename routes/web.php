@@ -32,6 +32,17 @@ Route::get('/csrf-token', function () {
 // Dashboard route - requires authentication
 Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->middleware('auth')->name('dashboard');
 
+// Admin approval routes - requires admin middleware
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    // Client approval routes
+    Route::post('/clients/{client}/approve', [App\Http\Controllers\Admin\ApprovalController::class, 'approveClient'])->name('clients.approve');
+    Route::post('/clients/{client}/reject', [App\Http\Controllers\Admin\ApprovalController::class, 'rejectClient'])->name('clients.reject');
+    
+    // Vendor approval routes
+    Route::post('/vendors/{vendor}/approve', [App\Http\Controllers\Admin\ApprovalController::class, 'approveVendor'])->name('vendors.approve');
+    Route::post('/vendors/{vendor}/reject', [App\Http\Controllers\Admin\ApprovalController::class, 'rejectVendor'])->name('vendors.reject');
+});
+
 Route::get('/client', [PublicClientController::class, 'create'])->name('client.register');
 Route::post('/client', [PublicClientController::class, 'store'])->name('client.store');
 Route::get('/client/thank-you/{id}', [PublicClientController::class, 'thankYou'])->name('client.thank-you');
