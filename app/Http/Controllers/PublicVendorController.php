@@ -70,6 +70,7 @@ class PublicVendorController extends Controller
                 'contact_email' => $validated['email'],
                 'contact_designation' => $validated['designation'],
                 'contact_mobile' => $validated['mobile_country_code'] . ' ' . $validated['mobile_number'],
+                'contact_company_name' => $validated['company_name'], // Required field - use company name
                 
                 // Split full_name into first_name and last_name for database compatibility
                 'first_name' => explode(' ', $validated['full_name'], 2)[0],
