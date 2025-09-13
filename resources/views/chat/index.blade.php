@@ -32,7 +32,7 @@
         }
         
         .glass-dark {
-            background: rgba(0, 0, 0, 0.25);
+            background: rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -49,13 +49,25 @@
         /* Message bubbles */
         .message-sent {
             background: linear-gradient(135deg, #4A90E2 0%, #50C878 100%);
-            color: white;
+            color: white !important;
+        }
+        
+        .message-sent * {
+            color: white !important;
         }
         
         .message-received {
-            background: rgba(255, 255, 255, 0.9);
-            color: #333;
+            background: rgba(255, 255, 255, 0.95);
+            color: #1f2937 !important;
             border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .message-received * {
+            color: #1f2937 !important;
+        }
+        
+        .message-received .opacity-70 {
+            color: #4b5563 !important;
         }
         
         /* Scrollbar styling */
@@ -156,6 +168,29 @@
             right: 0;
         }
         
+        /* Text readability improvements */
+        .chat-text-primary {
+            color: #1f2937 !important; /* Dark gray for primary text */
+        }
+        
+        .chat-text-secondary {
+            color: #4b5563 !important; /* Medium gray for secondary text */
+        }
+        
+        .chat-text-white {
+            color: #ffffff !important; /* White text for dark backgrounds */
+        }
+        
+        .sidebar-text-primary {
+            color: #f9fafb !important; /* Light text for sidebar */
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); /* Add shadow for better readability */
+        }
+        
+        .sidebar-text-secondary {
+            color: #d1d5db !important; /* Lighter gray for sidebar secondary text */
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        
         /* Typing indicator */
         .typing-indicator {
             display: flex;
@@ -227,8 +262,8 @@
                         <div class="online-indicator"></div>
                     </div>
                     <div>
-                        <div class="font-medium text-white">{{ $user->name }}</div>
-                        <div class="text-sm text-white/70">
+                        <div class="font-medium sidebar-text-primary">{{ $user->name }}</div>
+                        <div class="text-sm sidebar-text-secondary">
                             {{ $user->isAdmin() ? 'Administrator' : ($user->isClient() ? 'Client' : 'Vendor') }}
                         </div>
                     </div>
@@ -258,12 +293,12 @@
                         <!-- Conversation Info -->
                         <div class="flex-1 min-w-0">
                             <div class="flex items-center justify-between">
-                                <h3 class="font-medium text-white truncate">{{ $conversation->getDisplayTitle() }}</h3>
-                                <span class="text-xs text-white/60">
+                                <h3 class="font-medium sidebar-text-primary truncate">{{ $conversation->getDisplayTitle() }}</h3>
+                                <span class="text-xs sidebar-text-secondary">
                                     {{ $conversation->last_message_at ? $conversation->last_message_at->format('H:i') : '' }}
                                 </span>
                             </div>
-                            <p class="text-sm text-white/70 truncate">
+                            <p class="text-sm sidebar-text-secondary truncate">
                                 {{ $conversation->last_message_preview ?: 'No messages yet' }}
                             </p>
                         </div>
@@ -274,7 +309,7 @@
                     <svg class="w-16 h-16 mx-auto mb-4 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
                     </svg>
-                    <p>No conversations yet</p>
+                    <p class="sidebar-text-secondary">No conversations yet</p>
                     @if($user->isAdmin())
                     <button onclick="showNewChatModal()" class="mt-3 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
                         Start a conversation
@@ -301,8 +336,8 @@
                             <div class="online-indicator"></div>
                         </div>
                         <div>
-                            <h2 class="font-semibold text-white text-lg">{{ $activeConversation->getDisplayTitle() }}</h2>
-                            <p class="text-sm text-white/70">
+                            <h2 class="font-semibold sidebar-text-primary text-lg">{{ $activeConversation->getDisplayTitle() }}</h2>
+                            <p class="text-sm sidebar-text-secondary">
                                 {{ $activeConversation->entity_type === 'client' ? 'Client' : 'Vendor' }} • 
                                 {{ $activeConversation->isEntityApproved() ? 'Approved' : 'Pending Approval' }}
                             </p>
@@ -538,8 +573,8 @@
                     <svg class="w-24 h-24 mx-auto mb-6 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
                     </svg>
-                    <h3 class="text-xl font-semibold mb-2">Welcome to SKYLAND Chat</h3>
-                    <p class="text-lg">Select a conversation to start messaging</p>
+                    <h3 class="text-xl font-semibold mb-2 chat-text-primary">Welcome to SKYLAND Chat</h3>
+                    <p class="text-lg chat-text-secondary">Select a conversation to start messaging</p>
                     @if($user->isAdmin())
                     <button onclick="showNewChatModal()" class="mt-6 px-6 py-3 bg-gradient-to-r from-blue-500 to-green-500 text-white rounded-xl hover:from-blue-600 hover:to-green-600 transition-colors">
                         Start New Conversation
@@ -607,6 +642,14 @@
         
         // CSRF token setup
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        
+        // Ensure loadConversation is always available (fallback)
+        if (typeof window.loadConversation === 'undefined') {
+            window.loadConversation = function(conversationId) {
+                console.log('Fallback loadConversation called with ID:', conversationId);
+                window.location.href = `/chat?conversation=${conversationId}`;
+            };
+        }
         
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
@@ -707,6 +750,7 @@
         
         // Load conversation
         function loadConversation(conversationId) {
+            console.log('loadConversation called with ID:', conversationId);
             currentConversationId = conversationId;
             
             // Update active state in sidebar
@@ -1240,6 +1284,23 @@
         
         // Start polling when page loads
         startPolling();
+        
+        // Global function check for debugging
+        console.log('Functions defined:', {
+            loadConversation: typeof loadConversation,
+            loadMessages: typeof loadMessages,
+            displayMessages: typeof displayMessages
+        });
+        
+        // Make functions globally available for onclick handlers
+        window.loadConversation = loadConversation;
+        window.showNewChatModal = showNewChatModal;
+        window.hideNewChatModal = hideNewChatModal;
+        window.toggleEmojiPicker = toggleEmojiPicker;
+        window.insertEmoji = insertEmoji;
+        window.toggleFileUpload = toggleFileUpload;
+        window.testDropdown = testDropdown;
+        window.removeAttachedFile = removeAttachedFile;
     </script>
 </body>
 </html>
