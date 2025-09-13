@@ -24,6 +24,11 @@ Route::get('/supplier', [PublicVendorController::class, 'create'])->name('suppli
 Route::post('/supplier', [PublicVendorController::class, 'store'])->name('supplier.store');
 Route::get('/supplier/thank-you/{id}', [PublicVendorController::class, 'thankYou'])->name('supplier.thank-you');
 
+// CSRF token endpoint for AJAX requests
+Route::get('/csrf-token', function () {
+    return response()->json(['csrf_token' => csrf_token()]);
+});
+
 Route::get('/client', [PublicClientController::class, 'create'])->name('client.register');
 Route::post('/client', [PublicClientController::class, 'store'])->name('client.store');
 Route::get('/client/thank-you/{id}', [PublicClientController::class, 'thankYou'])->name('client.thank-you');

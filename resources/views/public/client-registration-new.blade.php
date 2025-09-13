@@ -2232,92 +2232,133 @@ document.addEventListener('DOMContentLoaded', function() {
         // Debug: Check if CSRF token is included in FormData
         console.log('FormData entries:');
         let tokenFoundInFormData = false;
+        let csrfTokenValue = null;
+        
         for (let [key, value] of formData.entries()) {
             if (key === '_token') {
                 console.log('CSRF token in FormData:', key, '=', value);
                 tokenFoundInFormData = true;
+                csrfTokenValue = value;
             }
         }
         
-        // Fallback: If token not in FormData, add it manually
-        if (!tokenFoundInFormData) {
+        // Get CSRF token for header (try multiple sources)
+        if (!csrfTokenValue) {
             const metaToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
             const inputToken = document.querySelector('input[name="_token"]')?.value;
-            const csrfToken = metaToken || inputToken;
+            csrfTokenValue = metaToken || inputToken;
             
-            console.log('Token not found in FormData, adding manually:', csrfToken);
-            if (csrfToken) {
-                formData.append('_token', csrfToken);
+            console.log('Token not found in FormData, using fallback:', csrfTokenValue);
+            if (csrfTokenValue) {
+                formData.append('_token', csrfTokenValue);
             }
         }
         
-        // Send AJAX request
-        fetch(this.action, {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'Accept': 'application/json'
+        console.log('Final CSRF token value:', csrfTokenValue);
+        
+        // Function to submit the form
+        const submitForm = (token) => {
+            console.log('Submitting with token:', token);
+            
+            // Ensure token is in FormData
+            if (token) {
+                formData.set('_token', token);
             }
-        })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(err => Promise.reject(err));
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Form submitted successfully:', data);
             
-            // Clear saved form data on successful submission
-            const STORAGE_KEY = 'client_registration_form_data';
-            const CURRENT_STEP_KEY = 'client_registration_current_step';
-            localStorage.removeItem(STORAGE_KEY);
-            localStorage.removeItem(CURRENT_STEP_KEY);
-            console.log('Form data cleared');
-            
-            // Show success modal
-            showSuccessModal();
-        })
-        .catch(error => {
-            console.error('Form submission error:', error);
-            
-            // Reset button state
-            submitBtn.textContent = originalText;
-            submitBtn.disabled = false;
-            
-            // Show error message
-            let errorMessage = 'There was an error submitting your registration. Please try again.';
-            if (error.errors) {
-                // Handle validation errors
-                const firstError = Object.values(error.errors)[0];
-                if (firstError && firstError[0]) {
-                    errorMessage = firstError[0];
+            // Send AJAX request with CSRF token in both FormData and header
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': token || ''
                 }
-            } else if (error.message) {
-                errorMessage = error.message;
-            }
-            
-            // Show error notification
-            const errorDiv = document.createElement('div');
-            errorDiv.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-4 rounded-lg shadow-lg z-50 max-w-md';
-            errorDiv.innerHTML = `
-                <div class="flex items-center">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                    <span>${errorMessage}</span>
-                </div>
-            `;
-            document.body.appendChild(errorDiv);
-            
-            // Remove error message after 5 seconds
-            setTimeout(() => {
-                if (errorDiv && errorDiv.parentNode) {
-                    errorDiv.remove();
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => Promise.reject(err));
                 }
-            }, 5000);
-        });
+                return response.json();
+            })
+            .then(data => {
+                console.log('Form submitted successfully:', data);
+                
+                // Clear saved form data on successful submission
+                const STORAGE_KEY = 'client_registration_form_data';
+                const CURRENT_STEP_KEY = 'client_registration_current_step';
+                localStorage.removeItem(STORAGE_KEY);
+                localStorage.removeItem(CURRENT_STEP_KEY);
+                console.log('Form data cleared');
+                
+                // Show success modal
+                showSuccessModal();
+            })
+            .catch(error => {
+                console.error('Form submission error:', error);
+                
+                // Reset button state
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+                
+                // Show error message
+                let errorMessage = 'There was an error submitting your registration. Please try again.';
+                if (error.errors) {
+                    // Handle validation errors
+                    const firstError = Object.values(error.errors)[0];
+                    if (firstError && firstError[0]) {
+                        errorMessage = firstError[0];
+                    }
+                } else if (error.message) {
+                    errorMessage = error.message;
+                }
+                
+                // Show error notification
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-4 rounded-lg shadow-lg z-50 max-w-md';
+                errorDiv.innerHTML = `
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span>${errorMessage}</span>
+                    </div>
+                `;
+                document.body.appendChild(errorDiv);
+                
+                // Remove error message after 5 seconds
+                setTimeout(() => {
+                    if (errorDiv && errorDiv.parentNode) {
+                        errorDiv.remove();
+                    }
+                }, 5000);
+            });
+        };
+        
+        // If token is invalid or missing, get a fresh one
+        if (!csrfTokenValue || csrfTokenValue.length < 10) {
+            console.log('CSRF token appears invalid, getting fresh token');
+            
+            fetch('/csrf-token', {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Got fresh CSRF token:', data.csrf_token);
+                submitForm(data.csrf_token);
+            })
+            .catch(error => {
+                console.log('Could not get fresh CSRF token, trying with existing token:', error);
+                submitForm(csrfTokenValue);
+            });
+        } else {
+            // Use existing token
+            submitForm(csrfTokenValue);
+        }
     });
 
 });
