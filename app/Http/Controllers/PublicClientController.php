@@ -81,56 +81,61 @@ class PublicClientController extends Controller
                 $validated['boq_path'] = $request->file('boq_step4')->store('client-documents', 'public');
             }
 
-            // Store the original name for both fields
-            $originalName = $validated['name'];
-            
             // Map form fields to database columns for compatibility
-            $validated['full_name'] = $originalName;
-            $validated['mobile'] = $validated['mobile_country_code'] . ' ' . $validated['phone'];
-            $validated['landline'] = !empty($validated['landline']) ? $validated['landline_country_code'] . ' ' . $validated['landline'] : null;
-            $validated['email'] = $validated['client_email']; // Use client_email as the main email
-            $validated['address'] = $validated['street_address'] . ', ' . $validated['emirate'] . ', ' . $validated['country'];
-            $validated['emirate'] = $validated['emirate'];
-            $validated['country'] = $validated['country'];
-            $validated['website'] = $validated['website'];
-            
-            // Map client type to database enum values
-            $clientTypeMapping = [
-                'individual' => 'Individual',
-                'company' => 'Corporate',
-                'government' => 'Government',
-                'developer' => 'Corporate', // Map developer to Corporate
-                'consultant' => 'Corporate' // Map consultant to Corporate
+            $clientData = [
+                // Basic fields that match database columns
+                'full_name' => $validated['name'], // Map 'name' to 'full_name'
+                'email' => $validated['client_email'], // Use client_email as the main email
+                'mobile' => $validated['mobile_country_code'] . ' ' . $validated['phone'],
+                'office_phone' => !empty($validated['landline']) ? $validated['landline_country_code'] . ' ' . $validated['landline'] : null,
+                'address' => $validated['street_address'] . ', ' . $validated['emirate'] . ', ' . $validated['country'],
+                'website' => $validated['website'],
+                'company_name' => $validated['company_name'],
+                'project_type' => $validated['project_type'],
+                'service_needed' => $validated['service_needed'],
+                'estimated_budget' => $validated['estimated_budget'],
+                'project_brief' => $validated['project_brief'],
+                
+                // Map client type to database enum values
+                'client_type' => match($validated['client_type']) {
+                    'individual' => 'Individual',
+                    'company' => 'Corporate',
+                    'government' => 'Government',
+                    'developer' => 'Corporate',
+                    'consultant' => 'Corporate',
+                    default => 'Individual'
+                },
+                
+                // Required fields with default values for database compatibility
+                'primary_contact_person' => $validated['name'],
+                'official_email' => $validated['client_email'],
+                'contact_mobile' => $validated['mobile_country_code'] . ' ' . $validated['phone'],
+                'physical_address' => $validated['street_address'] . ', ' . $validated['emirate'] . ', ' . $validated['country'],
+                'services_required' => json_encode([$validated['service_needed']]),
+                'selection_reason' => $validated['project_brief'],
+                'preferred_payment_method' => 'Bank Transfer',
+                
+                // Add file paths if uploaded
+                'site_plans_path' => $validated['trade_license_path'] ?? null,
+                'additional_documents_path' => $validated['vat_certificate_path'] ?? null,
             ];
-            $validated['client_type'] = $clientTypeMapping[$validated['client_type']] ?? 'Individual';
             
-            // Add required fields with default values for database compatibility
-            // Note: $validated['name'] already contains the form input, no need to reassign
-            $validated['primary_contact_person'] = $validated['full_name']; // Use the person's name as primary contact
-            $validated['official_email'] = $validated['email']; // Use same email as official email
-            $validated['contact_mobile'] = $validated['mobile']; // Use same mobile as contact mobile
-            $validated['physical_address'] = $validated['address']; // Use same address as physical address
-            $validated['services_required'] = json_encode([$validated['service_needed']]); // Convert to JSON array
-            $validated['selection_reason'] = $validated['project_brief']; // Use project brief as selection reason
-            $validated['preferred_payment_method'] = 'Bank Transfer'; // Default payment method
-            
-            // Remove form field names that don't match database columns
-            unset(
-                $validated['mobile_country_code'],
-                $validated['phone'], 
-                $validated['landline_country_code'],
-                $validated['landline'],
-                $validated['client_email'],
-                $validated['street_address'],
-                $validated['password_confirmation'],
-                $validated['trade_license_step4'],
-                $validated['vat_certificate_step4'],
-                $validated['drawings_step4'],
-                $validated['boq_step4']
-            );
+            // Add file paths to clientData if they exist
+            if (isset($validated['trade_license_path'])) {
+                $clientData['site_plans_path'] = $validated['trade_license_path'];
+            }
+            if (isset($validated['vat_certificate_path'])) {
+                $clientData['additional_documents_path'] = $validated['vat_certificate_path'];
+            }
+            if (isset($validated['drawings_path'])) {
+                $clientData['site_plans_path'] = $validated['drawings_path']; // Use drawings as site plans
+            }
+            if (isset($validated['boq_path'])) {
+                $clientData['additional_documents_path'] = $validated['boq_path']; // Use BOQ as additional documents
+            }
 
             // Create the client
-            $client = Client::create($validated);
+            $client = Client::create($clientData);
 
             // Send email notifications
             $emailsSent = false;
