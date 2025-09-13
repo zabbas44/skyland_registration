@@ -130,9 +130,7 @@ class PublicVendorController extends Controller
             // Create the vendor
             $vendor = Vendor::create($vendorData);
 
-            // Create user account for vendor (temporarily disabled until migration runs on production)
-            // TODO: Enable after running migration on production server
-            /*
+            // Create user account for vendor
             $user = User::create([
                 'name' => $validated['full_name'],
                 'email' => $validated['email'],
@@ -141,7 +139,6 @@ class PublicVendorController extends Controller
                 'supplier_id' => $vendor->id,
                 'is_admin' => false,
             ]);
-            */
 
             // Send email notifications
             $emailsSent = false;

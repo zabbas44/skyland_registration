@@ -33,15 +33,22 @@ class LoginController extends Controller
         if (Auth::attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
 
+            $user = auth()->user();
+
             // Check if user is admin, redirect to admin dashboard
-            if (auth()->user()->is_admin) {
+            if ($user->isAdmin()) {
                 return redirect()->intended('/admin/dashboard');
             }
 
-            // For non-admin users, logout and show error
+            // Check if user is client or supplier, redirect to dashboard
+            if ($user->isClient() || $user->isSupplier()) {
+                return redirect()->intended('/dashboard');
+            }
+
+            // For unknown user types, logout and show error
             Auth::logout();
             return back()->withErrors([
-                'email' => 'Access denied. Admin privileges required.',
+                'email' => 'Unable to determine account type. Please contact support.',
             ]);
         }
 
