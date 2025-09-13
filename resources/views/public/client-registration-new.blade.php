@@ -24,8 +24,8 @@
                     <div class="flex items-center step-indicator" data-step="1">
                         <div class="w-8 h-8 step-circle rounded-full flex items-center justify-center text-white text-sm font-semibold transition-all duration-300" style="background-color: rgb(255,94,20);">1</div>
                         <span class="ml-2 step-label text-white font-medium">Account</span>
-                    </div>
-                    
+            </div>
+
                     <!-- Connector Line 1 -->
                     <div class="flex-1 h-1 step-connector bg-slate-600 mx-2 transition-all duration-500" data-connector="1"></div>
                     
@@ -90,7 +90,7 @@
                 <div class="hidden">
                     <label for="website">Do not fill this field</label>
                     <input type="text" name="website" id="website" value="" class="w-full">
-                </div>
+                        </div>
 
                 <!-- Step 1: Account -->
                 <div class="step-content active" data-step="1">
@@ -111,7 +111,7 @@
                                 @error('name')
                                     <p class="mt-2 text-sm text-red-400">{{ $message }}</p>
                                 @enderror
-                            </div>
+                    </div>
 
                             <!-- Email -->
                             <div>
@@ -178,68 +178,68 @@
                     
                     <div class="space-y-6">
                         <!-- Row 1: Client Type and Company Name -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <!-- Client Type -->
-                            <div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Client Type -->
+                        <div>
                                 <label for="client_type" class="block text-sm font-medium text-slate-300 mb-2">
-                                    Client Type *
-                                </label>
-                                <select name="client_type" id="client_type" required
+                                Client Type *
+                            </label>
+                            <select name="client_type" id="client_type" required
                                         class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 transition-all duration-200 @error('client_type') border-red-400 @enderror" style="--tw-ring-color: rgb(255,94,20); --tw-border-opacity: 1;" onfocus="this.style.borderColor='rgb(255,94,20)'" onblur="this.style.borderColor='rgb(71,85,105)'">
-                                    <option value="">Select Client Type</option>
-                                    <option value="individual" {{ old('client_type') === 'individual' ? 'selected' : '' }}>Individual</option>
-                                    <option value="company" {{ old('client_type') === 'company' ? 'selected' : '' }}>Company</option>
-                                    <option value="government" {{ old('client_type') === 'government' ? 'selected' : '' }}>Government</option>
-                                    <option value="developer" {{ old('client_type') === 'developer' ? 'selected' : '' }}>Developer</option>
-                                    <option value="consultant" {{ old('client_type') === 'consultant' ? 'selected' : '' }}>Consultant</option>
-                                </select>
-                                @error('client_type')
-                                    <p class="mt-2 text-sm text-red-400">{{ $message }}</p>
-                                @enderror
-                            </div>
+                                <option value="">Select Client Type</option>
+                                <option value="individual" {{ old('client_type') === 'individual' ? 'selected' : '' }}>Individual</option>
+                                <option value="company" {{ old('client_type') === 'company' ? 'selected' : '' }}>Company</option>
+                                <option value="government" {{ old('client_type') === 'government' ? 'selected' : '' }}>Government</option>
+                                <option value="developer" {{ old('client_type') === 'developer' ? 'selected' : '' }}>Developer</option>
+                                <option value="consultant" {{ old('client_type') === 'consultant' ? 'selected' : '' }}>Consultant</option>
+                            </select>
+                            @error('client_type')
+                                <p class="mt-2 text-sm text-red-400">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-                            <!-- Company Name -->
-                            <div>
+                        <!-- Company Name -->
+                        <div>
                                 <label for="company_name" class="block text-sm font-medium text-slate-300 mb-2">
-                                    Company Name *
-                                </label>
-                                <input type="text" name="company_name" id="company_name" required
-                                       value="{{ old('company_name') }}"
+                                Company Name *
+                            </label>
+                            <input type="text" name="company_name" id="company_name" required
+                                   value="{{ old('company_name') }}"
                                        class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 transition-all duration-200 @error('company_name') border-red-400 @enderror" style="--tw-ring-color: rgb(255,94,20); --tw-border-opacity: 1;" onfocus="this.style.borderColor='rgb(255,94,20)'" onblur="this.style.borderColor='rgb(71,85,105)'">
-                                @error('company_name')
-                                    <p class="mt-2 text-sm text-red-400">{{ $message }}</p>
-                                @enderror
+                            @error('company_name')
+                                <p class="mt-2 text-sm text-red-400">{{ $message }}</p>
+                            @enderror
                             </div>
                         </div>
 
                         <!-- Row 2: Email and Website -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <!-- Email -->
-                            <div>
+                        <div>
                                 <label for="client_email" class="block text-sm font-medium text-slate-300 mb-2">
                                     Email Address *
-                                </label>
+                            </label>
                                 <input type="email" name="client_email" id="client_email" required
                                        value="{{ old('client_email') }}"
                                        placeholder="client@example.com"
                                        class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 transition-all duration-200 @error('client_email') border-red-400 @enderror" style="--tw-ring-color: rgb(255,94,20); --tw-border-opacity: 1;" onfocus="this.style.borderColor='rgb(255,94,20)'" onblur="this.style.borderColor='rgb(71,85,105)'">
                                 @error('client_email')
-                                    <p class="mt-2 text-sm text-red-400">{{ $message }}</p>
-                                @enderror
-                            </div>
+                                <p class="mt-2 text-sm text-red-400">{{ $message }}</p>
+                            @enderror
+                        </div>
 
                             <!-- Website -->
-                            <div>
+                        <div>
                                 <label for="website" class="block text-sm font-medium text-slate-300 mb-2">
                                     Website
-                                </label>
+                            </label>
                                 <input type="url" name="website" id="website"
                                        value="{{ old('website') }}"
                                        placeholder="https://example.com"
                                        class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 transition-all duration-200 @error('website') border-red-400 @enderror" style="--tw-ring-color: rgb(255,94,20); --tw-border-opacity: 1;" onfocus="this.style.borderColor='rgb(255,94,20)'" onblur="this.style.borderColor='rgb(71,85,105)'">
                                 @error('website')
-                                    <p class="mt-2 text-sm text-red-400">{{ $message }}</p>
-                                @enderror
+                                <p class="mt-2 text-sm text-red-400">{{ $message }}</p>
+                            @enderror
                             </div>
                         </div>
 
@@ -251,21 +251,21 @@
                             <div>
                                 <label for="street_address" class="block text-sm font-medium text-slate-300 mb-2">
                                     Street Address *
-                                </label>
+                            </label>
                                 <textarea name="street_address" id="street_address" rows="2" required
                                           placeholder="Building name, street name, area, city"
                                           class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 transition-all duration-200 resize-none @error('street_address') border-red-400 @enderror" style="--tw-ring-color: rgb(255,94,20); --tw-border-opacity: 1;" onfocus="this.style.borderColor='rgb(255,94,20)'" onblur="this.style.borderColor='rgb(71,85,105)'">{{ old('street_address') }}</textarea>
                                 @error('street_address')
-                                    <p class="mt-2 text-sm text-red-400">{{ $message }}</p>
-                                @enderror
-                            </div>
+                                <p class="mt-2 text-sm text-red-400">{{ $message }}</p>
+                            @enderror
+                </div>
 
                             <!-- Emirates and Country -->
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
                                     <label for="emirate" class="block text-sm font-medium text-slate-300 mb-2">
                                         Emirate *
-                                    </label>
+                            </label>
                                     <select name="emirate" id="emirate" required
                                             class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 transition-all duration-200 @error('emirate') border-red-400 @enderror" style="--tw-ring-color: rgb(255,94,20); --tw-border-opacity: 1;" onfocus="this.style.borderColor='rgb(255,94,20)'" onblur="this.style.borderColor='rgb(71,85,105)'">
                                         <option value="" class="bg-slate-700">Select Emirate</option>
@@ -276,23 +276,23 @@
                                         <option value="Umm Al Quwain" class="bg-slate-700" {{ old('emirate') == 'Umm Al Quwain' ? 'selected' : '' }}>Umm Al Quwain</option>
                                         <option value="Ras Al Khaimah" class="bg-slate-700" {{ old('emirate') == 'Ras Al Khaimah' ? 'selected' : '' }}>Ras Al Khaimah</option>
                                         <option value="Fujairah" class="bg-slate-700" {{ old('emirate') == 'Fujairah' ? 'selected' : '' }}>Fujairah</option>
-                                    </select>
+                            </select>
                                     @error('emirate')
-                                        <p class="mt-2 text-sm text-red-400">{{ $message }}</p>
-                                    @enderror
-                                </div>
+                                <p class="mt-2 text-sm text-red-400">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-                                <div>
+                        <div>
                                     <label for="country" class="block text-sm font-medium text-slate-300 mb-2">
                                         Country *
-                                    </label>
+                            </label>
                                     <input type="text" name="country" id="country" required
                                            value="{{ old('country', 'United Arab Emirates') }}"
                                            placeholder="United Arab Emirates"
                                            class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 transition-all duration-200 @error('country') border-red-400 @enderror" style="--tw-ring-color: rgb(255,94,20); --tw-border-opacity: 1;" onfocus="this.style.borderColor='rgb(255,94,20)'" onblur="this.style.borderColor='rgb(71,85,105)'">
                                     @error('country')
-                                        <p class="mt-2 text-sm text-red-400">{{ $message }}</p>
-                                    @enderror
+                                <p class="mt-2 text-sm text-red-400">{{ $message }}</p>
+                            @enderror
                                 </div>
                             </div>
                         </div>
@@ -303,7 +303,7 @@
                             <div>
                                 <label for="phone" class="block text-sm font-medium text-slate-300 mb-2">
                                     Mobile Number *
-                                </label>
+                            </label>
                                 <div class="flex">
                                     <select name="mobile_country_code" class="px-3 py-3 bg-slate-700 border border-slate-600 rounded-l-lg text-white focus:outline-none focus:ring-2 transition-all duration-200 w-24 text-sm appearance-none bg-no-repeat bg-right" style="--tw-ring-color: rgb(255,94,20); --tw-border-opacity: 1; background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 4 5\"><path fill=\"%23ffffff\" d=\"m0 0 2 2 2-2z\"/></svg>'); background-position: right 4px center; background-size: 10px;" onfocus="this.style.borderColor='rgb(255,94,20)'" onblur="this.style.borderColor='rgb(71,85,105)'">
                                         <option value="+971" {{ old('mobile_country_code', '+971') == '+971' ? 'selected' : '' }}>🇦🇪 +971</option>
@@ -542,16 +542,16 @@
                                         <option value="+967" {{ old('mobile_country_code') == '+967' ? 'selected' : '' }}>🇾🇪 +967</option>
                                         <option value="+260" {{ old('mobile_country_code') == '+260' ? 'selected' : '' }}>🇿🇲 +260</option>
                                         <option value="+263" {{ old('mobile_country_code') == '+263' ? 'selected' : '' }}>🇿🇼 +263</option>
-                                    </select>
+                            </select>
                                     <input type="tel" name="phone" id="phone" required
                                            value="{{ old('phone') }}"
                                            placeholder="50 123 4567"
                                            class="flex-1 px-4 py-3 bg-slate-700 border border-slate-600 border-l-0 rounded-r-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 transition-all duration-200 @error('phone') border-red-400 @enderror" style="--tw-ring-color: rgb(255,94,20); --tw-border-opacity: 1;" onfocus="this.style.borderColor='rgb(255,94,20)'" onblur="this.style.borderColor='rgb(71,85,105)'">
                                 </div>
                                 @error('phone')
-                                    <p class="mt-2 text-sm text-red-400">{{ $message }}</p>
-                                @enderror
-                            </div>
+                                <p class="mt-2 text-sm text-red-400">{{ $message }}</p>
+                            @enderror
+                        </div>
 
                             <!-- Landline Number -->
                             <div>
@@ -805,11 +805,11 @@
                                 @error('landline')
                                     <p class="mt-2 text-sm text-red-400">{{ $message }}</p>
                                 @enderror
-                            </div>
-                        </div>
-
                     </div>
                 </div>
+
+                        </div>
+                    </div>
 
                 <!-- Step 3: Project -->
                 <div class="step-content" data-step="3">
@@ -817,12 +817,12 @@
                     
                     <div class="space-y-6">
                         <!-- 1st Row: Project Type and Project Title -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <!-- Project Type -->
-                            <div>
+                        <div>
                                 <label for="project_type" class="block text-sm font-medium text-slate-300 mb-2">
                                     Project Type *
-                                </label>
+                            </label>
                                 <select name="project_type" id="project_type" required
                                         class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 transition-all duration-200 @error('project_type') border-red-400 @enderror" style="--tw-ring-color: rgb(255,94,20); --tw-border-opacity: 1;" onfocus="this.style.borderColor='rgb(255,94,20)'" onblur="this.style.borderColor='rgb(71,85,105)'">
                                     <option value="">Select Project Type</option>
@@ -834,32 +834,32 @@
                                     <option value="others" {{ old('project_type') == 'others' ? 'selected' : '' }}>Others</option>
                                 </select>
                                 @error('project_type')
-                                    <p class="mt-2 text-sm text-red-400">{{ $message }}</p>
-                                @enderror
-                            </div>
+                                <p class="mt-2 text-sm text-red-400">{{ $message }}</p>
+                            @enderror
+                        </div>
 
                             <!-- Project Title -->
-                            <div>
+                        <div>
                                 <label for="project_title" class="block text-sm font-medium text-slate-300 mb-2">
                                     Project Title *
-                                </label>
+                            </label>
                                 <input type="text" name="project_title" id="project_title" required
                                        value="{{ old('project_title') }}"
                                        placeholder="Enter project title"
                                        class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 transition-all duration-200 @error('project_title') border-red-400 @enderror" style="--tw-ring-color: rgb(255,94,20); --tw-border-opacity: 1;" onfocus="this.style.borderColor='rgb(255,94,20)'" onblur="this.style.borderColor='rgb(71,85,105)'">
                                 @error('project_title')
-                                    <p class="mt-2 text-sm text-red-400">{{ $message }}</p>
-                                @enderror
+                                <p class="mt-2 text-sm text-red-400">{{ $message }}</p>
+                            @enderror
                             </div>
                         </div>
 
                         <!-- 2nd Row: Service Needed and Timeline -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <!-- Service Needed -->
-                            <div>
+                        <div>
                                 <label for="service_needed" class="block text-sm font-medium text-slate-300 mb-2">
                                     Service Needed *
-                                </label>
+                            </label>
                                 <select name="service_needed" id="service_needed" required
                                         class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 transition-all duration-200 @error('service_needed') border-red-400 @enderror" style="--tw-ring-color: rgb(255,94,20); --tw-border-opacity: 1;" onfocus="this.style.borderColor='rgb(255,94,20)'" onblur="this.style.borderColor='rgb(71,85,105)'">
                                     <option value="">Select Service Needed</option>
@@ -869,17 +869,17 @@
                                     <option value="interior_joinery" {{ old('service_needed') == 'interior_joinery' ? 'selected' : '' }}>Interior and Joinery</option>
                                     <option value="landscaping" {{ old('service_needed') == 'landscaping' ? 'selected' : '' }}>Landscaping</option>
                                     <option value="maintenance_amc" {{ old('service_needed') == 'maintenance_amc' ? 'selected' : '' }}>Maintenance AMC</option>
-                                </select>
+                            </select>
                                 @error('service_needed')
-                                    <p class="mt-2 text-sm text-red-400">{{ $message }}</p>
-                                @enderror
-                            </div>
+                                <p class="mt-2 text-sm text-red-400">{{ $message }}</p>
+                            @enderror
+                        </div>
 
                             <!-- Timeline -->
-                            <div>
+                        <div>
                                 <label for="timeline" class="block text-sm font-medium text-slate-300 mb-2">
                                     Timeline *
-                                </label>
+                            </label>
                                 <select name="timeline" id="timeline" required
                                         class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 transition-all duration-200 @error('timeline') border-red-400 @enderror" style="--tw-ring-color: rgb(255,94,20); --tw-border-opacity: 1;" onfocus="this.style.borderColor='rgb(255,94,20)'" onblur="this.style.borderColor='rgb(71,85,105)'">
                                     <option value="">Select Timeline</option>
@@ -891,18 +891,18 @@
                                     <option value="flexible" {{ old('timeline') == 'flexible' ? 'selected' : '' }}>Flexible</option>
                                 </select>
                                 @error('timeline')
-                                    <p class="mt-2 text-sm text-red-400">{{ $message }}</p>
-                                @enderror
-                            </div>
-                        </div>
+                                <p class="mt-2 text-sm text-red-400">{{ $message }}</p>
+                            @enderror
+                    </div>
+                </div>
 
                         <!-- 3rd Row: Estimated Budget and Project Location -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <!-- Estimated Budget -->
-                            <div>
+                        <div>
                                 <label for="estimated_budget" class="block text-sm font-medium text-slate-300 mb-2">
                                     Estimated Budget *
-                                </label>
+                            </label>
                                 <select name="estimated_budget" id="estimated_budget" required
                                         class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 transition-all duration-200 @error('estimated_budget') border-red-400 @enderror" style="--tw-ring-color: rgb(255,94,20); --tw-border-opacity: 1;" onfocus="this.style.borderColor='rgb(255,94,20)'" onblur="this.style.borderColor='rgb(71,85,105)'">
                                     <option value="">Select Budget Range</option>
@@ -915,22 +915,22 @@
                                     <option value="over_5m" {{ old('estimated_budget') == 'over_5m' ? 'selected' : '' }}>Over AED 5,000,000</option>
                                 </select>
                                 @error('estimated_budget')
-                                    <p class="mt-2 text-sm text-red-400">{{ $message }}</p>
-                                @enderror
-                            </div>
+                                <p class="mt-2 text-sm text-red-400">{{ $message }}</p>
+                            @enderror
+                        </div>
 
                             <!-- Project Location -->
-                            <div>
+                        <div>
                                 <label for="project_location" class="block text-sm font-medium text-slate-300 mb-2">
                                     Project Location *
-                                </label>
+                            </label>
                                 <input type="text" name="project_location" id="project_location" required
                                        value="{{ old('project_location') }}"
                                        placeholder="Enter project location"
                                        class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 transition-all duration-200 @error('project_location') border-red-400 @enderror" style="--tw-ring-color: rgb(255,94,20); --tw-border-opacity: 1;" onfocus="this.style.borderColor='rgb(255,94,20)'" onblur="this.style.borderColor='rgb(71,85,105)'">
                                 @error('project_location')
-                                    <p class="mt-2 text-sm text-red-400">{{ $message }}</p>
-                                @enderror
+                                <p class="mt-2 text-sm text-red-400">{{ $message }}</p>
+                            @enderror
                             </div>
                         </div>
 
@@ -968,7 +968,7 @@
                                 @error('trade_license_step4')
                                     <p class="mt-2 text-sm text-red-400">{{ $message }}</p>
                                 @enderror
-                            </div>
+                        </div>
 
                             <!-- VAT Certificate -->
                             <div>
@@ -982,34 +982,34 @@
                                     <p class="mt-2 text-sm text-red-400">{{ $message }}</p>
                                 @enderror
                             </div>
-                        </div>
+                    </div>
 
                         <!-- 2nd Row: Drawings and BOQ -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <!-- Drawings -->
-                            <div>
+                        <div>
                                 <label for="drawings_step4" class="block text-sm font-medium text-slate-300 mb-2">
                                     Drawings
-                                </label>
+                            </label>
                                 <input type="file" name="drawings_step4" id="drawings_step4" accept=".pdf,.jpg,.jpeg,.png,.dwg"
                                        class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 transition-all duration-200 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:text-white file:bg-orange-500 hover:file:bg-orange-600 @error('drawings_step4') border-red-400 @enderror" style="--tw-ring-color: rgb(255,94,20); --tw-border-opacity: 1;" onfocus="this.style.borderColor='rgb(255,94,20)'" onblur="this.style.borderColor='rgb(71,85,105)'">
-                                <p class="mt-1 text-xs text-slate-400">PDF, JPG, PNG, DWG (max 5MB)</p>
+                            <p class="mt-1 text-xs text-slate-400">PDF, JPG, PNG, DWG (max 5MB)</p>
                                 @error('drawings_step4')
-                                    <p class="mt-2 text-sm text-red-400">{{ $message }}</p>
-                                @enderror
-                            </div>
+                                <p class="mt-2 text-sm text-red-400">{{ $message }}</p>
+                            @enderror
+                        </div>
 
                             <!-- BOQ -->
-                            <div>
+                        <div>
                                 <label for="boq_step4" class="block text-sm font-medium text-slate-300 mb-2">
                                     BOQ (Bill of Quantities)
-                                </label>
+                            </label>
                                 <input type="file" name="boq_step4" id="boq_step4" accept=".pdf,.xlsx,.xls,.doc,.docx"
                                        class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 transition-all duration-200 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:text-white file:bg-orange-500 hover:file:bg-orange-600 @error('boq_step4') border-red-400 @enderror" style="--tw-ring-color: rgb(255,94,20); --tw-border-opacity: 1;" onfocus="this.style.borderColor='rgb(255,94,20)'" onblur="this.style.borderColor='rgb(71,85,105)'">
                                 <p class="mt-1 text-xs text-slate-400">PDF, Excel, Word (max 5MB)</p>
                                 @error('boq_step4')
-                                    <p class="mt-2 text-sm text-red-400">{{ $message }}</p>
-                                @enderror
+                                <p class="mt-2 text-sm text-red-400">{{ $message }}</p>
+                            @enderror
                             </div>
                         </div>
                     </div>
@@ -1022,31 +1022,31 @@
                     <div class="space-y-6">
                         <div class="bg-slate-700 rounded-lg p-6">
                             <h4 class="text-lg font-semibold text-slate-200 mb-4">Terms & Conditions</h4>
-                            
-                            <div class="space-y-4 text-sm">
+                        
+                        <div class="space-y-4 text-sm">
                                 <p class="text-slate-300">
-                                    By submitting this Client Registration Form, I hereby acknowledge and agree to the following terms:
-                                </p>
-                                
+                                By submitting this Client Registration Form, I hereby acknowledge and agree to the following terms:
+                            </p>
+                            
                                 <div class="space-y-3 max-h-60 overflow-y-auto">
-                                    <div>
+                                <div>
                                         <h5 class="font-bold mb-1" style="color: rgb(255,94,20);">1. Accuracy of Information</h5>
                                         <p class="text-slate-300">I affirm that all information provided in this application is true, accurate, and complete to the best of my knowledge.</p>
-                                    </div>
-                                    
-                                    <div>
+                                </div>
+                                
+                                <div>
                                         <h5 class="font-bold mb-1" style="color: rgb(255,94,20);">2. Verification & Due Diligence</h5>
                                         <p class="text-slate-300">I authorize the Company to verify any information provided, including conducting background, financial, or compliance checks as deemed necessary.</p>
-                                    </div>
-                                    
-                                    <div>
+                                </div>
+                                
+                                <div>
                                         <h5 class="font-bold mb-1" style="color: rgb(255,94,20);">3. Data Privacy & Protection</h5>
                                         <p class="text-slate-300">I consent to the collection, processing, and secure storage of my personal and business data in accordance with applicable data protection and privacy laws.</p>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
+                                </div>
+                                
                         <div class="flex items-start">
                             <input type="checkbox" id="terms" name="terms" required
                                    class="mt-1 h-4 w-4 text-teal-600 focus:ring-teal-500 border-slate-600 rounded bg-slate-700">
@@ -1058,8 +1058,8 @@
                             </label>
                         </div>
                     </div>
-                </div>
-
+                                </div>
+                                
                 <!-- Step 6: Review -->
                 <div class="step-content" data-step="6">
                     <h2 class="text-xl font-semibold mb-6" style="color: rgb(255,94,20);">Review & Submit</h2>
@@ -1083,8 +1083,8 @@
                                     <span class="text-slate-200 ml-2" id="review-email">-</span>
                                 </div>
                             </div>
-                        </div>
-
+                                </div>
+                                
                         <!-- Client & Company Information Review -->
                         <div class="bg-slate-700 rounded-lg p-6">
                             <div class="flex items-center justify-between mb-4">
@@ -1131,8 +1131,8 @@
                                     <span class="text-slate-200 ml-2" id="review-country">-</span>
                                 </div>
                             </div>
-                        </div>
-
+                                </div>
+                                
                         <!-- Project Requirements Review -->
                         <div class="bg-slate-700 rounded-lg p-6">
                             <div class="flex items-center justify-between mb-4">
@@ -1171,8 +1171,8 @@
                                 <span class="text-slate-400">Project Brief:</span>
                                 <p class="text-slate-200 mt-2" id="review-project-brief">-</p>
                             </div>
-                        </div>
-
+                                </div>
+                                
                         <!-- Attachments Review -->
                         <div class="bg-slate-700 rounded-lg p-6">
                             <div class="flex items-center justify-between mb-4">
@@ -1189,7 +1189,7 @@
                                 <div>
                                     <span class="text-slate-400">VAT Certificate:</span>
                                     <span class="text-slate-200 ml-2" id="review-vat-certificate">-</span>
-                                </div>
+                            </div>
                                 <div>
                                     <span class="text-slate-400">Drawings:</span>
                                     <span class="text-slate-200 ml-2" id="review-drawings">-</span>
@@ -1198,8 +1198,8 @@
                                     <span class="text-slate-400">BOQ:</span>
                                     <span class="text-slate-200 ml-2" id="review-boq">-</span>
                                 </div>
-                            </div>
                         </div>
+                    </div>
 
                         <!-- Consents Review -->
                         <div class="bg-slate-700 rounded-lg p-6">
@@ -1220,7 +1220,7 @@
                                     </span>
                                 </div>
                             </div>
-                        </div>
+                    </div>
 
                         <!-- Final Status -->
                         <div class="bg-green-900/20 border border-green-500/30 rounded-lg p-6">
@@ -1228,7 +1228,7 @@
                                 <div class="flex-shrink-0">
                                     <svg class="h-8 w-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
+                            </svg>
                                 </div>
                                 <div class="ml-3">
                                     <h3 class="text-lg font-medium text-green-400">Ready to Submit</h3>
@@ -1249,8 +1249,8 @@
                     </button>
                     <button type="submit" id="submit-btn" class="px-6 py-3 text-white rounded-lg transition-colors duration-200 hidden" style="background-color: rgb(255,94,20);" onmouseover="this.style.backgroundColor='rgb(230,80,15)'" onmouseout="this.style.backgroundColor='rgb(255,94,20)'">
                         Submit Registration
-                    </button>
-                </div>
+                        </button>
+                    </div>
 
                 <!-- Help Section -->
                 <div class="mt-6 text-center">
@@ -1260,7 +1260,7 @@
                 </div>
             </form>
         </div>
-    </div>
+        </div>
 
     <!-- Success Modal -->
     <div id="success-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
@@ -1271,7 +1271,7 @@
                     <svg class="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                     </svg>
-                </div>
+        </div>
 
                 <!-- Modal Content -->
                 <div class="text-center">
@@ -1284,7 +1284,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                             <h4 class="text-sm font-semibold text-slate-200">What's Next?</h4>
-                        </div>
+    </div>
                         <ul class="text-sm text-slate-400 space-y-2">
                             <li class="flex items-center">
                                 <span class="w-2 h-2 rounded-full mr-3" style="background-color: rgb(255,94,20);"></span>
@@ -1299,7 +1299,7 @@
                                 Access to client portal will be activated upon approval
                             </li>
                         </ul>
-                    </div>
+</div>
 
                     <!-- Action Button -->
                     <button type="button" onclick="closeSuccessModal()" class="w-full px-6 py-3 text-white rounded-lg transition-colors duration-200" style="background-color: rgb(255,94,20);" onmouseover="this.style.backgroundColor='rgb(230,80,15)'" onmouseout="this.style.backgroundColor='rgb(255,94,20)'">
@@ -1623,6 +1623,23 @@ input[type="file"]::-webkit-file-upload-button:hover {
         inset 0 1px 0 rgba(255, 255, 255, 0.3),
         inset 0 -1px 0 rgba(0, 0, 0, 0.3);
 }
+
+/* Validation Animation Effects */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.validation-error-field {
+    animation: fieldShake 0.3s ease-in-out;
+}
+
+@keyframes fieldShake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-3px); }
+    75% { transform: translateX(3px); }
+}
 </style>
 
 <script>
@@ -1799,10 +1816,16 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 3000);
     }
     
+    console.log('=== INITIALIZING CLIENT FORM ===');
     const nextBtn = document.getElementById('next-btn');
     const prevBtn = document.getElementById('prev-btn');
     const submitBtn = document.getElementById('submit-btn');
     const progressBar = document.getElementById('progress-bar');
+    
+    console.log('Next button found:', nextBtn);
+    console.log('Previous button found:', prevBtn);
+    console.log('Submit button found:', submitBtn);
+    console.log('Progress bar found:', progressBar);
     
     // Initialize form persistence
     loadFormData(); // Load saved data first
@@ -1812,15 +1835,21 @@ document.addEventListener('DOMContentLoaded', function() {
     updateStepDisplay();
     
     nextBtn.addEventListener('click', function() {
+        console.log('=== NEXT BUTTON CLICKED ===');
         console.log('Next button clicked, current step:', currentStep);
+        console.log('Total steps:', totalSteps);
+        console.log('Next button element:', nextBtn);
+        
         const isValid = validateCurrentStep();
         console.log('Validation result:', isValid);
         
         if (isValid) {
             if (currentStep < totalSteps) {
-                console.log('Moving to next step');
+                console.log('Moving to next step from', currentStep, 'to', currentStep + 1);
                 saveFormData(); // Save current step data
                 animateToNextStep();
+            } else {
+                console.log('Already at last step');
             }
         } else {
             console.log('Validation failed, staying on current step');
@@ -1945,15 +1974,32 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function populateReviewData() {
+        console.log('=== POPULATING REVIEW DATA ===');
+        
         // Account Information
-        document.getElementById('review-name').textContent = document.getElementById('name')?.value || '-';
-        document.getElementById('review-email').textContent = document.getElementById('email')?.value || '-';
+        const nameField = document.getElementById('name');
+        const emailField = document.getElementById('email');
+        console.log('Name field:', nameField, 'Value:', nameField?.value);
+        console.log('Email field:', emailField, 'Value:', emailField?.value);
+        
+        document.getElementById('review-name').textContent = nameField?.value || '-';
+        document.getElementById('review-email').textContent = emailField?.value || '-';
         
         // Client & Company Information
+        const clientTypeField = document.getElementById('client_type');
+        const companyNameField = document.getElementById('company_name');
+        const clientEmailField = document.getElementById('client_email');
+        const websiteField = document.getElementById('website');
+        
+        console.log('Client Type field:', clientTypeField, 'Selected text:', getSelectText('client_type'));
+        console.log('Company Name field:', companyNameField, 'Value:', companyNameField?.value);
+        console.log('Client Email field:', clientEmailField, 'Value:', clientEmailField?.value);
+        console.log('Website field:', websiteField, 'Value:', websiteField?.value);
+        
         document.getElementById('review-client-type').textContent = getSelectText('client_type') || '-';
-        document.getElementById('review-company-name').textContent = document.getElementById('company_name')?.value || '-';
-        document.getElementById('review-email-address').textContent = document.getElementById('email_address')?.value || '-';
-        document.getElementById('review-website').textContent = document.getElementById('website')?.value || '-';
+        document.getElementById('review-company-name').textContent = companyNameField?.value || '-';
+        document.getElementById('review-email-address').textContent = clientEmailField?.value || '-';
+        document.getElementById('review-website').textContent = websiteField?.value || '-';
         
         // Mobile and Landline with country codes
         const mobileCountryCode = getSelectText('mobile_country_code') || '';
@@ -1965,8 +2011,8 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('review-landline').textContent = landlineCountryCode && landlineNumber ? `${landlineCountryCode} ${landlineNumber}` : '-';
         
         document.getElementById('review-street').textContent = document.getElementById('street_address')?.value || '-';
-        document.getElementById('review-emirates').textContent = getSelectText('emirates') || '-';
-        document.getElementById('review-country').textContent = getSelectText('country') || '-';
+        document.getElementById('review-emirates').textContent = getSelectText('emirate') || '-';
+        document.getElementById('review-country').textContent = document.getElementById('country')?.value || '-';
         
         // Project Requirements
         document.getElementById('review-project-type').textContent = getSelectText('project_type') || '-';
@@ -2014,20 +2060,62 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log(`Found ${requiredFields.length} required fields:`, requiredFields);
         
         let isValid = true;
+        let firstInvalidField = null;
+        let invalidFields = [];
         
         requiredFields.forEach((field, index) => {
-            console.log(`Field ${index + 1}: ${field.name || field.id} = "${field.value}"`);
-            if (!field.value.trim()) {
-                field.classList.add('border-red-500');
-                isValid = false;
+            const fieldValue = field.value ? field.value.trim() : '';
+            console.log(`Field ${index + 1}: ${field.name || field.id} (${field.type || field.tagName}) = "${fieldValue}"`);
+            
+            let fieldValid = true;
+            
+            // Special handling for select elements
+            if (field.tagName.toLowerCase() === 'select') {
+                if (!field.value || field.value === '') {
+                    console.log(`❌ Select field ${field.name || field.id} is empty`);
+                    fieldValid = false;
+                } else {
+                    console.log(`✅ Select field ${field.name || field.id} is valid`);
+                }
+            } else {
+                // Handle input and textarea elements
+                if (!fieldValue) {
+                    console.log(`❌ Field ${field.name || field.id} is empty`);
+                    fieldValid = false;
+                } else {
+                    console.log(`✅ Field ${field.name || field.id} is valid`);
+                }
+            }
+            
+            // Apply visual feedback and animations
+            if (!fieldValid) {
+                field.style.borderColor = 'rgb(239,68,68)';
+                field.style.boxShadow = '0 0 0 1px rgb(239,68,68)';
                 
-                // Remove error styling after user starts typing
-                field.addEventListener('input', function() {
-                    this.classList.remove('border-red-500');
-                }, { once: true });
+                // Add shake animation to invalid field
+                field.classList.add('validation-error-field');
+                setTimeout(() => {
+                    field.classList.remove('validation-error-field');
+                }, 300);
+                
+                if (!firstInvalidField) {
+                    firstInvalidField = field;
+                }
+                invalidFields.push(field.name || field.id);
+                isValid = false;
             } else {
                 field.classList.remove('border-red-500');
+                field.style.borderColor = '';
+                field.style.boxShadow = '';
             }
+            
+            // Remove error styling after user starts interacting
+            const eventType = field.tagName.toLowerCase() === 'select' ? 'change' : 'input';
+            field.addEventListener(eventType, function() {
+                this.classList.remove('border-red-500');
+                this.style.borderColor = '';
+                this.style.boxShadow = '';
+            }, { once: true });
         });
         
         // Special validation for step 1 (password confirmation)
@@ -2050,7 +2138,58 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
+        // If validation failed, add additional effects
+        if (!isValid) {
+            console.log(`Validation failed. Invalid fields: ${invalidFields.join(', ')}`);
+            
+            // Focus on the first invalid field
+            if (firstInvalidField) {
+                try {
+                    firstInvalidField.focus();
+                    console.log(`Focused on first invalid field: ${firstInvalidField.name || firstInvalidField.id}`);
+                } catch (e) {
+                    console.log('Could not focus field:', firstInvalidField.name, e.message);
+                }
+            }
+            
+            // Add shake animation to the form container
+            const formContainer = document.querySelector('.form-3d-container');
+            if (formContainer) {
+                formContainer.style.animation = 'shake 0.5s ease-in-out';
+                setTimeout(() => {
+                    formContainer.style.animation = '';
+                }, 500);
+            }
+            
+            // Show a temporary error message
+            const existingError = document.getElementById('validation-error');
+            if (existingError) {
+                existingError.remove();
+            }
+            
+            const errorDiv = document.createElement('div');
+            errorDiv.id = 'validation-error';
+            errorDiv.className = 'fixed top-4 right-4 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 transform transition-all duration-300';
+            errorDiv.textContent = `Please fill in all required fields: ${invalidFields.join(', ')}`;
+            document.body.appendChild(errorDiv);
+            
+            // Remove error message after 5 seconds
+            setTimeout(() => {
+                if (errorDiv && errorDiv.parentNode) {
+                    errorDiv.style.opacity = '0';
+                    errorDiv.style.transform = 'translateX(100%)';
+                    setTimeout(() => {
+                        errorDiv.remove();
+                    }, 300);
+                }
+            }, 5000);
+        }
+        
+        console.log(`=== VALIDATION SUMMARY ===`);
         console.log(`Step ${currentStep} validation result: ${isValid}`);
+        console.log(`Required fields found: ${requiredFields.length}`);
+        console.log(`Invalid fields: ${invalidFields.length}`);
+        console.log(`========================`);
         return isValid;
     }
     
@@ -2125,20 +2264,24 @@ function closeSuccessModal() {
 
 // Handle form submission
 document.getElementById('wizard-form').addEventListener('submit', function(e) {
-    e.preventDefault(); // Prevent default form submission for demo
+    console.log('Form submission triggered');
+    
+    // Validate final step before submitting
+    if (currentStep === totalSteps && !validateCurrentStep()) {
+        e.preventDefault();
+        console.log('Final validation failed, preventing submission');
+        return false;
+    }
     
     // Clear saved form data on successful submission
     const STORAGE_KEY = 'client_registration_form_data';
     const CURRENT_STEP_KEY = 'client_registration_current_step';
     localStorage.removeItem(STORAGE_KEY);
     localStorage.removeItem(CURRENT_STEP_KEY);
-    console.log('Form submitted successfully - saved data cleared');
+    console.log('Form data cleared - submitting to server');
     
-    // Show success modal
-    showSuccessModal();
-    
-    // In a real application, you would submit the form here:
-    // this.submit();
+    // Let the form submit naturally to the server
+    // The server will handle email sending and redirect
 });
 
 // Close modal when clicking outside

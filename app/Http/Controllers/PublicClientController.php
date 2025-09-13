@@ -26,49 +26,58 @@ class PublicClientController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            // Client & Company section
+            // Account Information (Step 1)
             'name' => 'required|string|max:255',
-            'company_name' => 'required|string|max:255',
-            'mobile_country' => 'required|string|max:10',
-            'mobile_number' => 'required|string|max:255',
-            'landline_country' => 'nullable|string|max:10',
-            'landline_number' => 'nullable|string|max:255',
             'email' => 'required|email|unique:clients,email|max:255',
-            'company_website' => 'nullable|url|max:255',
+            'password' => 'required|string|min:8|confirmed',
+            
+            // Client & Company section (Step 2)
             'client_type' => 'required|in:individual,company,government,developer,consultant',
-            'license_number' => 'required|string|max:255',
+            'company_name' => 'required|string|max:255',
+            'client_email' => 'required|email|max:255',
+            'website' => 'nullable|url|max:255',
+            'street_address' => 'required|string|max:255',
+            'emirate' => 'required|string|max:255',
+            'country' => 'required|string|max:255',
+            'mobile_country_code' => 'required|string|max:10',
+            'phone' => 'required|string|max:255',
+            'landline_country_code' => 'nullable|string|max:10',
+            'landline' => 'nullable|string|max:255',
             
-            // Project & Service Requirements section
-            'project_type' => 'required|in:residential_villa,commercial_retail,industrial_warehouse,fitout_renovation,maintenance,others',
-            'service_needed' => 'required|in:design_approval,civil_construction,mep_works,interior_joinery,landscaping,maintenance_amc',
-            'estimated_budget' => 'required|in:under_50k,50k_100k,100k_250k,250k_500k,500k_1m,1m_5m,over_5m',
+            // Project & Service Requirements section (Step 3)
+            'project_type' => 'required|string|max:255',
+            'project_title' => 'required|string|max:255',
+            'service_needed' => 'required|string|max:255',
+            'timeline' => 'required|string|max:255',
+            'estimated_budget' => 'required|string|max:255',
+            'project_location' => 'required|string|max:255',
+            'project_brief' => 'required|string|min:10',
             
-            // Address section
-            'street' => 'required|string|max:255',
-            'community' => 'required|string|max:255',
-            'emirate' => 'required|in:abu_dhabi,dubai,sharjah,ajman,umm_al_quwain,ras_al_khaimah,fujairah',
-            'plot_unit_number' => 'nullable|string|max:255',
+            // File uploads (Step 4)
+            'trade_license_step4' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'vat_certificate_step4' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'drawings_step4' => 'nullable|file|mimes:pdf,jpg,jpeg,png,dwg|max:5120',
+            'boq_step4' => 'nullable|file|mimes:pdf,xlsx,xls,doc,docx|max:5120',
             
-            // Timeline section
-            'target_start_date' => 'required|date|after:today',
-            'desired_timeline' => 'required|in:urgent_0_4_weeks,short_1_3_months,medium_3_6_months,long_6_plus_months',
-            'project_brief' => 'required|string|min:50',
-            
-            // File uploads
-            'site_plans' => 'nullable|file|mimes:pdf,jpg,jpeg,png,dwg|max:5120',
-            'additional_documents' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:5120',
-            
-            // Terms consent
+            // Terms consent (Step 5)
             'terms' => 'required|accepted',
         ]);
 
         // Handle file uploads
-        if ($request->hasFile('site_plans')) {
-            $validated['site_plans_path'] = $request->file('site_plans')->store('client-documents', 'public');
+        if ($request->hasFile('trade_license_step4')) {
+            $validated['trade_license_path'] = $request->file('trade_license_step4')->store('client-documents', 'public');
         }
         
-        if ($request->hasFile('additional_documents')) {
-            $validated['additional_documents_path'] = $request->file('additional_documents')->store('client-documents', 'public');
+        if ($request->hasFile('vat_certificate_step4')) {
+            $validated['vat_certificate_path'] = $request->file('vat_certificate_step4')->store('client-documents', 'public');
+        }
+        
+        if ($request->hasFile('drawings_step4')) {
+            $validated['drawings_path'] = $request->file('drawings_step4')->store('client-documents', 'public');
+        }
+        
+        if ($request->hasFile('boq_step4')) {
+            $validated['boq_path'] = $request->file('boq_step4')->store('client-documents', 'public');
         }
 
         // Store the original name for both fields
@@ -76,19 +85,17 @@ class PublicClientController extends Controller
         
         // Map form fields to database columns for compatibility
         $validated['full_name'] = $originalName;
-        $validated['mobile'] = $validated['mobile_country'] . ' ' . $validated['mobile_number'];
-        $validated['office_phone'] = $validated['landline_country'] ? $validated['landline_country'] . ' ' . $validated['landline_number'] : $validated['landline_number'];
-        $validated['website'] = $validated['company_website'];
-        $validated['trade_license_number'] = $validated['license_number'];
+        $validated['mobile'] = $validated['mobile_country_code'] . ' ' . $validated['phone'];
+        $validated['office_phone'] = $validated['landline_country_code'] ? $validated['landline_country_code'] . ' ' . $validated['landline'] : $validated['landline'];
+        
+        // Use client_email as the main email for database storage
+        $validated['email'] = $validated['client_email'];
+        
+        // Add password hashing
+        $validated['password'] = bcrypt($validated['password']);
         
         // Combine address components for the required address field
-        $addressParts = array_filter([
-            $validated['street'],
-            $validated['community'],
-            $validated['plot_unit_number'],
-            $validated['emirate']
-        ]);
-        $validated['address'] = implode(', ', $addressParts);
+        $validated['address'] = $validated['street_address'] . ', ' . $validated['emirate'] . ', ' . $validated['country'];
         
         // Map client type to database enum values
         $clientTypeMapping = [
@@ -112,12 +119,17 @@ class PublicClientController extends Controller
         
         // Remove form field names that don't match database columns
         unset(
-            $validated['mobile_country'],
-            $validated['mobile_number'], 
-            $validated['landline_country'],
-            $validated['landline_number'],
-            $validated['company_website'],
-            $validated['license_number']
+            $validated['mobile_country_code'],
+            $validated['phone'], 
+            $validated['landline_country_code'],
+            $validated['landline'],
+            $validated['client_email'],
+            $validated['street_address'],
+            $validated['password_confirmation'],
+            $validated['trade_license_step4'],
+            $validated['vat_certificate_step4'],
+            $validated['drawings_step4'],
+            $validated['boq_step4']
         );
 
         // Create the client
