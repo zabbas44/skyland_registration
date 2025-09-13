@@ -78,7 +78,12 @@ class PublicVendorController extends Controller
                 
                 // Company information
                 'company_name' => $validated['company_name'],
-                'business_type' => $validated['business_type'],
+                'business_type' => match($validated['business_type']) {
+                    'building_material' => 'Supplier',
+                    'sub_contractor' => 'Contractor', 
+                    'transport_rental' => 'Service Provider',
+                    default => 'Supplier'
+                },
                 'company_contact_person' => $validated['contact_person'],
                 'company_designation' => $validated['designation'],
                 'company_email' => $validated['company_email'],
