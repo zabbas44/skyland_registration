@@ -3,12 +3,46 @@
 @section('title', 'Client Registration')
 
 @section('content')
-<div class="min-h-screen bg-slate-900 py-8 px-4 sm:px-6 lg:px-8 page-3d-background">
+<style>
+    /* Animation for floating blobs */
+    @keyframes blob {
+        0% { transform: translate(0px, 0px) scale(1); }
+        33% { transform: translate(30px, -50px) scale(1.1); }
+        66% { transform: translate(-20px, 20px) scale(0.9); }
+        100% { transform: translate(0px, 0px) scale(1); }
+    }
+    
+    .animate-blob {
+        animation: blob 7s infinite;
+    }
+    
+    .animation-delay-2000 {
+        animation-delay: 2s;
+    }
+    
+    .animation-delay-4000 {
+        animation-delay: 4s;
+    }
+    
+    /* Custom backdrop blur for better browser support */
+    .backdrop-blur-xl {
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+    }
+</style>
+
+<div class="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 py-8 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <!-- Animated Background Elements -->
+    <div class="absolute inset-0 overflow-hidden">
+        <div class="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
+        <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-yellow-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
+        <div class="absolute top-40 left-40 w-80 h-80 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
+    </div>
     <div class="max-w-4xl mx-auto">
         <!-- Header -->
         <div class="flex items-center mb-8">
             <div class="w-16 h-16 flex items-center justify-center mr-4">
-                <img src="{{ asset('images/logo-light-trimmed.webp') }}" alt="Sky Land Construction Logo" class="w-16 h-17 object-contain">
+                <img src="{{ asset('images/SKYLAND_Logo.webp') }}" alt="SKY LAND CONSTRUCTION LLC OPC Logo" class="w-16 h-17 object-contain">
             </div>
             <div>
                 <h1 class="text-2xl font-normal text-white" style="font-family: Teko, sans-serif;">Client Registration</h1>

@@ -10,7 +10,7 @@
     <div class="relative w-64 bg-white/10 backdrop-blur-md border-r border-white/20 shadow-xl">
         <div class="flex items-center justify-center h-16 bg-gradient-to-r from-orange-600/80 to-red-600/80 backdrop-blur-md border-b border-white/20">
             <div class="flex items-center space-x-3">
-                <img src="{{ asset('logo-light-trimmed.webp') }}" alt="Sky Land Construction" class="w-8 h-auto">
+                <img src="{{ asset('images/SKYLAND_Logo.webp') }}" alt="SKY LAND CONSTRUCTION LLC OPC" class="w-8 h-auto">
                 <span class="text-white text-lg font-bold font-['Inter',_'system-ui',_sans-serif]">Admin Console</span>
             </div>
         </div>

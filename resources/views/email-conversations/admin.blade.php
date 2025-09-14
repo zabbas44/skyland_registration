@@ -1,10 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Email Conversations - SKYLAND Admin</title>
+@extends('layouts.admin-dark')
+
+@section('title', 'Email Conversations')
+@section('page-title', 'Email Conversations')
+
+@section('admin-content')
+<meta name="csrf-token" content="{{ csrf_token() }}"
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Teko:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     @if(file_exists(public_path('build/manifest.json')))
@@ -265,7 +265,7 @@
         <!-- Header - Same style as registration forms -->
         <div class="flex items-center mb-8">
             <div class="w-16 h-16 flex items-center justify-center mr-4">
-                <img src="{{ asset('images/logo-light-trimmed.webp') }}" alt="Sky Land Construction Logo" class="w-16 h-17 object-contain">
+                <img src="{{ asset('images/SKYLAND_Logo.webp') }}" alt="SKY LAND CONSTRUCTION LLC OPC Logo" class="w-16 h-17 object-contain">
             </div>
             <div class="flex-1">
                 <h1 class="text-2xl font-normal text-white" style="font-family: Teko, sans-serif;">📧 Email Conversations - Admin Panel</h1>

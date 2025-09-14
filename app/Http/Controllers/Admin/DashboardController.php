@@ -12,20 +12,163 @@ class DashboardController extends Controller
 {
     public function index(Request $request)
     {
-        // Get filter parameters
-        $filter = $request->get('filter', 'daily');
-        
-        // Calculate date ranges based on filter
-        $dateRanges = $this->getDateRanges($filter);
-        
-        // Get statistics for clients and vendors
-        $clientStats = $this->getEntityStats(Client::class, $dateRanges);
-        $vendorStats = $this->getEntityStats(Vendor::class, $dateRanges);
-        
-        // Get chart data for the selected filter
-        $chartData = $this->getChartData($filter);
-        
-        return view('admin.dashboard', compact('clientStats', 'vendorStats', 'chartData', 'filter'));
+        try {
+            // Get filter parameters
+            $filter = $request->get('filter', 'daily');
+            
+            // Calculate date ranges based on filter
+            $dateRanges = $this->getDateRanges($filter);
+            
+            // Get statistics for clients and vendors
+            $clientStats = $this->getEntityStats(Client::class, $dateRanges);
+            $vendorStats = $this->getEntityStats(Vendor::class, $dateRanges);
+            
+            // Get chart data for the selected filter
+            $chartData = $this->getChartData($filter);
+            
+            // Get advanced statistics
+            $advancedStats = $this->getAdvancedStats();
+            
+            // Get status distribution
+            $statusDistribution = $this->getStatusDistribution();
+            
+            // Get growth metrics
+            $growthMetrics = $this->getGrowthMetrics();
+            
+            // Extract simple variables for the view
+            $totalClients = $clientStats['total'];
+            $totalVendors = $vendorStats['total'];
+            $pendingApprovals = ($statusDistribution['clients']['pending'] ?? 0) + ($statusDistribution['vendors']['pending'] ?? 0);
+            $thisMonth = Client::where('created_at', '>=', Carbon::now()->startOfMonth())->count() + 
+                        Vendor::where('created_at', '>=', Carbon::now()->startOfMonth())->count();
+            $avgClientsPerDay = $advancedStats['avg_clients_per_day'];
+            $avgVendorsPerDay = $advancedStats['avg_vendors_per_day'];
+            
+            // Get recent entities for display
+            $recentClients = Client::orderBy('created_at', 'desc')->take(5)->get();
+            $recentVendors = Vendor::orderBy('created_at', 'desc')->take(5)->get();
+            
+            // Get approved clients and vendors for right sidebar
+            $approvedClients = Client::where('status', 'approved')
+                ->orderBy('updated_at', 'desc')
+                ->limit(10)
+                ->get();
+            
+            $approvedVendors = Vendor::where('status', 'approved')
+                ->orderBy('updated_at', 'desc')
+                ->limit(10)
+                ->get();
+                
+            // Get recent conversations for dashboard
+            $recentConversations = \App\Models\ChatConversation::with(['client', 'vendor', 'lastMessageBy'])
+                ->whereNotNull('last_message_at')
+                ->orderBy('last_message_at', 'desc')
+                ->limit(5)
+                ->get();
+                
+            // If no recent conversations with messages, get any conversations (even without messages)
+            if ($recentConversations->isEmpty()) {
+                $recentConversations = \App\Models\ChatConversation::with(['client', 'vendor'])
+                    ->orderBy('created_at', 'desc')
+                    ->limit(5)
+                    ->get();
+            }
+            
+            // Prepare status distribution for charts
+            $statusDistributionChart = [
+                'approved' => ($statusDistribution['clients']['approved'] ?? 0) + ($statusDistribution['vendors']['approved'] ?? 0),
+                'pending' => ($statusDistribution['clients']['pending'] ?? 0) + ($statusDistribution['vendors']['pending'] ?? 0),
+                'rejected' => ($statusDistribution['clients']['rejected'] ?? 0) + ($statusDistribution['vendors']['rejected'] ?? 0),
+            ];
+
+            return view('admin.dashboard', compact(
+                'clientStats', 
+                'vendorStats', 
+                'chartData', 
+                'filter',
+                'advancedStats',
+                'growthMetrics',
+                'totalClients',
+                'totalVendors',
+                'pendingApprovals',
+                'thisMonth',
+                'avgClientsPerDay',
+                'avgVendorsPerDay',
+                'recentClients',
+                'recentVendors',
+                'approvedClients',
+                'approvedVendors',
+                'recentConversations'
+            ))->with('statusDistribution', $statusDistributionChart);
+        } catch (\Exception $e) {
+            // Log the error and provide fallback data
+            \Log::error('Dashboard error: ' . $e->getMessage());
+            
+            // Provide basic fallback data
+            $filter = $request->get('filter', 'daily');
+            $clientStats = ['total' => Client::count(), 'today' => 0, 'this_month' => 0, 'this_year' => 0];
+            $vendorStats = ['total' => Vendor::count(), 'today' => 0, 'this_month' => 0, 'this_year' => 0];
+            $chartData = ['labels' => [], 'clients' => [], 'vendors' => []];
+            $advancedStats = [
+                'total_entities' => $clientStats['total'] + $vendorStats['total'],
+                'client_percentage' => 50,
+                'vendor_percentage' => 50,
+                'recent_clients' => 0,
+                'recent_vendors' => 0,
+                'client_growth_rate' => 0,
+                'vendor_growth_rate' => 0,
+                'avg_clients_per_day' => 0,
+                'avg_vendors_per_day' => 0,
+            ];
+            $statusDistribution = ['clients' => [], 'vendors' => []];
+            $growthMetrics = ['weekly' => [], 'hourly' => []];
+            
+            // Extract simple variables for the view (fallback)
+            $totalClients = $clientStats['total'];
+            $totalVendors = $vendorStats['total'];
+            $pendingApprovals = 0;
+            $thisMonth = 0;
+            $avgClientsPerDay = $advancedStats['avg_clients_per_day'];
+            $avgVendorsPerDay = $advancedStats['avg_vendors_per_day'];
+            
+            // Get recent entities for display (fallback)
+            $recentClients = collect();
+            $recentVendors = collect();
+            
+            // Get approved entities for right sidebar (fallback)
+            $approvedClients = collect();
+            $approvedVendors = collect();
+            
+            // Get conversations fallback
+            $recentConversations = collect();
+            
+            // Prepare status distribution for charts (fallback)
+            $statusDistributionChart = [
+                'approved' => 0,
+                'pending' => 0,
+                'rejected' => 0,
+            ];
+            
+            return view('admin.dashboard', compact(
+                'clientStats', 
+                'vendorStats', 
+                'chartData', 
+                'filter',
+                'advancedStats',
+                'growthMetrics',
+                'totalClients',
+                'totalVendors',
+                'pendingApprovals',
+                'thisMonth',
+                'avgClientsPerDay',
+                'avgVendorsPerDay',
+                'recentClients',
+                'recentVendors',
+                'approvedClients',
+                'approvedVendors',
+                'recentConversations'
+            ))->with('statusDistribution', $statusDistributionChart);
+        }
     }
     
     private function getDateRanges($filter)
@@ -121,6 +264,141 @@ class DashboardController extends Controller
             'labels' => $labels,
             'clients' => $clientData,
             'vendors' => $vendorData,
+        ];
+    }
+    
+    private function getAdvancedStats()
+    {
+        $now = Carbon::now();
+        
+        // Get total entities
+        $totalClients = Client::count();
+        $totalVendors = Vendor::count();
+        $totalEntities = $totalClients + $totalVendors;
+        
+        // Get recent activity (last 30 days)
+        $recentClients = Client::where('created_at', '>=', $now->copy()->subDays(30))->count();
+        $recentVendors = Vendor::where('created_at', '>=', $now->copy()->subDays(30))->count();
+        
+        // Calculate growth rates
+        $previousMonthClients = Client::whereBetween('created_at', [
+            $now->copy()->subDays(60)->startOfDay(),
+            $now->copy()->subDays(30)->endOfDay()
+        ])->count();
+        
+        $previousMonthVendors = Vendor::whereBetween('created_at', [
+            $now->copy()->subDays(60)->startOfDay(),
+            $now->copy()->subDays(30)->endOfDay()
+        ])->count();
+        
+        $clientGrowthRate = $previousMonthClients > 0 ? 
+            (($recentClients - $previousMonthClients) / $previousMonthClients) * 100 : 
+            ($recentClients > 0 ? 100 : 0);
+            
+        $vendorGrowthRate = $previousMonthVendors > 0 ? 
+            (($recentVendors - $previousMonthVendors) / $previousMonthVendors) * 100 : 
+            ($recentVendors > 0 ? 100 : 0);
+        
+        // Get average registrations per day (SQLite compatible)
+        $avgClientsPerDay = 0;
+        $avgVendorsPerDay = 0;
+        
+        if ($totalClients > 0) {
+            $clientDateRange = Client::selectRaw('MIN(created_at) as min_date, MAX(created_at) as max_date')->first();
+            if ($clientDateRange && $clientDateRange->min_date && $clientDateRange->max_date) {
+                $daysDiff = Carbon::parse($clientDateRange->max_date)->diffInDays(Carbon::parse($clientDateRange->min_date)) + 1;
+                $avgClientsPerDay = $daysDiff > 0 ? round($totalClients / $daysDiff, 1) : 0;
+            }
+        }
+        
+        if ($totalVendors > 0) {
+            $vendorDateRange = Vendor::selectRaw('MIN(created_at) as min_date, MAX(created_at) as max_date')->first();
+            if ($vendorDateRange && $vendorDateRange->min_date && $vendorDateRange->max_date) {
+                $daysDiff = Carbon::parse($vendorDateRange->max_date)->diffInDays(Carbon::parse($vendorDateRange->min_date)) + 1;
+                $avgVendorsPerDay = $daysDiff > 0 ? round($totalVendors / $daysDiff, 1) : 0;
+            }
+        }
+        
+        return [
+            'total_entities' => $totalEntities,
+            'client_percentage' => $totalEntities > 0 ? round(($totalClients / $totalEntities) * 100, 1) : 0,
+            'vendor_percentage' => $totalEntities > 0 ? round(($totalVendors / $totalEntities) * 100, 1) : 0,
+            'recent_clients' => $recentClients,
+            'recent_vendors' => $recentVendors,
+            'client_growth_rate' => round($clientGrowthRate, 1),
+            'vendor_growth_rate' => round($vendorGrowthRate, 1),
+            'avg_clients_per_day' => round($avgClientsPerDay, 1),
+            'avg_vendors_per_day' => round($avgVendorsPerDay, 1),
+        ];
+    }
+    
+    private function getStatusDistribution()
+    {
+        // Get client status distribution (SQLite compatible)
+        $clientStatuses = [];
+        try {
+            $clientStatuses = Client::selectRaw('CASE WHEN status IS NULL THEN "pending" ELSE status END as status, COUNT(*) as count')
+                                    ->groupBy('status')
+                                    ->pluck('count', 'status')
+                                    ->toArray();
+        } catch (\Exception $e) {
+            // If status column doesn't exist, create default distribution
+            $totalClients = Client::count();
+            $clientStatuses = $totalClients > 0 ? ['pending' => $totalClients] : [];
+        }
+        
+        // Get vendor status distribution (SQLite compatible)
+        $vendorStatuses = [];
+        try {
+            $vendorStatuses = Vendor::selectRaw('CASE WHEN status IS NULL THEN "pending" ELSE status END as status, COUNT(*) as count')
+                                    ->groupBy('status')
+                                    ->pluck('count', 'status')
+                                    ->toArray();
+        } catch (\Exception $e) {
+            // If status column doesn't exist, create default distribution
+            $totalVendors = Vendor::count();
+            $vendorStatuses = $totalVendors > 0 ? ['pending' => $totalVendors] : [];
+        }
+        
+        return [
+            'clients' => $clientStatuses,
+            'vendors' => $vendorStatuses,
+        ];
+    }
+    
+    private function getGrowthMetrics()
+    {
+        $now = Carbon::now();
+        
+        // Get weekly growth for the last 8 weeks
+        $weeklyData = [];
+        for ($i = 7; $i >= 0; $i--) {
+            $weekStart = $now->copy()->subWeeks($i)->startOfWeek();
+            $weekEnd = $now->copy()->subWeeks($i)->endOfWeek();
+            
+            $weeklyData[] = [
+                'week' => $weekStart->format('M j'),
+                'clients' => Client::whereBetween('created_at', [$weekStart, $weekEnd])->count(),
+                'vendors' => Vendor::whereBetween('created_at', [$weekStart, $weekEnd])->count(),
+            ];
+        }
+        
+        // Get hourly distribution for today
+        $hourlyData = [];
+        for ($hour = 0; $hour < 24; $hour++) {
+            $hourStart = $now->copy()->startOfDay()->addHours($hour);
+            $hourEnd = $hourStart->copy()->addHour();
+            
+            $hourlyData[] = [
+                'hour' => $hour,
+                'clients' => Client::whereBetween('created_at', [$hourStart, $hourEnd])->count(),
+                'vendors' => Vendor::whereBetween('created_at', [$hourStart, $hourEnd])->count(),
+            ];
+        }
+        
+        return [
+            'weekly' => $weeklyData,
+            'hourly' => $hourlyData,
         ];
     }
 }

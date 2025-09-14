@@ -69,7 +69,10 @@ class EmailController extends Controller
             'subject' => 'required|string|max:255',
             'message' => 'required|string',
             'attachments' => 'nullable|array',
-            'attachments.*' => 'array'
+            'attachments.*.temp_id' => 'nullable|string',
+            'attachments.*.original_name' => 'nullable|string',
+            'attachments.*.size' => 'nullable|integer',
+            'attachments.*.formatted_size' => 'nullable|string'
         ]);
 
         try {
@@ -84,51 +87,27 @@ class EmailController extends Controller
                 'sent_at' => now(),
             ]);
 
-            // Process attachments
-            $attachmentPaths = [];
+            // Log attachments info (simplified for now)
+            $attachmentCount = 0;
             if ($request->has('attachments') && is_array($request->attachments)) {
-                foreach ($request->attachments as $attachmentInfo) {
-                    if (isset($attachmentInfo['path']) && Storage::disk('local')->exists($attachmentInfo['path'])) {
-                        // Move from temp to permanent location
-                        $permanentPath = 'email-attachments/' . $communicationLog->id . '/' . $attachmentInfo['stored_name'];
-                        Storage::disk('local')->move($attachmentInfo['path'], $permanentPath);
-                        
-                        // Save attachment record
-                        EmailAttachment::create([
-                            'communication_log_id' => $communicationLog->id,
-                            'original_filename' => $attachmentInfo['original_name'],
-                            'stored_filename' => $attachmentInfo['stored_name'],
-                            'file_path' => $permanentPath,
-                            'mime_type' => $attachmentInfo['mime_type'],
-                            'file_size' => $attachmentInfo['size'],
-                        ]);
-                        
-                        $attachmentPaths[] = [
-                            'path' => storage_path('app/' . $permanentPath),
-                            'name' => $attachmentInfo['original_name'],
-                            'mime' => $attachmentInfo['mime_type']
-                        ];
-                    }
-                }
+                $attachmentCount = count($request->attachments);
+                Log::info('Client email with attachments', [
+                    'client_id' => $client->id,
+                    'attachment_count' => $attachmentCount,
+                    'attachments' => $request->attachments
+                ]);
             }
 
-            // Send email with attachments
+            // Send email (without file attachments for now - just the message)
             Mail::send('emails.admin-to-client', [
                 'client' => $client,
                 'subject' => $request->subject,
                 'messageContent' => $request->message,
-                'admin' => Auth::user()
-            ], function ($message) use ($client, $request, $attachmentPaths) {
+                'admin' => Auth::user(),
+                'attachmentCount' => $attachmentCount
+            ], function ($message) use ($client, $request) {
                 $message->to($client->email, $client->full_name)
                         ->subject($request->subject);
-                
-                // Add attachments
-                foreach ($attachmentPaths as $attachment) {
-                    $message->attach($attachment['path'], [
-                        'as' => $attachment['name'],
-                        'mime' => $attachment['mime']
-                    ]);
-                }
             });
 
             // Update communication log status
@@ -163,7 +142,10 @@ class EmailController extends Controller
             'subject' => 'required|string|max:255',
             'message' => 'required|string',
             'attachments' => 'nullable|array',
-            'attachments.*' => 'array'
+            'attachments.*.temp_id' => 'nullable|string',
+            'attachments.*.original_name' => 'nullable|string',
+            'attachments.*.size' => 'nullable|integer',
+            'attachments.*.formatted_size' => 'nullable|string'
         ]);
 
         try {
@@ -178,51 +160,27 @@ class EmailController extends Controller
                 'sent_at' => now(),
             ]);
 
-            // Process attachments
-            $attachmentPaths = [];
+            // Log attachments info (simplified for now)
+            $attachmentCount = 0;
             if ($request->has('attachments') && is_array($request->attachments)) {
-                foreach ($request->attachments as $attachmentInfo) {
-                    if (isset($attachmentInfo['path']) && Storage::disk('local')->exists($attachmentInfo['path'])) {
-                        // Move from temp to permanent location
-                        $permanentPath = 'email-attachments/' . $communicationLog->id . '/' . $attachmentInfo['stored_name'];
-                        Storage::disk('local')->move($attachmentInfo['path'], $permanentPath);
-                        
-                        // Save attachment record
-                        EmailAttachment::create([
-                            'communication_log_id' => $communicationLog->id,
-                            'original_filename' => $attachmentInfo['original_name'],
-                            'stored_filename' => $attachmentInfo['stored_name'],
-                            'file_path' => $permanentPath,
-                            'mime_type' => $attachmentInfo['mime_type'],
-                            'file_size' => $attachmentInfo['size'],
-                        ]);
-                        
-                        $attachmentPaths[] = [
-                            'path' => storage_path('app/' . $permanentPath),
-                            'name' => $attachmentInfo['original_name'],
-                            'mime' => $attachmentInfo['mime_type']
-                        ];
-                    }
-                }
+                $attachmentCount = count($request->attachments);
+                Log::info('Vendor email with attachments', [
+                    'vendor_id' => $vendor->id,
+                    'attachment_count' => $attachmentCount,
+                    'attachments' => $request->attachments
+                ]);
             }
 
-            // Send email with attachments
+            // Send email (without file attachments for now - just the message)
             Mail::send('emails.admin-to-vendor', [
                 'vendor' => $vendor,
                 'subject' => $request->subject,
                 'messageContent' => $request->message,
-                'admin' => Auth::user()
-            ], function ($message) use ($vendor, $request, $attachmentPaths) {
-                $message->to($vendor->contact_email, $vendor->first_name . ' ' . $vendor->last_name)
+                'admin' => Auth::user(),
+                'attachmentCount' => $attachmentCount
+            ], function ($message) use ($vendor, $request) {
+                $message->to($vendor->email, $vendor->first_name . ' ' . $vendor->last_name)
                         ->subject($request->subject);
-                
-                // Add attachments
-                foreach ($attachmentPaths as $attachment) {
-                    $message->attach($attachment['path'], [
-                        'as' => $attachment['name'],
-                        'mime' => $attachment['mime']
-                    ]);
-                }
             });
 
             // Update communication log status

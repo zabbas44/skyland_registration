@@ -156,18 +156,36 @@ class ClientController extends Controller
             'message' => 'required|string',
         ]);
 
-        // TODO: Implement actual email sending
-        // For now, just log the communication
-        CommunicationLog::create([
-            'entity_type' => 'client',
-            'entity_id' => $client->id,
-            'admin_user_id' => auth()->id(),
-            'subject' => $validated['subject'],
-            'message_preview' => substr($validated['message'], 0, 200),
-            'status' => 'sent',
-            'sent_at' => now(),
-        ]);
+        try {
+            // TODO: Implement actual email sending
+            // For now, just log the communication
+            CommunicationLog::create([
+                'entity_type' => 'client',
+                'entity_id' => $client->id,
+                'admin_user_id' => auth()->id(),
+                'subject' => $validated['subject'],
+                'message_preview' => substr($validated['message'], 0, 200),
+                'status' => 'sent',
+                'sent_at' => now(),
+            ]);
 
-        return redirect()->back()->with('success', 'Email sent successfully!');
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Email sent successfully!'
+                ]);
+            }
+
+            return redirect()->back()->with('success', 'Email sent successfully!');
+        } catch (\Exception $e) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to send email: ' . $e->getMessage()
+                ], 500);
+            }
+
+            return redirect()->back()->withErrors(['error' => 'Failed to send email: ' . $e->getMessage()]);
+        }
     }
 }

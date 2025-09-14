@@ -9,6 +9,8 @@ use App\Http\Controllers\PublicVendorController;
 use App\Http\Controllers\PublicClientController;
 use App\Http\Controllers\EmailTestController;
 use App\Http\Controllers\EmailConversationController;
+use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\ReportsController;
 
 // Redirect root to login
 Route::get('/', function () {
@@ -63,6 +65,15 @@ Route::get('/client', [PublicClientController::class, 'create'])->name('client.r
 Route::post('/client', [PublicClientController::class, 'store'])->name('client.store');
 Route::get('/client/thank-you/{id}', [PublicClientController::class, 'thankYou'])->name('client.thank-you');
 
+// Conversation routes for clients and vendors (protected by auth)
+Route::middleware('auth')->group(function () {
+    Route::get('/conversations', [App\Http\Controllers\ChatController::class, 'index'])->name('conversations.index');
+    Route::post('/conversations/send', [App\Http\Controllers\ChatController::class, 'sendMessage'])->name('conversations.send');
+    Route::get('/conversations/{conversation}/messages', [App\Http\Controllers\ChatController::class, 'getMessages'])->name('conversations.messages');
+    Route::post('/conversations/{conversation}/read', [App\Http\Controllers\ChatController::class, 'markAsRead'])->name('conversations.read');
+    Route::post('/conversations/upload', [App\Http\Controllers\ChatController::class, 'uploadAttachment'])->name('conversations.upload');
+});
+
 // Admin routes (protected by admin middleware)
 Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -75,4 +86,22 @@ Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function ()
     Route::get('/email/test', [EmailTestController::class, 'showTestForm'])->name('email.test');
     Route::post('/email/send-test', [EmailTestController::class, 'sendTestEmail'])->name('email.send-test');
     Route::post('/email/test-connection', [EmailTestController::class, 'testConnection'])->name('email.test-connection');
+    
+    // Settings Routes
+    Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
+    Route::put('/settings/profile', [SettingsController::class, 'updateProfile'])->name('settings.profile');
+    Route::post('/settings/email', [SettingsController::class, 'updateEmailSettings'])->name('settings.email');
+    Route::post('/settings/test-email', [SettingsController::class, 'testEmail'])->name('settings.test-email');
+    Route::post('/settings/clear-cache', [SettingsController::class, 'clearCache'])->name('settings.clear-cache');
+    Route::post('/settings/backup', [SettingsController::class, 'backupDatabase'])->name('settings.backup');
+    
+    // Reports Routes
+    Route::get('/reports', [ReportsController::class, 'index'])->name('reports.index');
+    Route::get('/reports/export-clients', [ReportsController::class, 'exportClients'])->name('reports.export-clients');
+    Route::get('/reports/export-vendors', [ReportsController::class, 'exportVendors'])->name('reports.export-vendors');
+    
+    // Interactive Map Route
+    Route::get('/interactive-map', function () {
+        return view('admin.interactive-map');
+    })->name('interactive-map');
 });

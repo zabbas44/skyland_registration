@@ -1,241 +1,187 @@
-@extends('layouts.admin')
-
-@section('title', 'Add New Vendor')
-@section('page-title', 'Add New Vendor')
+@extends('layouts.admin-dark')
 
 @section('admin-content')
-<div class="mb-6">
-    <a href="{{ route('admin.vendors.index') }}" 
-       class="text-gray-600 hover:text-gray-900 flex items-center">
-        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-        </svg>
-        Back to Vendors
-    </a>
-</div>
-
-<div class="bg-white shadow rounded-lg">
-    <div class="px-6 py-4 border-b border-gray-200">
-        <h3 class="text-lg font-medium text-gray-900">Vendor Information</h3>
-    </div>
-    
-    <form method="POST" action="{{ route('admin.vendors.store') }}" class="px-6 py-4">
-        @csrf
-        
-        <!-- Contact Section -->
-        <div class="mb-8">
-            <h4 class="text-md font-medium text-gray-900 mb-4">Contact Information</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label for="first_name" class="block text-sm font-medium text-gray-700 mb-2">First Name *</label>
-                    <input type="text" name="first_name" id="first_name" required maxlength="50"
-                           value="{{ old('first_name') }}"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 @error('first_name') border-red-500 @enderror">
-                    @error('first_name')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-                
-                <div>
-                    <label for="last_name" class="block text-sm font-medium text-gray-700 mb-2">Last Name *</label>
-                    <input type="text" name="last_name" id="last_name" required maxlength="50"
-                           value="{{ old('last_name') }}"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 @error('last_name') border-red-500 @enderror">
-                    @error('last_name')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-                
-                <div>
-                    <label for="contact_company_name" class="block text-sm font-medium text-gray-700 mb-2">Contact Company Name *</label>
-                    <input type="text" name="contact_company_name" id="contact_company_name" required maxlength="100"
-                           value="{{ old('contact_company_name') }}"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 @error('contact_company_name') border-red-500 @enderror">
-                    @error('contact_company_name')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-                
-                <div>
-                    <label for="contact_designation" class="block text-sm font-medium text-gray-700 mb-2">Contact Designation</label>
-                    <input type="text" name="contact_designation" id="contact_designation"
-                           value="{{ old('contact_designation') }}"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 @error('contact_designation') border-red-500 @enderror">
-                    @error('contact_designation')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-                
-                <div>
-                    <label for="contact_email" class="block text-sm font-medium text-gray-700 mb-2">Contact Email *</label>
-                    <input type="email" name="contact_email" id="contact_email" required
-                           value="{{ old('contact_email') }}"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 @error('contact_email') border-red-500 @enderror">
-                    @error('contact_email')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-                
-                <div>
-                    <label for="contact_mobile" class="block text-sm font-medium text-gray-700 mb-2">Contact Mobile *</label>
-                    <input type="text" name="contact_mobile" id="contact_mobile" required
-                           value="{{ old('contact_mobile') }}"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 @error('contact_mobile') border-red-500 @enderror">
-                    @error('contact_mobile')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-            </div>
+<!-- Header -->
+<header class="bg-black/20 backdrop-blur-xl border-b border-white/10 px-6 py-4">
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-bold text-white">Create New Vendor</h1>
+            <p class="text-purple-300">Add a new vendor to the system</p>
         </div>
-
-        <!-- Company Information Section -->
-        <div class="mb-8">
-            <h4 class="text-md font-medium text-gray-900 mb-4">Company Information</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label for="company_name" class="block text-sm font-medium text-gray-700 mb-2">Company Name *</label>
-                    <input type="text" name="company_name" id="company_name" required
-                           value="{{ old('company_name') }}"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 @error('company_name') border-red-500 @enderror">
-                    @error('company_name')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-                
-                <div>
-                    <label for="business_type" class="block text-sm font-medium text-gray-700 mb-2">Business Type</label>
-                    <select name="business_type" id="business_type"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 @error('business_type') border-red-500 @enderror">
-                        <option value="">Select Type</option>
-                        <option value="Sole Proprietorship" {{ old('business_type') === 'Sole Proprietorship' ? 'selected' : '' }}>Sole Proprietorship</option>
-                        <option value="Partnership" {{ old('business_type') === 'Partnership' ? 'selected' : '' }}>Partnership</option>
-                        <option value="LLC" {{ old('business_type') === 'LLC' ? 'selected' : '' }}>LLC</option>
-                        <option value="Corporation" {{ old('business_type') === 'Corporation' ? 'selected' : '' }}>Corporation</option>
-                        <option value="Non-Profit" {{ old('business_type') === 'Non-Profit' ? 'selected' : '' }}>Non-Profit</option>
-                        <option value="Other" {{ old('business_type') === 'Other' ? 'selected' : '' }}>Other</option>
-                    </select>
-                    @error('business_type')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-                
-                <div>
-                    <label for="company_contact_person" class="block text-sm font-medium text-gray-700 mb-2">Company Contact Person *</label>
-                    <input type="text" name="company_contact_person" id="company_contact_person" required
-                           value="{{ old('company_contact_person') }}"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 @error('company_contact_person') border-red-500 @enderror">
-                    @error('company_contact_person')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-                
-                <div>
-                    <label for="company_designation" class="block text-sm font-medium text-gray-700 mb-2">Company Designation *</label>
-                    <input type="text" name="company_designation" id="company_designation" required
-                           value="{{ old('company_designation') }}"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 @error('company_designation') border-red-500 @enderror">
-                    @error('company_designation')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-                
-                <div>
-                    <label for="company_email" class="block text-sm font-medium text-gray-700 mb-2">Company Email *</label>
-                    <input type="email" name="company_email" id="company_email" required
-                           value="{{ old('company_email') }}"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 @error('company_email') border-red-500 @enderror">
-                    @error('company_email')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-                
-                <div>
-                    <label for="company_phone" class="block text-sm font-medium text-gray-700 mb-2">Company Phone *</label>
-                    <input type="text" name="company_phone" id="company_phone" required
-                           value="{{ old('company_phone') }}"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 @error('company_phone') border-red-500 @enderror">
-                    @error('company_phone')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-                
-                <div>
-                    <label for="year_of_establishment" class="block text-sm font-medium text-gray-700 mb-2">Year of Establishment</label>
-                    <input type="number" name="year_of_establishment" id="year_of_establishment" min="1800" max="{{ date('Y') }}"
-                           value="{{ old('year_of_establishment') }}"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 @error('year_of_establishment') border-red-500 @enderror">
-                    @error('year_of_establishment')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-                
-                <div>
-                    <label for="website" class="block text-sm font-medium text-gray-700 mb-2">Website</label>
-                    <input type="url" name="website" id="website"
-                           value="{{ old('website') }}"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 @error('website') border-red-500 @enderror">
-                    @error('website')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-                
-                <div class="md:col-span-2">
-                    <label for="nature_of_business" class="block text-sm font-medium text-gray-700 mb-2">Nature of Business</label>
-                    <textarea name="nature_of_business" id="nature_of_business" rows="3"
-                              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 @error('nature_of_business') border-red-500 @enderror">{{ old('nature_of_business') }}</textarea>
-                    @error('nature_of_business')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-                
-                <div class="md:col-span-2">
-                    <label for="address" class="block text-sm font-medium text-gray-700 mb-2">Address *</label>
-                    <textarea name="address" id="address" rows="3" required
-                              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 @error('address') border-red-500 @enderror">{{ old('address') }}</textarea>
-                    @error('address')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-            </div>
-        </div>
-
-        <!-- Legal Information Section -->
-        <div class="mb-8">
-            <h4 class="text-md font-medium text-gray-900 mb-4">Legal & Compliance</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label for="trade_license_number" class="block text-sm font-medium text-gray-700 mb-2">Trade License Number</label>
-                    <input type="text" name="trade_license_number" id="trade_license_number"
-                           value="{{ old('trade_license_number') }}"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 @error('trade_license_number') border-red-500 @enderror">
-                    @error('trade_license_number')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-                
-                <div>
-                    <label for="tax_id" class="block text-sm font-medium text-gray-700 mb-2">Tax ID</label>
-                    <input type="text" name="tax_id" id="tax_id"
-                           value="{{ old('tax_id') }}"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 @error('tax_id') border-red-500 @enderror">
-                    @error('tax_id')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-            </div>
-        </div>
-
-        <!-- Submit Button -->
-        <div class="flex justify-end space-x-3 pt-6 border-t border-gray-200">
+        <div class="flex items-center space-x-3">
             <a href="{{ route('admin.vendors.index') }}" 
-               class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 text-sm">
-                Cancel
+               class="px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white rounded-xl hover:bg-white/20 transition-all flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                Back to Vendors
             </a>
-            <button type="submit" 
-                    class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm">
-                Create Vendor
-            </button>
+            <a href="{{ route('supplier.register') }}" target="_blank"
+               class="px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl hover:from-green-600 hover:to-emerald-600 transition-all flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                Use Full Registration Form
+            </a>
         </div>
-    </form>
+    </div>
+</header>
+
+<!-- Page Content -->
+<div class="flex-1 p-6 overflow-y-auto custom-scrollbar">
+    <!-- Info Card -->
+    <div class="bg-gradient-to-r from-green-500/20 to-emerald-500/20 backdrop-blur-xl border border-white/20 rounded-2xl p-6 mb-8">
+        <div class="flex items-start">
+            <div class="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center mr-4">
+                <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <div>
+                <h3 class="text-lg font-semibold text-white mb-2">Recommended: Use Full Registration Form</h3>
+                <p class="text-purple-300 mb-4">For the best experience and to capture all necessary vendor information, we recommend using the complete multi-step registration form.</p>
+                <a href="{{ route('supplier.register') }}" target="_blank"
+                   class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl font-medium hover:from-green-600 hover:to-emerald-600 transition-all">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-1M10 6V5a2 2 0 112 0v1M10 6h2m0 0v3m0-3h3m-3 3l3-3"></path>
+                    </svg>
+                    Open Full Registration Form
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Create Form -->
+    <div class="bg-black/20 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
+        <div class="mb-6">
+            <h3 class="text-xl font-semibold text-white mb-2">Quick Vendor Creation</h3>
+            <p class="text-purple-300">Create a basic vendor entry with essential information only.</p>
+        </div>
+
+        <form method="POST" action="{{ route('admin.vendors.store') }}" class="max-w-4xl">
+            @csrf
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div>
+                    <label class="block text-sm font-medium text-purple-300 mb-2">First Name *</label>
+                    <input type="text" name="first_name" value="{{ old('first_name') }}" 
+                           class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500" 
+                           required>
+                    @error('first_name')
+                        <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-purple-300 mb-2">Last Name *</label>
+                    <input type="text" name="last_name" value="{{ old('last_name') }}" 
+                           class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500" 
+                           required>
+                    @error('last_name')
+                        <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-purple-300 mb-2">Email *</label>
+                    <input type="email" name="contact_email" value="{{ old('contact_email') }}" 
+                           class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500" 
+                           required>
+                    @error('contact_email')
+                        <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-purple-300 mb-2">Mobile *</label>
+                    <input type="text" name="contact_mobile" value="{{ old('contact_mobile') }}" 
+                           class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500" 
+                           required>
+                    @error('contact_mobile')
+                        <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-purple-300 mb-2">Vendor Type</label>
+                    <select name="vendor_type" class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        <option value="Individual" {{ old('vendor_type') === 'Individual' ? 'selected' : '' }}>Individual</option>
+                        <option value="Company" {{ old('vendor_type') === 'Company' ? 'selected' : '' }}>Company</option>
+                        <option value="Partnership" {{ old('vendor_type') === 'Partnership' ? 'selected' : '' }}>Partnership</option>
+                    </select>
+                    @error('vendor_type')
+                        <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-purple-300 mb-2">Company Name</label>
+                    <input type="text" name="company_name" value="{{ old('company_name') }}" 
+                           class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    @error('company_name')
+                        <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-purple-300 mb-2">Job Title</label>
+                    <input type="text" name="job_title" value="{{ old('job_title') }}" 
+                           class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    @error('job_title')
+                        <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-purple-300 mb-2">Business Type</label>
+                    <input type="text" name="business_type" value="{{ old('business_type') }}" 
+                           class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    @error('business_type')
+                        <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-purple-300 mb-2">Address</label>
+                <textarea name="address" rows="3" 
+                          class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500">{{ old('address') }}</textarea>
+                @error('address')
+                    <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-purple-300 mb-2">Services Offered</label>
+                <textarea name="services_offered" rows="3" 
+                          placeholder="List the services you offer..."
+                          class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500">{{ old('services_offered') }}</textarea>
+                @error('services_offered')
+                    <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-purple-300 mb-2">Company Description</label>
+                <textarea name="company_description" rows="4" 
+                          placeholder="Brief description of your company or services..."
+                          class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500">{{ old('company_description') }}</textarea>
+                @error('company_description')
+                    <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div class="flex justify-end space-x-4">
+                <a href="{{ route('admin.vendors.index') }}" 
+                   class="px-6 py-3 bg-white/10 text-white rounded-xl hover:bg-white/20 transition-all">
+                    Cancel
+                </a>
+                <button type="submit" 
+                        class="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl font-medium hover:from-green-600 hover:to-emerald-600 transition-all">
+                    Create Vendor
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
 @endsection

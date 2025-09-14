@@ -3,20 +3,52 @@
 @section('title', 'Client Registration')
 
 @section('content')
-<div class="min-h-screen bg-gradient-to-br from-slate-800 via-blue-900 to-slate-900 py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-    <!-- Background Pattern -->
-    <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23F97316" fill-opacity="0.03"%3E%3Ccircle cx="30" cy="30" r="3"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20"></div>
+<style>
+    /* Animation for floating blobs */
+    @keyframes blob {
+        0% { transform: translate(0px, 0px) scale(1); }
+        33% { transform: translate(30px, -50px) scale(1.1); }
+        66% { transform: translate(-20px, 20px) scale(0.9); }
+        100% { transform: translate(0px, 0px) scale(1); }
+    }
+    
+    .animate-blob {
+        animation: blob 7s infinite;
+    }
+    
+    .animation-delay-2000 {
+        animation-delay: 2s;
+    }
+    
+    .animation-delay-4000 {
+        animation-delay: 4s;
+    }
+    
+    /* Custom backdrop blur for better browser support */
+    .backdrop-blur-xl {
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+    }
+</style>
+
+<div class="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <!-- Animated Background Elements -->
+    <div class="absolute inset-0 overflow-hidden">
+        <div class="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
+        <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-yellow-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
+        <div class="absolute top-40 left-40 w-80 h-80 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
+    </div>
     
     <div class="max-w-4xl mx-auto relative z-10">
         <!-- Header -->
         <div class="text-center mb-6">
             <div class="mb-2">
-                <img src="{{ asset('logo-light-trimmed.webp') }}" alt="Sky Land Construction" class="w-40 h-auto mx-auto">
+                <img src="{{ asset('images/SKYLAND_Logo.webp') }}" alt="SKY LAND CONSTRUCTION LLC OPC" class="w-40 h-auto mx-auto">
             </div>
             <br/>
             <h1 class="text-5xl font-bold text-white mb-4 tracking-wide" style="font-family: Teko, sans-serif;">Client Registration</h1>
             <p class="text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed">
-                Register today to request quotations, schedule site visits, and seamlessly manage your projects with <span class="text-orange-400">Sky Land Construction</span>.
+                Register today to request quotations, schedule site visits, and seamlessly manage your projects with <span class="text-orange-400">SKY LAND CONSTRUCTION LLC OPC</span>.
             </p>
         </div>
 

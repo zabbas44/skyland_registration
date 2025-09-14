@@ -239,7 +239,7 @@
         <!-- Header - Same style as registration forms -->
         <div class="flex items-center mb-8">
             <div class="w-16 h-16 flex items-center justify-center mr-4">
-                <img src="{{ asset('images/logo-light-trimmed.webp') }}" alt="Sky Land Construction Logo" class="w-16 h-17 object-contain">
+                <img src="{{ asset('images/SKYLAND_Logo.webp') }}" alt="SKY LAND CONSTRUCTION LLC OPC Logo" class="w-16 h-17 object-contain">
             </div>
             <div class="flex-1">
                 <h1 class="text-2xl font-normal text-white" style="font-family: Teko, sans-serif;">📧 Email Conversations</h1>

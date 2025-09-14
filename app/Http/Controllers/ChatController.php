@@ -16,10 +16,8 @@ use Illuminate\Support\Str;
 
 class ChatController extends Controller
 {
-    // Middleware will be applied via routes instead of constructor
-
     /**
-     * Show chat interface
+     * Show conversation interface
      */
     public function index(Request $request)
     {
@@ -43,11 +41,11 @@ class ChatController extends Controller
                 $entity = Vendor::find($entityId);
             } else {
                 // User is not linked to any entity
-                return view('chat.not-approved');
+                return view('conversations.not-approved');
             }
             
             if (!$entity || $entity->status !== 'approved') {
-                return view('chat.not-approved');
+                return view('conversations.not-approved');
             }
             
             $conversations = ChatConversation::with(['client', 'vendor', 'lastMessageBy'])
@@ -59,12 +57,12 @@ class ChatController extends Controller
         
         $activeConversation = null;
         if ($request->has('conversation') && $conversations->count() > 0) {
-            $activeConversation = $conversations->firstWhere('id', $request->conversation);
+            $activeConversation = $conversations->where('id', $request->conversation)->first();
         } elseif ($conversations->count() > 0) {
             $activeConversation = $conversations->first();
         }
         
-        return view('chat.index', compact('conversations', 'activeConversation', 'user'));
+        return view('conversations.index', compact('conversations', 'activeConversation', 'user'));
     }
 
     /**
@@ -100,104 +98,173 @@ class ChatController extends Controller
      */
     public function sendMessage(Request $request)
     {
-        $request->validate([
-            'conversation_id' => 'nullable|exists:chat_conversations,id',
-            'entity_type' => 'required_without:conversation_id|in:client,vendor',
-            'entity_id' => 'required_without:conversation_id|integer',
-            'message' => 'required|string|max:2000',
-            'attachments' => 'nullable|array',
-            'attachments.*' => 'array'
-        ]);
-
         $user = Auth::user();
         
-        // Get or create conversation
-        if ($request->conversation_id) {
-            $conversation = ChatConversation::findOrFail($request->conversation_id);
-        } else {
-            // Admin starting new conversation - auto-approve entity
-            if ($user->isAdmin()) {
-                $entity = $request->entity_type === 'client' 
-                    ? Client::findOrFail($request->entity_id)
-                    : Vendor::findOrFail($request->entity_id);
+        $request->validate([
+            'message' => 'required|string|max:5000',
+            'conversation_id' => 'nullable|exists:chat_conversations,id',
+            'create_new' => 'boolean'
+        ]);
+
+        try {
+            // If creating new conversation or no conversation specified
+            if ($request->create_new || !$request->conversation_id) {
+                $conversation = $this->createOrGetConversation($user);
+            } else {
+                $conversation = ChatConversation::findOrFail($request->conversation_id);
                 
-                // Auto-approve entity when admin starts chat
-                if ($entity->status !== 'approved') {
-                    $entity->update([
-                        'status' => 'approved',
-                        'status_updated_at' => now(),
-                        'status_updated_by' => $user->id,
-                        'status_reason' => 'Auto-approved when admin initiated chat'
-                    ]);
+                // Check access permissions
+                if (!$this->canAccessConversation($user, $conversation)) {
+                    return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
                 }
             }
-            
-            $conversation = ChatConversation::firstOrCreate([
-                'entity_type' => $request->entity_type,
-                'entity_id' => $request->entity_id,
-            ], [
-                'status' => 'active',
-                'title' => null,
+
+            // Create the message
+            $message = ChatMessage::create([
+                'conversation_id' => $conversation->id,
+                'sender_id' => $user->id,
+                'message' => $request->message,
+                'message_type' => 'text'
             ]);
+
+            // Update conversation
+            $conversation->update([
+                'last_message_at' => now(),
+                'last_message_by' => $user->id,
+                'last_message_preview' => \Str::limit($request->message, 100)
+            ]);
+
+            // Increment unread count for the other party
+            if ($user->isAdmin()) {
+                $conversation->increment('unread_count_client');
+            } else {
+                $conversation->increment('unread_count_admin');
+            }
+
+            // Send notification (optional - implement later)
+            // $this->sendMessageNotification($conversation, $message);
+
+            return response()->json([
+                'success' => true,
+                'message' => $message->load('sender'),
+                'conversation' => $conversation
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Failed to send message: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to send message: ' . $e->getMessage()
+            ], 500);
         }
+    }
+
+    /**
+     * Mark conversation as read
+     */
+    public function markAsRead(ChatConversation $conversation)
+    {
+        $user = Auth::user();
         
-        // Check access
+        // Check access permissions
         if (!$this->canAccessConversation($user, $conversation)) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
-        
-        // Create message
-        $message = ChatMessage::create([
-            'conversation_id' => $conversation->id,
-            'sender_id' => $user->id,
-            'message' => $request->message,
-            'message_type' => 'text',
+
+        $userType = $user->isAdmin() ? 'admin' : 'client';
+        $conversation->markAsRead($userType);
+
+        return response()->json(['success' => true]);
+    }
+
+    /**
+     * Upload attachment
+     */
+    public function uploadAttachment(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|max:10240', // 10MB max
+            'conversation_id' => 'required|exists:chat_conversations,id'
         ]);
+
+        $user = Auth::user();
+        $conversation = ChatConversation::findOrFail($request->conversation_id);
         
-        // Handle attachments
-        if ($request->has('attachments') && is_array($request->attachments)) {
-            foreach ($request->attachments as $attachmentInfo) {
-                if (isset($attachmentInfo['path']) && Storage::disk('local')->exists($attachmentInfo['path'])) {
-                    // Move from temp to permanent location
-                    $permanentPath = 'chat-attachments/' . $conversation->id . '/' . $attachmentInfo['stored_name'];
-                    Storage::disk('local')->move($attachmentInfo['path'], $permanentPath);
-                    
-                    // Save attachment record
-                    ChatAttachment::create([
-                        'message_id' => $message->id,
-                        'original_filename' => $attachmentInfo['original_name'],
-                        'stored_filename' => $attachmentInfo['stored_name'],
-                        'file_path' => $permanentPath,
-                        'mime_type' => $attachmentInfo['mime_type'],
-                        'file_size' => $attachmentInfo['size'],
-                    ]);
-                }
-            }
+        // Check access permissions
+        if (!$this->canAccessConversation($user, $conversation)) {
+            return response()->json(['error' => 'Unauthorized'], 403);
         }
-        
-        // Update conversation
-        $conversation->update([
-            'last_message_at' => now(),
-            'last_message_by' => $user->id,
-            'last_message_preview' => $message->getPreview(),
-        ]);
-        
-        // Increment unread count for the other party
-        $recipientType = $user->isAdmin() ? 'client' : 'admin';
-        $conversation->incrementUnreadCount($recipientType);
-        
-        // Send email notification (async - don't block chat)
+
         try {
-            $this->sendMessageNotification($conversation, $message);
+            $file = $request->file('file');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $path = $file->storeAs('conversation-attachments', $filename, 'private');
+
+            // Create attachment record (implement ChatAttachment model if needed)
+            // For now, we'll store it as metadata in the message
+            $message = ChatMessage::create([
+                'conversation_id' => $conversation->id,
+                'sender_id' => $user->id,
+                'message' => 'File: ' . $file->getClientOriginalName(),
+                'message_type' => 'file',
+                'metadata' => [
+                    'filename' => $file->getClientOriginalName(),
+                    'path' => $path,
+                    'size' => $file->getSize(),
+                    'mime_type' => $file->getMimeType()
+                ]
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => $message->load('sender')
+            ]);
+
         } catch (\Exception $e) {
-            // Log error but don't break chat functionality
-            Log::error('Email notification failed: ' . $e->getMessage());
+            Log::error('Failed to upload attachment: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to upload file'
+            ], 500);
         }
-        
-        return response()->json([
-            'success' => true,
-            'message' => $message->load(['sender', 'attachments'])
-        ]);
+    }
+
+    /**
+     * Create or get existing conversation for user
+     */
+    private function createOrGetConversation($user)
+    {
+        if ($user->isAdmin()) {
+            throw new \Exception('Admin cannot create conversations from this endpoint');
+        }
+
+        // Determine entity type and ID
+        if ($user->isClient()) {
+            $entityType = 'client';
+            $entityId = $user->client_id;
+        } elseif ($user->isSupplier()) {
+            $entityType = 'vendor';
+            $entityId = $user->supplier_id;
+        } else {
+            throw new \Exception('User not linked to any entity');
+        }
+
+        // Check if conversation already exists
+        $conversation = ChatConversation::where('entity_type', $entityType)
+            ->where('entity_id', $entityId)
+            ->first();
+
+        if (!$conversation) {
+            // Create new conversation
+            $conversation = ChatConversation::create([
+                'entity_type' => $entityType,
+                'entity_id' => $entityId,
+                'title' => 'Conversation with Admin',
+                'status' => 'active'
+            ]);
+        }
+
+        return $conversation;
     }
 
     /**
@@ -208,185 +275,15 @@ class ChatController extends Controller
         if ($user->isAdmin()) {
             return true;
         }
-        
-        if ($user->isClient() && $user->client_id) {
-            $entityType = 'client';
-            $entityId = $user->client_id;
-        } elseif ($user->isSupplier() && $user->supplier_id) {
-            $entityType = 'vendor';
-            $entityId = $user->supplier_id;
-        } else {
-            return false; // User not properly linked to entity
-        }
-        
-        return $conversation->entity_type === $entityType && $conversation->entity_id === $entityId;
-    }
 
-    /**
-     * Upload attachment temporarily
-     */
-    public function uploadAttachment(Request $request)
-    {
-        $request->validate([
-            'file' => 'required|file|max:10240', // 10MB max
-        ]);
+        if ($user->isClient() && $conversation->entity_type === 'client' && $conversation->entity_id == $user->client_id) {
+            return true;
+        }
 
-        try {
-            $file = $request->file('file');
-            $originalName = $file->getClientOriginalName();
-            $mimeType = $file->getMimeType();
-            $size = $file->getSize();
-            
-            // Generate unique filename
-            $storedName = Str::random(40) . '.' . $file->getClientOriginalExtension();
-            
-            // Store in temp location
-            $tempPath = 'temp-attachments/' . $storedName;
-            $path = $file->storeAs('temp-attachments', $storedName, 'local');
-            
-            return response()->json([
-                'success' => true,
-                'original_name' => $originalName,
-                'stored_name' => $storedName,
-                'path' => $path,
-                'mime_type' => $mimeType,
-                'size' => $size
-            ]);
-        } catch (\Exception $e) {
-            Log::error('File upload failed: ' . $e->getMessage());
-            return response()->json(['error' => 'Upload failed'], 500);
+        if ($user->isSupplier() && $conversation->entity_type === 'vendor' && $conversation->entity_id == $user->supplier_id) {
+            return true;
         }
-    }
 
-    /**
-     * Download attachment
-     */
-    public function downloadAttachment(ChatAttachment $attachment)
-    {
-        $user = Auth::user();
-        
-        // Check if user can access this attachment
-        if (!$this->canAccessConversation($user, $attachment->message->conversation)) {
-            abort(403);
-        }
-        
-        if (!$attachment->fileExists()) {
-            abort(404);
-        }
-        
-        return response()->download($attachment->full_path, $attachment->original_filename);
-    }
-
-    /**
-     * Edit message
-     */
-    public function editMessage(Request $request, ChatMessage $message)
-    {
-        $request->validate([
-            'message' => 'required|string|max:2000',
-        ]);
-
-        $user = Auth::user();
-        
-        // Check if user can edit this message (only sender can edit)
-        if ($message->sender_id !== $user->id) {
-            return response()->json(['error' => 'Unauthorized'], 403);
-        }
-        
-        // Check if message is not too old (e.g., 5 minutes)
-        if ($message->created_at->diffInMinutes(now()) > 5) {
-            return response()->json(['error' => 'Message too old to edit'], 403);
-        }
-        
-        $message->update([
-            'message' => $request->message,
-            'is_edited' => true,
-            'edited_at' => now(),
-        ]);
-        
-        return response()->json([
-            'success' => true,
-            'message' => $message->load(['sender', 'attachments'])
-        ]);
-    }
-
-    /**
-     * Mark conversation as read
-     */
-    public function markAsRead(ChatConversation $conversation)
-    {
-        $user = Auth::user();
-        
-        if (!$this->canAccessConversation($user, $conversation)) {
-            return response()->json(['error' => 'Unauthorized'], 403);
-        }
-        
-        $userType = $user->isAdmin() ? 'admin' : 'client';
-        $conversation->markAsRead($userType);
-        
-        return response()->json(['success' => true]);
-    }
-
-    /**
-     * Get entities for new chat modal (Admin only)
-     */
-    public function getEntities(Request $request)
-    {
-        $user = Auth::user();
-        
-        Log::info('getEntities called', [
-            'user_id' => $user->id,
-            'is_admin' => $user->isAdmin(),
-            'type' => $request->get('type')
-        ]);
-        
-        if (!$user->isAdmin()) {
-            Log::warning('Non-admin user tried to access entities', ['user_id' => $user->id]);
-            return response()->json(['error' => 'Unauthorized'], 403);
-        }
-        
-        $type = $request->get('type');
-        
-        if ($type === 'client') {
-            $entities = Client::select('id', 'full_name', 'email', 'status')->get();
-            Log::info('Retrieved clients', ['count' => $entities->count()]);
-            return response()->json($entities);
-        } elseif ($type === 'vendor') {
-            $entities = Vendor::select('id', 'company_name', 'contact_email', 'status')->get();
-            Log::info('Retrieved vendors', ['count' => $entities->count()]);
-            return response()->json($entities);
-        }
-        
-        Log::error('Invalid type requested', ['type' => $type]);
-        return response()->json(['error' => 'Invalid type'], 400);
-    }
-
-    /**
-     * Send message notification email
-     */
-    private function sendMessageNotification($conversation, $message)
-    {
-        try {
-            $sender = $message->sender;
-            $entity = $conversation->getEntity();
-            
-            if ($sender->isAdmin()) {
-                // Admin sent message to client/vendor
-                $recipientEmail = $conversation->entity_type === 'client' 
-                    ? $entity->email 
-                    : $entity->contact_email;
-                
-                // Send notification email
-                Mail::to($recipientEmail)->send(new \App\Mail\ChatMessageNotification($conversation, $message));
-            } else {
-                // Client/vendor sent message to admin
-                $adminUsers = \App\Models\User::where('is_admin', true)->get();
-                foreach ($adminUsers as $admin) {
-                    Mail::to($admin->email)->send(new \App\Mail\ChatMessageNotification($conversation, $message));
-                }
-            }
-        } catch (\Exception $e) {
-            Log::error('Failed to send chat notification: ' . $e->getMessage());
-        }
+        return false;
     }
 }
