@@ -234,11 +234,14 @@ class DashboardController extends Controller
                 }
 
                 $entityName = 'Unknown';
+                $entityEmail = '';
                 if ($entity) {
                     if ($communication->entity_type === 'client') {
                         $entityName = $entity->full_name ?? 'Unknown Client';
+                        $entityEmail = $entity->email ?? '';
                     } else {
                         $entityName = ($entity->first_name . ' ' . $entity->last_name) ?? 'Unknown Vendor';
+                        $entityEmail = $entity->email ?? '';
                     }
                 }
 
@@ -248,6 +251,7 @@ class DashboardController extends Controller
                     'entity_type' => $communication->entity_type,
                     'entity_id' => $communication->entity_id,
                     'entityName' => $entityName,
+                    'entityEmail' => $entityEmail,
                     'last_message_at' => $communication->sent_at,
                     'last_message_preview' => $communication->message_preview,
                     'unread_count_admin' => 0, // Email communications don't have unread counts

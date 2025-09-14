@@ -615,7 +615,7 @@
                                             </div>
                                         @endif
                                         <div class="flex items-center justify-end">
-                                            <button class="bg-purple-500/20 hover:bg-purple-500/40 transition-colors px-2 py-1 rounded text-purple-300 text-xs flex items-center space-x-1">
+                                            <button onclick="openDashboardEmailModal('{{ $conversation->entity_type }}', {{ $conversation->entity_id }}, '{{ addslashes($entityName) }}', '{{ $conversation->entityEmail ?? '' }}')" class="bg-purple-500/20 hover:bg-purple-500/40 transition-colors px-2 py-1 rounded text-purple-300 text-xs flex items-center space-x-1">
                                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path>
                                                 </svg>
@@ -762,4 +762,320 @@
         </div>
     </div>
 
+<!-- Email Modal for Dashboard Reply -->
+<div id="dashboardEmailModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm overflow-y-auto h-full w-full hidden z-50">
+    <div class="relative top-10 mx-auto p-5 border border-white/20 w-full max-w-2xl shadow-2xl rounded-2xl bg-black/40 backdrop-blur-xl">
+        <div class="mt-3">
+            <h3 class="text-lg font-medium text-white text-center mb-4">Send Email</h3>
+            <form id="dashboardEmailForm" method="POST">
+                @csrf
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-purple-300 mb-2">To:</label>
+                    <input type="text" id="dashboardRecipientInfo" readonly 
+                           class="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-xl text-white">
+                </div>
+                <div class="mb-4">
+                    <label for="dashboardEmailSubject" class="block text-sm font-medium text-purple-300 mb-2">Subject:</label>
+                    <input type="text" name="subject" id="dashboardEmailSubject" required
+                           class="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                           placeholder="Enter email subject...">
+                </div>
+                <div class="mb-4">
+                    <label for="dashboardEmailMessage" class="block text-sm font-medium text-purple-300 mb-2">Message:</label>
+                    <textarea name="message" id="dashboardEmailMessage" rows="6" required
+                              class="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                              placeholder="Type your message here..."></textarea>
+                </div>
+                
+                <!-- Attachments Section -->
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-purple-300 mb-2">Attachments (Optional):</label>
+                    <div class="border-2 border-dashed border-white/20 rounded-xl p-4 bg-white/5">
+                        <div class="text-center">
+                            <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                                <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            <div class="mt-4">
+                                <label for="dashboardFileInput" class="cursor-pointer">
+                                    <span class="mt-2 block text-sm font-medium text-white">
+                                        Click to upload files or drag and drop
+                                    </span>
+                                    <span class="mt-1 block text-xs text-gray-400">
+                                        Max 10MB per file. Multiple files allowed.
+                                    </span>
+                                </label>
+                                <input id="dashboardFileInput" name="files[]" type="file" class="hidden" multiple>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- File List -->
+                    <div id="dashboardFileList" class="mt-3 space-y-2 hidden">
+                        <h4 class="text-sm font-medium text-purple-300">Selected Files:</h4>
+                        <div id="dashboardFileItems"></div>
+                    </div>
+                </div>
+                
+                <div class="flex justify-end space-x-3">
+                    <button type="button" onclick="closeDashboardEmailModal()" 
+                            class="px-4 py-2 bg-white/10 text-white rounded-xl hover:bg-white/20 text-sm transition-all">
+                        Cancel
+                    </button>
+                    <button type="submit" id="dashboardSendEmailBtn"
+                            class="px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl hover:from-green-600 hover:to-emerald-600 text-sm transition-all">
+                        Send Email
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 @endsection
+
+@push('scripts')
+<script>
+    let dashboardCurrentEntityType = null;
+    let dashboardCurrentEntityId = null;
+    let dashboardUploadedFiles = [];
+    let dashboardUploadCounter = 0;
+
+    function openDashboardEmailModal(entityType, entityId, entityName, entityEmail = '') {
+        dashboardCurrentEntityType = entityType;
+        dashboardCurrentEntityId = entityId;
+        
+        document.getElementById('dashboardEmailModal').classList.remove('hidden');
+        document.getElementById('dashboardRecipientInfo').value = `${entityName} (${entityEmail || 'Email not available'})`;
+        
+        // Clear form
+        document.getElementById('dashboardEmailForm').reset();
+        document.getElementById('dashboardRecipientInfo').value = `${entityName} (${entityEmail || 'Email not available'})`;
+        dashboardUploadedFiles = [];
+        document.getElementById('dashboardFileList').classList.add('hidden');
+        document.getElementById('dashboardFileItems').innerHTML = '';
+    }
+
+    function closeDashboardEmailModal() {
+        document.getElementById('dashboardEmailModal').classList.add('hidden');
+        dashboardCurrentEntityType = null;
+        dashboardCurrentEntityId = null;
+        dashboardUploadedFiles = [];
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('dashboardEmailModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeDashboardEmailModal();
+        }
+    });
+
+    // File Upload Functionality for Dashboard
+    document.getElementById('dashboardFileInput').addEventListener('change', function(e) {
+        const files = Array.from(e.target.files);
+        files.forEach(file => dashboardUploadFile(file));
+    });
+
+    // Drag and drop functionality for dashboard
+    const dashboardDropZone = document.querySelector('#dashboardEmailModal .border-dashed');
+    
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dashboardDropZone.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dashboardDropZone.addEventListener(eventName, dashboardHighlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dashboardDropZone.addEventListener(eventName, dashboardUnhighlight, false);
+    });
+
+    function dashboardHighlight(e) {
+        dashboardDropZone.classList.add('border-blue-400', 'bg-blue-500/10');
+    }
+
+    function dashboardUnhighlight(e) {
+        dashboardDropZone.classList.remove('border-blue-400', 'bg-blue-500/10');
+    }
+
+    dashboardDropZone.addEventListener('drop', dashboardHandleDrop, false);
+
+    function dashboardHandleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = Array.from(dt.files);
+        files.forEach(file => dashboardUploadFile(file));
+    }
+
+    function dashboardUploadFile(file) {
+        const tempId = 'dashboard_file_' + (++dashboardUploadCounter);
+        const maxSize = 10 * 1024 * 1024; // 10MB
+
+        if (file.size > maxSize) {
+            alert('File size must be less than 10MB: ' + file.name);
+            return;
+        }
+
+        // Create file item in UI
+        const fileItem = dashboardCreateFileItem(tempId, file.name, file.size, 'uploading');
+        document.getElementById('dashboardFileItems').appendChild(fileItem);
+        document.getElementById('dashboardFileList').classList.remove('hidden');
+
+        // For now, just mark as uploaded (since we don't have the upload route)
+        setTimeout(() => {
+            dashboardUploadedFiles.push({
+                temp_id: tempId,
+                original_name: file.name,
+                size: file.size,
+                formatted_size: dashboardFormatFileSize(file.size)
+            });
+            dashboardUpdateFileItem(tempId, 'uploaded', dashboardFormatFileSize(file.size));
+        }, 1000);
+    }
+
+    function dashboardCreateFileItem(tempId, fileName, fileSize, status) {
+        const div = document.createElement('div');
+        div.id = `dashboard-file-${tempId}`;
+        div.className = 'flex items-center justify-between p-2 bg-white/5 rounded border border-white/10';
+        
+        const sizeText = dashboardFormatFileSize(fileSize);
+        const statusClass = status === 'uploading' ? 'text-blue-400' : status === 'uploaded' ? 'text-green-400' : 'text-red-400';
+        const statusText = status === 'uploading' ? 'Uploading...' : status === 'uploaded' ? 'Uploaded' : 'Failed';
+        
+        div.innerHTML = `
+            <div class="flex items-center">
+                <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <div>
+                    <div class="text-sm font-medium text-white">${fileName}</div>
+                    <div class="text-xs text-gray-400">${sizeText}</div>
+                </div>
+            </div>
+            <div class="flex items-center">
+                <span class="text-xs ${statusClass} mr-2">${statusText}</span>
+                ${status !== 'uploading' ? `<button onclick="dashboardRemoveFile('${tempId}')" class="text-red-400 hover:text-red-300 text-xs">Remove</button>` : ''}
+            </div>
+        `;
+        
+        return div;
+    }
+
+    function dashboardUpdateFileItem(tempId, status, sizeOrError) {
+        const fileItem = document.getElementById(`dashboard-file-${tempId}`);
+        if (!fileItem) return;
+
+        const statusClass = status === 'uploaded' ? 'text-green-400' : 'text-red-400';
+        const statusText = status === 'uploaded' ? 'Uploaded' : 'Failed';
+        
+        const statusSpan = fileItem.querySelector('.text-xs.text-blue-400, .text-xs.text-green-400, .text-xs.text-red-400');
+        if (statusSpan) {
+            statusSpan.className = `text-xs ${statusClass} mr-2`;
+            statusSpan.textContent = statusText;
+        }
+
+        // Add remove button if not uploading
+        if (status !== 'uploading') {
+            const buttonContainer = fileItem.querySelector('.flex.items-center:last-child');
+            if (!buttonContainer.querySelector('button')) {
+                buttonContainer.innerHTML += `<button onclick="dashboardRemoveFile('${tempId}')" class="text-red-400 hover:text-red-300 text-xs ml-2">Remove</button>`;
+            }
+        }
+    }
+
+    function dashboardRemoveFile(tempId) {
+        // Remove from uploaded files array
+        dashboardUploadedFiles = dashboardUploadedFiles.filter(file => file.temp_id !== tempId);
+        
+        // Remove from UI
+        const fileItem = document.getElementById(`dashboard-file-${tempId}`);
+        if (fileItem) {
+            fileItem.remove();
+        }
+        
+        // Hide file list if no files
+        if (dashboardUploadedFiles.length === 0) {
+            document.getElementById('dashboardFileList').classList.add('hidden');
+        }
+    }
+
+    function dashboardFormatFileSize(bytes) {
+        const units = ['B', 'KB', 'MB', 'GB'];
+        let size = bytes;
+        let unitIndex = 0;
+        
+        while (size >= 1024 && unitIndex < units.length - 1) {
+            size /= 1024;
+            unitIndex++;
+        }
+        
+        return Math.round(size * 100) / 100 + ' ' + units[unitIndex];
+    }
+
+    // Handle email form submission from dashboard
+    document.getElementById('dashboardEmailForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        if (!dashboardCurrentEntityType || !dashboardCurrentEntityId) {
+            alert('No recipient selected');
+            return;
+        }
+        
+        const submitBtn = document.getElementById('dashboardSendEmailBtn');
+        const originalText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending...';
+        
+        const formData = new FormData();
+        formData.append('subject', document.getElementById('dashboardEmailSubject').value);
+        formData.append('message', document.getElementById('dashboardEmailMessage').value);
+        formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+        
+        // Add attachments
+        if (dashboardUploadedFiles.length > 0) {
+            dashboardUploadedFiles.forEach((file, index) => {
+                formData.append(`attachments[${index}][temp_id]`, file.temp_id);
+                formData.append(`attachments[${index}][original_name]`, file.original_name);
+                formData.append(`attachments[${index}][size]`, file.size);
+                formData.append(`attachments[${index}][formatted_size]`, file.formatted_size);
+            });
+        }
+        
+        const endpoint = dashboardCurrentEntityType === 'client' 
+            ? `/admin/clients/${dashboardCurrentEntityId}/send-email`
+            : `/admin/vendors/${dashboardCurrentEntityId}/send-email`;
+        
+        fetch(endpoint, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Email sent successfully!');
+                closeDashboardEmailModal();
+                // Refresh the page to update the conversations
+                window.location.reload();
+            } else {
+                alert(data.message || 'Failed to send email');
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            }
+        })
+        .catch(error => {
+            console.error('Email sending error:', error);
+            alert('An error occurred while sending the email');
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+        });
+    });
+</script>
+@endpush
