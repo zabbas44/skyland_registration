@@ -39,6 +39,8 @@ class DashboardController extends Controller
             $totalClients = $clientStats['total'];
             $totalVendors = $vendorStats['total'];
             $pendingApprovals = ($statusDistribution['clients']['pending'] ?? 0) + ($statusDistribution['vendors']['pending'] ?? 0);
+            $pendingClients = $statusDistribution['clients']['pending'] ?? 0;
+            $pendingVendors = $statusDistribution['vendors']['pending'] ?? 0;
             $thisMonth = Client::where('created_at', '>=', Carbon::now()->startOfMonth())->count() + 
                         Vendor::where('created_at', '>=', Carbon::now()->startOfMonth())->count();
             $avgClientsPerDay = $advancedStats['avg_clients_per_day'];
@@ -79,6 +81,8 @@ class DashboardController extends Controller
                 'totalClients',
                 'totalVendors',
                 'pendingApprovals',
+                'pendingClients',
+                'pendingVendors',
                 'thisMonth',
                 'avgClientsPerDay',
                 'avgVendorsPerDay',
@@ -115,6 +119,8 @@ class DashboardController extends Controller
             $totalClients = $clientStats['total'];
             $totalVendors = $vendorStats['total'];
             $pendingApprovals = 0;
+            $pendingClients = 0;
+            $pendingVendors = 0;
             $thisMonth = 0;
             $avgClientsPerDay = $advancedStats['avg_clients_per_day'];
             $avgVendorsPerDay = $advancedStats['avg_vendors_per_day'];
@@ -147,6 +153,8 @@ class DashboardController extends Controller
                 'totalClients',
                 'totalVendors',
                 'pendingApprovals',
+                'pendingClients',
+                'pendingVendors',
                 'thisMonth',
                 'avgClientsPerDay',
                 'avgVendorsPerDay',

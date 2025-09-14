@@ -33,7 +33,7 @@
                     <!-- Pending Clients -->
                     <div class="bg-gradient-to-br from-blue-500/15 to-cyan-500/15 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
                         <h3 class="text-white font-semibold text-lg mb-4">Pending Clients</h3>
-                        <div class="text-5xl font-bold text-white mb-2">1,250</div>
+                        <div class="text-5xl font-bold text-white mb-2">{{ number_format($pendingClients) }}</div>
                         <div class="flex items-center text-green-400 text-sm">
                             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
@@ -45,7 +45,7 @@
                     <!-- Pending Vendors -->
                     <div class="bg-gradient-to-br from-purple-500/15 to-pink-500/15 backdrop-blur-xl border border-white/10 rounded-2xl p-6 relative">
                         <h3 class="text-white font-semibold text-lg mb-4">Pending Vendors</h3>
-                        <div class="text-5xl font-bold text-white mb-2">218</div>
+                        <div class="text-5xl font-bold text-white mb-2">{{ number_format($pendingVendors) }}</div>
                         <div class="flex items-center text-green-400 text-sm mb-4">
                             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
