@@ -260,8 +260,15 @@ class DashboardController extends Controller
                 ];
             });
 
-        // Combine both collections and sort by last_message_at
+        // Combine both collections and group by user (entity_type + entity_id)
         $allCommunications = $chatConversations->concat($emailCommunications)
+            ->groupBy(function ($item) {
+                return $item->entity_type . '_' . $item->entity_id;
+            })
+            ->map(function ($userCommunications) {
+                // For each user, return only the most recent communication
+                return $userCommunications->sortByDesc('last_message_at')->first();
+            })
             ->sortByDesc('last_message_at')
             ->take(5);
 
