@@ -59,20 +59,8 @@ class DashboardController extends Controller
                 ->limit(10)
                 ->get();
                 
-            // Get recent conversations for dashboard
-            $recentConversations = \App\Models\ChatConversation::with(['client', 'vendor', 'lastMessageBy'])
-                ->whereNotNull('last_message_at')
-                ->orderBy('last_message_at', 'desc')
-                ->limit(5)
-                ->get();
-                
-            // If no recent conversations with messages, get any conversations (even without messages)
-            if ($recentConversations->isEmpty()) {
-                $recentConversations = \App\Models\ChatConversation::with(['client', 'vendor'])
-                    ->orderBy('created_at', 'desc')
-                    ->limit(5)
-                    ->get();
-            }
+            // Get recent conversations for dashboard (both chat and email communications)
+            $recentConversations = $this->getRecentCommunications();
             
             // Prepare status distribution for charts
             $statusDistributionChart = [
@@ -140,7 +128,7 @@ class DashboardController extends Controller
             $approvedVendors = collect();
             
             // Get conversations fallback
-            $recentConversations = collect();
+            $recentConversations = $this->getRecentCommunications();
             
             // Prepare status distribution for charts (fallback)
             $statusDistributionChart = [
@@ -207,6 +195,111 @@ class DashboardController extends Controller
         }
         
         return $stats;
+    }
+    
+    /**
+     * Get recent communications combining both chat conversations and email communications
+     */
+    private function getRecentCommunications()
+    {
+        // Get recent chat conversations
+        $chatConversations = \App\Models\ChatConversation::with(['client', 'vendor', 'lastMessageBy'])
+            ->whereNotNull('last_message_at')
+            ->get()
+            ->map(function ($conversation) {
+                return (object) [
+                    'id' => $conversation->id,
+                    'type' => 'chat',
+                    'entity_type' => $conversation->entity_type,
+                    'entity_id' => $conversation->entity_id,
+                    'entityName' => $conversation->getEntity() ? $conversation->getEntity()->full_name ?? ($conversation->getEntity()->first_name . ' ' . $conversation->getEntity()->last_name) : 'Unknown',
+                    'last_message_at' => $conversation->last_message_at,
+                    'last_message_preview' => $conversation->last_message_preview,
+                    'unread_count_admin' => $conversation->unread_count_admin ?? 0,
+                    'created_at' => $conversation->created_at,
+                ];
+            });
+
+        // Get recent email communications
+        $emailCommunications = \App\Models\CommunicationLog::with(['adminUser'])
+            ->where('status', 'sent')
+            ->get()
+            ->map(function ($communication) {
+                // Get the entity (client or vendor)
+                $entity = null;
+                if ($communication->entity_type === 'client') {
+                    $entity = \App\Models\Client::find($communication->entity_id);
+                } elseif ($communication->entity_type === 'vendor') {
+                    $entity = \App\Models\Vendor::find($communication->entity_id);
+                }
+
+                $entityName = 'Unknown';
+                if ($entity) {
+                    if ($communication->entity_type === 'client') {
+                        $entityName = $entity->full_name ?? 'Unknown Client';
+                    } else {
+                        $entityName = ($entity->first_name . ' ' . $entity->last_name) ?? 'Unknown Vendor';
+                    }
+                }
+
+                return (object) [
+                    'id' => $communication->id,
+                    'type' => 'email',
+                    'entity_type' => $communication->entity_type,
+                    'entity_id' => $communication->entity_id,
+                    'entityName' => $entityName,
+                    'last_message_at' => $communication->sent_at,
+                    'last_message_preview' => $communication->message_preview,
+                    'unread_count_admin' => 0, // Email communications don't have unread counts
+                    'created_at' => $communication->created_at,
+                    'subject' => $communication->subject,
+                ];
+            });
+
+        // Combine both collections and sort by last_message_at
+        $allCommunications = $chatConversations->concat($emailCommunications)
+            ->sortByDesc('last_message_at')
+            ->take(5);
+
+        // If no recent communications, get any recent registrations
+        if ($allCommunications->isEmpty()) {
+            $recentClients = Client::orderBy('created_at', 'desc')->take(3)->get();
+            $recentVendors = Vendor::orderBy('created_at', 'desc')->take(2)->get();
+            
+            $fallbackCommunications = collect();
+            
+            foreach ($recentClients as $client) {
+                $fallbackCommunications->push((object) [
+                    'id' => $client->id,
+                    'type' => 'registration',
+                    'entity_type' => 'client',
+                    'entity_id' => $client->id,
+                    'entityName' => $client->full_name ?? 'Unknown Client',
+                    'last_message_at' => $client->created_at,
+                    'last_message_preview' => 'New registration - no messages yet',
+                    'unread_count_admin' => 0,
+                    'created_at' => $client->created_at,
+                ]);
+            }
+            
+            foreach ($recentVendors as $vendor) {
+                $fallbackCommunications->push((object) [
+                    'id' => $vendor->id,
+                    'type' => 'registration',
+                    'entity_type' => 'vendor',
+                    'entity_id' => $vendor->id,
+                    'entityName' => ($vendor->first_name . ' ' . $vendor->last_name) ?? 'Unknown Vendor',
+                    'last_message_at' => $vendor->created_at,
+                    'last_message_preview' => 'New registration - no messages yet',
+                    'unread_count_admin' => 0,
+                    'created_at' => $vendor->created_at,
+                ]);
+            }
+            
+            return $fallbackCommunications->sortByDesc('last_message_at')->take(5);
+        }
+
+        return $allCommunications;
     }
     
     private function getChartData($filter)

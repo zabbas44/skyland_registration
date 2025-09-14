@@ -551,17 +551,9 @@
                     <div class="space-y-3">
                         @forelse($recentConversations as $conversation)
                             @php
-                                $entity = $conversation->getEntity();
-                                $entityName = 'Unknown';
+                                // Handle unified communication structure (chat, email, registration)
+                                $entityName = $conversation->entityName ?? 'Unknown';
                                 $entityType = ucfirst($conversation->entity_type);
-                                
-                                if ($entity) {
-                                    if ($conversation->entity_type === 'client') {
-                                        $entityName = $entity->full_name ?? ($entity->first_name . ' ' . $entity->last_name) ?? 'Unknown Client';
-                                    } else {
-                                        $entityName = ($entity->first_name . ' ' . $entity->last_name) ?? $entity->company_name ?? 'Unknown Vendor';
-                                    }
-                                }
                                 
                                 // Generate a consistent color based on entity name
                                 $colors = [
@@ -579,6 +571,21 @@
                                 
                                 // Format the timestamp
                                 $timeAgo = $conversation->last_message_at ? $conversation->last_message_at->diffForHumans() : 'New conversation';
+                                
+                                // Communication type indicator
+                                $typeIcon = match($conversation->type) {
+                                    'email' => '📧',
+                                    'chat' => '💬',
+                                    'registration' => '📝',
+                                    default => '💬'
+                                };
+                                
+                                $typeColor = match($conversation->type) {
+                                    'email' => 'text-green-300',
+                                    'chat' => 'text-blue-300',
+                                    'registration' => 'text-yellow-300',
+                                    default => 'text-purple-300'
+                                };
                             @endphp
                             
                             <div class="bg-white/5 border border-white/10 rounded-lg p-3 hover:bg-white/10 transition-colors">
@@ -594,7 +601,10 @@
                                             <div class="text-purple-200 text-xs">{{ $timeAgo }}</div>
                                         </div>
                                         <div class="text-purple-100 text-xs leading-tight mb-1">
-                                            <span class="text-purple-300 text-xs">{{ $entityType }}:</span>
+                                            <span class="{{ $typeColor }} text-xs">{{ $typeIcon }} {{ $entityType }}:</span>
+                                            @if($conversation->type === 'email' && isset($conversation->subject))
+                                                <span class="font-medium">{{ $conversation->subject }}</span> - 
+                                            @endif
                                             {{ Str::limit($conversation->last_message_preview ?? 'No message preview available', 50) }}
                                         </div>
                                         @if($conversation->unread_count_admin > 0)
