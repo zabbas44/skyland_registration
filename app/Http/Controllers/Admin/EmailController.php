@@ -83,7 +83,7 @@ class EmailController extends Controller
                 'admin_user_id' => Auth::id(),
                 'subject' => $request->subject,
                 'message_preview' => Str::limit($request->message, 200),
-                'status' => 'sending',
+                'status' => 'sent', // Use 'sent' instead of 'sending' as per enum constraint
                 'sent_at' => now(),
             ]);
 
@@ -110,9 +110,8 @@ class EmailController extends Controller
                         ->subject($request->subject);
             });
 
-            // Update communication log status
-            $communicationLog->update(['status' => 'sent']);
-
+            // Communication log already has status 'sent' from creation
+            
             return response()->json([
                 'success' => true,
                 'message' => 'Email sent successfully to ' . $client->full_name
@@ -156,7 +155,7 @@ class EmailController extends Controller
                 'admin_user_id' => Auth::id(),
                 'subject' => $request->subject,
                 'message_preview' => Str::limit($request->message, 200),
-                'status' => 'sending',
+                'status' => 'sent', // Use 'sent' instead of 'sending' as per enum constraint
                 'sent_at' => now(),
             ]);
 
@@ -183,9 +182,8 @@ class EmailController extends Controller
                         ->subject($request->subject);
             });
 
-            // Update communication log status
-            $communicationLog->update(['status' => 'sent']);
-
+            // Communication log already has status 'sent' from creation
+            
             return response()->json([
                 'success' => true,
                 'message' => 'Email sent successfully to ' . $vendor->first_name . ' ' . $vendor->last_name
