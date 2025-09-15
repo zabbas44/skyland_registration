@@ -548,7 +548,7 @@
                     </div>
 
                     <!-- Client Messages List -->
-                    <div class="space-y-3">
+                    <div class="space-y-3 max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-purple-500/50 scrollbar-track-purple-500/10">
                         @forelse($recentConversations as $conversation)
                             @php
                                 // Handle unified communication structure (chat, email, registration)
