@@ -242,6 +242,387 @@
                     </div>
                 </div>
 
+                <!-- Sales Summary & Order Stats Row -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    
+                    <!-- Sales Summary -->
+                    <div class="bg-gradient-to-br from-pink-500/15 to-rose-500/15 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
+                        <h3 class="text-white font-semibold text-lg mb-6">Registration Summary</h3>
+                        
+                        <!-- Bar Chart -->
+                        <div class="h-48 relative mb-4">
+                            <svg class="w-full h-full" viewBox="0 0 400 200">
+                                <defs>
+                                    <linearGradient id="barGradient1" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#ec4899;stop-opacity:0.8"/>
+                                        <stop offset="100%" style="stop-color:#ec4899;stop-opacity:0.4"/>
+                                    </linearGradient>
+                                    <linearGradient id="barGradient2" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#f97316;stop-opacity:0.8"/>
+                                        <stop offset="100%" style="stop-color:#f97316;stop-opacity:0.4"/>
+                                    </linearGradient>
+                                </defs>
+                                
+                                <!-- Grid lines -->
+                                <line x1="0" y1="40" x2="400" y2="40" stroke="#ffffff10" stroke-width="1"/>
+                                <line x1="0" y1="80" x2="400" y2="80" stroke="#ffffff10" stroke-width="1"/>
+                                <line x1="0" y1="120" x2="400" y2="120" stroke="#ffffff10" stroke-width="1"/>
+                                <line x1="0" y1="160" x2="400" y2="160" stroke="#ffffff10" stroke-width="1"/>
+                                
+                                <!-- Bars -->
+                                <rect x="20" y="60" width="25" height="140" fill="url(#barGradient1)" rx="2"/>
+                                <rect x="60" y="40" width="25" height="160" fill="url(#barGradient2)" rx="2"/>
+                                <rect x="100" y="80" width="25" height="120" fill="url(#barGradient1)" rx="2"/>
+                                <rect x="140" y="30" width="25" height="170" fill="url(#barGradient2)" rx="2"/>
+                                <rect x="180" y="70" width="25" height="130" fill="url(#barGradient1)" rx="2"/>
+                                <rect x="220" y="50" width="25" height="150" fill="url(#barGradient2)" rx="2"/>
+                                <rect x="260" y="90" width="25" height="110" fill="url(#barGradient1)" rx="2"/>
+                                <rect x="300" y="35" width="25" height="165" fill="url(#barGradient2)" rx="2"/>
+                                <rect x="340" y="65" width="25" height="135" fill="url(#barGradient1)" rx="2"/>
+                            </svg>
+                            
+                            <!-- Chart labels -->
+                            <div class="absolute bottom-0 left-0 right-0 flex justify-between text-xs text-pink-300 px-4">
+                                <span>Jan</span>
+                                <span>Feb</span>
+                                <span>Mar</span>
+                                <span>Apr</span>
+                                <span>May</span>
+                                <span>Jun</span>
+                                <span>Jul</span>
+                                <span>Aug</span>
+                                <span>Sep</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Legend -->
+                        <div class="flex justify-center space-x-6 text-xs">
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 bg-pink-500 rounded-full mr-2"></div>
+                                <span class="text-pink-300">Clients</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 bg-orange-500 rounded-full mr-2"></div>
+                                <span class="text-orange-300">Vendors</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order and Visitor Stats -->
+                    <div class="bg-gradient-to-br from-cyan-500/15 to-blue-500/15 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
+                        <h3 class="text-white font-semibold text-lg mb-6">Registration Stats</h3>
+                        
+                        <!-- Area Chart -->
+                        <div class="h-48 relative mb-4">
+                            <svg class="w-full h-full" viewBox="0 0 400 200">
+                                <defs>
+                                    <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#06b6d4;stop-opacity:0.6"/>
+                                        <stop offset="50%" style="stop-color:#3b82f6;stop-opacity:0.4"/>
+                                        <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:0.2"/>
+                                    </linearGradient>
+                                </defs>
+                                
+                                <!-- Grid lines -->
+                                <line x1="0" y1="40" x2="400" y2="40" stroke="#ffffff10" stroke-width="1"/>
+                                <line x1="0" y1="80" x2="400" y2="80" stroke="#ffffff10" stroke-width="1"/>
+                                <line x1="0" y1="120" x2="400" y2="120" stroke="#ffffff10" stroke-width="1"/>
+                                <line x1="0" y1="160" x2="400" y2="160" stroke="#ffffff10" stroke-width="1"/>
+                                
+                                <!-- Area path -->
+                                <path d="M 0 150 Q 50 120 100 100 T 200 80 Q 250 70 300 60 T 400 40" stroke="#06b6d4" stroke-width="3" fill="none"/>
+                                <path d="M 0 150 Q 50 120 100 100 T 200 80 Q 250 70 300 60 T 400 40 L 400 200 L 0 200 Z" fill="url(#areaGradient)"/>
+                                
+                                <!-- Data points -->
+                                <circle cx="0" cy="150" r="4" fill="#06b6d4" stroke="#ffffff" stroke-width="2"/>
+                                <circle cx="100" cy="100" r="4" fill="#3b82f6" stroke="#ffffff" stroke-width="2"/>
+                                <circle cx="200" cy="80" r="4" fill="#8b5cf6" stroke="#ffffff" stroke-width="2"/>
+                                <circle cx="300" cy="60" r="4" fill="#06b6d4" stroke="#ffffff" stroke-width="2"/>
+                                <circle cx="400" cy="40" r="4" fill="#3b82f6" stroke="#ffffff" stroke-width="2"/>
+                            </svg>
+                            
+                            <!-- Chart labels -->
+                            <div class="absolute bottom-0 left-0 right-0 flex justify-between text-xs text-cyan-300 px-4">
+                                <span>Mon</span>
+                                <span>Tue</span>
+                                <span>Wed</span>
+                                <span>Thu</span>
+                                <span>Fri</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Stats -->
+                        <div class="grid grid-cols-2 gap-4 text-center">
+                            <div>
+                                <div class="text-2xl font-bold text-cyan-400">{{ number_format($totalClients + $totalVendors) }}</div>
+                                <div class="text-xs text-cyan-300">Total Registrations</div>
+                            </div>
+                            <div>
+                                <div class="text-2xl font-bold text-blue-400">{{ number_format($thisMonth) }}</div>
+                                <div class="text-xs text-blue-300">This Month</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Revenue & Performance Metrics Row -->
+                <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                    
+                    <!-- Email Performance -->
+                    <div class="bg-gradient-to-br from-emerald-500/15 to-green-500/15 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
+                        <h3 class="text-white font-semibold text-sm mb-4">Email Sent</h3>
+                        
+                        <!-- Donut Chart -->
+                        <div class="h-32 relative flex items-center justify-center">
+                            <svg class="w-24 h-24" viewBox="0 0 100 100">
+                                <defs>
+                                    <linearGradient id="emailGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#10b981"/>
+                                        <stop offset="100%" style="stop-color:#059669"/>
+                                    </linearGradient>
+                                </defs>
+                                <circle cx="50" cy="50" r="35" fill="none" stroke="#ffffff10" stroke-width="8"/>
+                                <circle cx="50" cy="50" r="35" fill="none" stroke="url(#emailGradient)" stroke-width="8" 
+                                        stroke-dasharray="165 220" stroke-dashoffset="0" stroke-linecap="round" 
+                                        transform="rotate(-90 50 50)"/>
+                                <text x="50" y="55" text-anchor="middle" class="text-xs fill-white font-bold">75%</text>
+                            </svg>
+                        </div>
+                        
+                        <div class="text-center mt-2">
+                            <div class="text-lg font-bold text-emerald-400">2,847</div>
+                            <div class="text-xs text-emerald-300">Emails Sent</div>
+                        </div>
+                    </div>
+
+                    <!-- Revenue -->
+                    <div class="bg-gradient-to-br from-yellow-500/15 to-orange-500/15 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
+                        <h3 class="text-white font-semibold text-sm mb-4">All Time Revenue</h3>
+                        
+                        <!-- Line Chart -->
+                        <div class="h-32 relative">
+                            <svg class="w-full h-full" viewBox="0 0 120 80">
+                                <defs>
+                                    <linearGradient id="revenueGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#f59e0b;stop-opacity:0.6"/>
+                                        <stop offset="100%" style="stop-color:#f59e0b;stop-opacity:0.1"/>
+                                    </linearGradient>
+                                </defs>
+                                <path d="M 0 60 Q 20 45 40 35 T 80 20 Q 100 15 120 10" stroke="#f59e0b" stroke-width="2" fill="none"/>
+                                <path d="M 0 60 Q 20 45 40 35 T 80 20 Q 100 15 120 10 L 120 80 L 0 80 Z" fill="url(#revenueGradient)"/>
+                                <circle cx="40" cy="35" r="2" fill="#f59e0b"/>
+                                <circle cx="80" cy="20" r="2" fill="#f59e0b"/>
+                                <circle cx="120" cy="10" r="2" fill="#f59e0b"/>
+                            </svg>
+                        </div>
+                        
+                        <div class="text-center mt-2">
+                            <div class="text-lg font-bold text-yellow-400">$18,534</div>
+                            <div class="text-xs text-yellow-300">Total Revenue</div>
+                        </div>
+                    </div>
+
+                    <!-- Level Progress -->
+                    <div class="bg-gradient-to-br from-red-500/15 to-pink-500/15 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
+                        <h3 class="text-white font-semibold text-sm mb-4">Level</h3>
+                        
+                        <!-- Progress Circle -->
+                        <div class="h-32 relative flex items-center justify-center">
+                            <svg class="w-20 h-20" viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="35" fill="none" stroke="#ffffff10" stroke-width="6"/>
+                                <circle cx="50" cy="50" r="35" fill="none" stroke="#ef4444" stroke-width="6" 
+                                        stroke-dasharray="140 220" stroke-dashoffset="0" stroke-linecap="round" 
+                                        transform="rotate(-90 50 50)"/>
+                            </svg>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="text-center">
+                                    <div class="text-xl font-bold text-red-400">6320</div>
+                                    <div class="text-xs text-red-300">Points</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center mt-2">
+                            <div class="text-xs text-red-300">+12% last month</div>
+                        </div>
+                    </div>
+
+                    <!-- Customer Traffic -->
+                    <div class="bg-gradient-to-br from-violet-500/15 to-purple-500/15 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
+                        <h3 class="text-white font-semibold text-sm mb-4">Customer Traffic</h3>
+                        
+                        <!-- Multi-colored Donut -->
+                        <div class="h-32 relative flex items-center justify-center">
+                            <svg class="w-24 h-24" viewBox="0 0 100 100">
+                                <!-- Background circle -->
+                                <circle cx="50" cy="50" r="35" fill="none" stroke="#ffffff10" stroke-width="8"/>
+                                
+                                <!-- Segments -->
+                                <circle cx="50" cy="50" r="35" fill="none" stroke="#8b5cf6" stroke-width="8" 
+                                        stroke-dasharray="70 220" stroke-dashoffset="0" stroke-linecap="round" 
+                                        transform="rotate(-90 50 50)"/>
+                                <circle cx="50" cy="50" r="35" fill="none" stroke="#06b6d4" stroke-width="8" 
+                                        stroke-dasharray="50 220" stroke-dashoffset="-70" stroke-linecap="round" 
+                                        transform="rotate(-90 50 50)"/>
+                                <circle cx="50" cy="50" r="35" fill="none" stroke="#10b981" stroke-width="8" 
+                                        stroke-dasharray="40 220" stroke-dashoffset="-120" stroke-linecap="round" 
+                                        transform="rotate(-90 50 50)"/>
+                                <circle cx="50" cy="50" r="35" fill="none" stroke="#f59e0b" stroke-width="8" 
+                                        stroke-dasharray="30 220" stroke-dashoffset="-160" stroke-linecap="round" 
+                                        transform="rotate(-90 50 50)"/>
+                            </svg>
+                        </div>
+                        
+                        <!-- Legend -->
+                        <div class="grid grid-cols-2 gap-1 text-xs mt-2">
+                            <div class="flex items-center">
+                                <div class="w-2 h-2 bg-violet-500 rounded-full mr-1"></div>
+                                <span class="text-violet-300">Direct</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-2 h-2 bg-cyan-500 rounded-full mr-1"></div>
+                                <span class="text-cyan-300">Social</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-2 h-2 bg-emerald-500 rounded-full mr-1"></div>
+                                <span class="text-emerald-300">Email</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-2 h-2 bg-yellow-500 rounded-full mr-1"></div>
+                                <span class="text-yellow-300">Referral</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Campaign Performance & Visitors Row -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    
+                    <!-- Campaign Performance -->
+                    <div class="bg-gradient-to-br from-indigo-500/15 to-blue-500/15 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
+                        <h3 class="text-white font-semibold text-lg mb-6">Campaign Performance</h3>
+                        
+                        <!-- Line Chart with Multiple Lines -->
+                        <div class="h-48 relative">
+                            <svg class="w-full h-full" viewBox="0 0 400 200">
+                                <!-- Grid lines -->
+                                <line x1="0" y1="40" x2="400" y2="40" stroke="#ffffff10" stroke-width="1"/>
+                                <line x1="0" y1="80" x2="400" y2="80" stroke="#ffffff10" stroke-width="1"/>
+                                <line x1="0" y1="120" x2="400" y2="120" stroke="#ffffff10" stroke-width="1"/>
+                                <line x1="0" y1="160" x2="400" y2="160" stroke="#ffffff10" stroke-width="1"/>
+                                
+                                <!-- Line 1 -->
+                                <path d="M 0 140 Q 50 120 100 110 T 200 90 Q 250 85 300 80 T 400 70" 
+                                      stroke="#3b82f6" stroke-width="2" fill="none"/>
+                                
+                                <!-- Line 2 -->
+                                <path d="M 0 160 Q 50 150 100 140 T 200 120 Q 250 110 300 100 T 400 90" 
+                                      stroke="#8b5cf6" stroke-width="2" fill="none"/>
+                                
+                                <!-- Line 3 -->
+                                <path d="M 0 180 Q 50 170 100 160 T 200 150 Q 250 145 300 140 T 400 130" 
+                                      stroke="#06b6d4" stroke-width="2" fill="none"/>
+                                
+                                <!-- Data points -->
+                                <circle cx="100" cy="110" r="3" fill="#3b82f6"/>
+                                <circle cx="200" cy="90" r="3" fill="#3b82f6"/>
+                                <circle cx="300" cy="80" r="3" fill="#3b82f6"/>
+                                
+                                <circle cx="100" cy="140" r="3" fill="#8b5cf6"/>
+                                <circle cx="200" cy="120" r="3" fill="#8b5cf6"/>
+                                <circle cx="300" cy="100" r="3" fill="#8b5cf6"/>
+                                
+                                <circle cx="100" cy="160" r="3" fill="#06b6d4"/>
+                                <circle cx="200" cy="150" r="3" fill="#06b6d4"/>
+                                <circle cx="300" cy="140" r="3" fill="#06b6d4"/>
+                            </svg>
+                            
+                            <!-- Month labels -->
+                            <div class="absolute bottom-0 left-0 right-0 flex justify-between text-xs text-blue-300 px-4">
+                                <span>Mar</span>
+                                <span>Apr</span>
+                                <span>May</span>
+                                <span>Jun</span>
+                                <span>Jul</span>
+                                <span>Aug</span>
+                                <span>Sep</span>
+                                <span>Oct</span>
+                                <span>Nov</span>
+                                <span>Dec</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Legend -->
+                        <div class="flex justify-center space-x-6 text-xs mt-4">
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
+                                <span class="text-blue-300">Email Campaign</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 bg-violet-500 rounded-full mr-2"></div>
+                                <span class="text-violet-300">Social Media</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 bg-cyan-500 rounded-full mr-2"></div>
+                                <span class="text-cyan-300">Direct Traffic</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Visitors Analytics -->
+                    <div class="bg-gradient-to-br from-teal-500/15 to-green-500/15 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
+                        <h3 class="text-white font-semibold text-lg mb-6">Visitors</h3>
+                        
+                        <!-- Wave Chart -->
+                        <div class="h-48 relative">
+                            <svg class="w-full h-full" viewBox="0 0 400 200">
+                                <defs>
+                                    <linearGradient id="waveGradient1" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#14b8a6;stop-opacity:0.8"/>
+                                        <stop offset="100%" style="stop-color:#14b8a6;stop-opacity:0.2"/>
+                                    </linearGradient>
+                                    <linearGradient id="waveGradient2" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#10b981;stop-opacity:0.6"/>
+                                        <stop offset="100%" style="stop-color:#10b981;stop-opacity:0.1"/>
+                                    </linearGradient>
+                                    <linearGradient id="waveGradient3" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#059669;stop-opacity:0.4"/>
+                                        <stop offset="100%" style="stop-color:#059669;stop-opacity:0.05"/>
+                                    </linearGradient>
+                                </defs>
+                                
+                                <!-- Wave 1 -->
+                                <path d="M 0 120 Q 100 80 200 90 T 400 70" stroke="#14b8a6" stroke-width="2" fill="none"/>
+                                <path d="M 0 120 Q 100 80 200 90 T 400 70 L 400 200 L 0 200 Z" fill="url(#waveGradient1)"/>
+                                
+                                <!-- Wave 2 -->
+                                <path d="M 0 140 Q 100 100 200 110 T 400 90" stroke="#10b981" stroke-width="2" fill="none"/>
+                                <path d="M 0 140 Q 100 100 200 110 T 400 90 L 400 200 L 0 200 Z" fill="url(#waveGradient2)"/>
+                                
+                                <!-- Wave 3 -->
+                                <path d="M 0 160 Q 100 130 200 140 T 400 120" stroke="#059669" stroke-width="2" fill="none"/>
+                                <path d="M 0 160 Q 100 130 200 140 T 400 120 L 400 200 L 0 200 Z" fill="url(#waveGradient3)"/>
+                            </svg>
+                        </div>
+                        
+                        <!-- Stats -->
+                        <div class="grid grid-cols-3 gap-4 text-center text-xs">
+                            <div>
+                                <div class="text-lg font-bold text-teal-400">2021</div>
+                                <div class="text-teal-300">Year</div>
+                            </div>
+                            <div>
+                                <div class="text-lg font-bold text-green-400">45.2k</div>
+                                <div class="text-green-300">Unique</div>
+                            </div>
+                            <div>
+                                <div class="text-lg font-bold text-emerald-400">89.1k</div>
+                                <div class="text-emerald-300">Total</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Live Registration Map -->
                 <!-- Global Registration Map -->
                 <div class="bg-gradient-to-br from-slate-500/10 to-gray-500/10 backdrop-blur-xl border border-white/10 rounded-2xl p-6 relative overflow-hidden">
