@@ -278,12 +278,12 @@ class DashboardController extends Controller
                 return $userCommunications->sortByDesc('last_message_at')->first();
             })
             ->sortByDesc('last_message_at')
-            ->take(5);
+            ->take(15);
 
         // If no recent communications, get any recent registrations
         if ($allCommunications->isEmpty()) {
-            $recentClients = Client::orderBy('created_at', 'desc')->take(3)->get();
-            $recentVendors = Vendor::orderBy('created_at', 'desc')->take(2)->get();
+            $recentClients = Client::orderBy('created_at', 'desc')->take(8)->get();
+            $recentVendors = Vendor::orderBy('created_at', 'desc')->take(7)->get();
             
             $fallbackCommunications = collect();
             
@@ -315,7 +315,7 @@ class DashboardController extends Controller
                 ]);
             }
             
-            return $fallbackCommunications->sortByDesc('last_message_at')->take(5);
+            return $fallbackCommunications->sortByDesc('last_message_at')->take(15);
         }
 
         return $allCommunications;
