@@ -39,8 +39,8 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
                             </svg>
                             12.3% this month
-                        </div>
-                    </div>
+        </div>
+    </div>
 
                     <!-- Pending Vendors -->
                     <div class="bg-gradient-to-br from-purple-500/15 to-pink-500/15 backdrop-blur-xl border border-white/10 rounded-2xl p-6 relative">
@@ -51,7 +51,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
                             </svg>
                             Pending
-                        </div>
+                </div>
 
                         <!-- Chart positioned in bottom right -->
                         <div class="absolute bottom-4 right-4 w-24 h-16">
@@ -64,17 +64,17 @@
                                 </defs>
                                 <path d="M 0 50 Q 24 35 48 25 T 96 15" stroke="#ec4899" stroke-width="2" fill="none"/>
                                 <path d="M 0 50 Q 24 35 48 25 T 96 15 L 96 64 L 0 64 Z" fill="url(#conversationGradient)"/>
-                            </svg>
-                        </div>
+                    </svg>
+                </div>
 
                         <!-- Chart labels -->
                         <div class="absolute bottom-0 right-0 flex space-x-2 text-xs text-purple-300 p-2">
                             <span>Apr</span>
                             <span>May</span>
                             <span>Jun</span>
-                        </div>
-                    </div>
-                    
+            </div>
+        </div>
+
                 </div>
 
                 <!-- Growth Analytics -->
@@ -100,7 +100,7 @@
                                     <circle cx="0" cy="100" r="3" fill="#3b82f6"/>
                                     <circle cx="100" cy="70" r="3" fill="#3b82f6"/>
                                     <circle cx="200" cy="45" r="3" fill="#3b82f6"/>
-                                </svg>
+                    </svg>
                                 <div class="absolute bottom-1 left-0 right-0 flex justify-between text-xs text-blue-300 px-2">
                                     <span>Apr</span>
                                     <span>May</span>
@@ -115,9 +115,9 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
                                     </svg>
                                     +15.2%
-                                </div>
-                            </div>
-                        </div>
+                </div>
+            </div>
+        </div>
 
                         <!-- Vendor Growth Chart -->
                         <div class="lg:col-span-1">
@@ -141,7 +141,7 @@
                                     <span>Apr</span>
                                     <span>May</span>
                                     <span>Jun</span>
-                                </div>
+                </div>
                             </div>
                             <div class="mt-2 text-center">
                                 <div class="text-2xl font-bold text-emerald-400">847</div>
@@ -149,11 +149,11 @@
                                 <div class="text-xs text-green-400 flex items-center justify-center mt-1">
                                     <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
-                                    </svg>
+                    </svg>
                                     +12.8%
-                                </div>
-                            </div>
-                        </div>
+                </div>
+            </div>
+        </div>
 
                         <!-- Advanced Pie Chart -->
                         <div class="lg:col-span-1">
@@ -201,46 +201,46 @@
                                         <!-- Center content -->
                                         <div class="absolute inset-0 flex items-center justify-center">
                                             <div class="text-center bg-black/20 backdrop-blur-sm rounded-full w-16 h-16 flex items-center justify-center border border-white/10">
-                                                <div>
+                <div>
                                                     <div class="text-lg font-bold text-white">2,097</div>
                                                     <div class="text-xs text-purple-300">Total</div>
-                                                </div>
-                                            </div>
-                                        </div>
+                </div>
+                </div>
+            </div>
                                         
                                         <!-- Percentage labels -->
                                         <div class="absolute top-2 right-2 bg-gradient-to-r from-blue-500/90 to-blue-600/90 backdrop-blur-sm px-2 py-1 rounded-md border border-blue-400/30 shadow-lg">
                                             <div class="text-white font-bold text-xs">59.6%</div>
-                                        </div>
+    </div>
 
                                         <div class="absolute bottom-2 left-2 bg-gradient-to-r from-emerald-500/90 to-emerald-600/90 backdrop-blur-sm px-2 py-1 rounded-md border border-emerald-400/30 shadow-lg">
                                             <div class="text-white font-bold text-xs">40.4%</div>
-                                        </div>
-                                    </div>
-                                </div>
+                </div>
+            </div>
+        </div>
 
                             <!-- Compact Legend -->
                             <div class="mt-2 space-y-1">
                                 <div class="flex items-center justify-between text-xs">
-                                    <div class="flex items-center">
+                    <div class="flex items-center">
                                         <div class="w-2 h-2 bg-blue-500 rounded-full mr-2"></div>
                                         <span class="text-blue-300">Clients</span>
-                                    </div>
+                    </div>
                                     <span class="text-white font-medium">1,250</span>
-                                </div>
+                    </div>
                                 <div class="flex items-center justify-between text-xs">
-                                    <div class="flex items-center">
+                    <div class="flex items-center">
                                         <div class="w-2 h-2 bg-emerald-500 rounded-full mr-2"></div>
                                         <span class="text-emerald-300">Vendors</span>
-                                    </div>
+                    </div>
                                     <span class="text-white font-medium">847</span>
-                                </div>
-                            </div>
+                </div>
+            </div>
                             </div>
 
-                        </div>
-                    </div>
-                </div>
+            </div>
+        </div>
+    </div>
 
                 <!-- Sales Summary & Order Stats Row -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -292,21 +292,21 @@
                                 <span>Jul</span>
                                 <span>Aug</span>
                                 <span>Sep</span>
-                            </div>
+            </div>
                         </div>
                         
                         <!-- Legend -->
                         <div class="flex justify-center space-x-6 text-xs">
-                            <div class="flex items-center">
+                                <div class="flex items-center">
                                 <div class="w-3 h-3 bg-pink-500 rounded-full mr-2"></div>
                                 <span class="text-pink-300">Clients</span>
-                            </div>
+                                    </div>
                             <div class="flex items-center">
                                 <div class="w-3 h-3 bg-orange-500 rounded-full mr-2"></div>
                                 <span class="text-orange-300">Vendors</span>
-                            </div>
-                        </div>
-                    </div>
+                                    </div>
+                                </div>
+                                </div>
 
                     <!-- Order and Visitor Stats -->
                     <div class="bg-gradient-to-br from-cyan-500/15 to-blue-500/15 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
@@ -349,7 +349,7 @@
                                 <span>Thu</span>
                                 <span>Fri</span>
                             </div>
-                        </div>
+                    </div>
                         
                         <!-- Stats -->
                         <div class="grid grid-cols-2 gap-4 text-center">
@@ -362,8 +362,8 @@
                                 <div class="text-xs text-blue-300">This Month</div>
                             </div>
                         </div>
-                    </div>
-                </div>
+            </div>
+        </div>
 
                 <!-- Revenue & Performance Metrics Row -->
                 <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -387,13 +387,13 @@
                                         transform="rotate(-90 50 50)"/>
                                 <text x="50" y="55" text-anchor="middle" class="text-xs fill-white font-bold">75%</text>
                             </svg>
-                        </div>
+            </div>
                         
                         <div class="text-center mt-2">
                             <div class="text-lg font-bold text-emerald-400">2,847</div>
                             <div class="text-xs text-emerald-300">Emails Sent</div>
-                        </div>
-                    </div>
+                                    </div>
+                                    </div>
 
                     <!-- Revenue -->
                     <div class="bg-gradient-to-br from-yellow-500/15 to-orange-500/15 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
@@ -414,13 +414,13 @@
                                 <circle cx="80" cy="20" r="2" fill="#f59e0b"/>
                                 <circle cx="120" cy="10" r="2" fill="#f59e0b"/>
                             </svg>
-                        </div>
+                                </div>
                         
                         <div class="text-center mt-2">
                             <div class="text-lg font-bold text-yellow-400">$18,534</div>
                             <div class="text-xs text-yellow-300">Total Revenue</div>
-                        </div>
-                    </div>
+                                </div>
+                            </div>
 
                     <!-- Level Progress -->
                     <div class="bg-gradient-to-br from-red-500/15 to-pink-500/15 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
@@ -438,13 +438,13 @@
                                 <div class="text-center">
                                     <div class="text-xl font-bold text-red-400">6320</div>
                                     <div class="text-xs text-red-300">Points</div>
-                                </div>
-                            </div>
-                        </div>
-                        
+                    </div>
+            </div>
+        </div>
+
                         <div class="text-center mt-2">
                             <div class="text-xs text-red-300">+12% last month</div>
-                        </div>
+            </div>
                     </div>
 
                     <!-- Customer Traffic -->
@@ -470,30 +470,30 @@
                                 <circle cx="50" cy="50" r="35" fill="none" stroke="#f59e0b" stroke-width="8" 
                                         stroke-dasharray="30 220" stroke-dashoffset="-160" stroke-linecap="round" 
                                         transform="rotate(-90 50 50)"/>
-                            </svg>
-                        </div>
+                                        </svg>
+                                    </div>
                         
                         <!-- Legend -->
                         <div class="grid grid-cols-2 gap-1 text-xs mt-2">
                             <div class="flex items-center">
                                 <div class="w-2 h-2 bg-violet-500 rounded-full mr-1"></div>
                                 <span class="text-violet-300">Direct</span>
-                            </div>
+                                    </div>
                             <div class="flex items-center">
                                 <div class="w-2 h-2 bg-cyan-500 rounded-full mr-1"></div>
                                 <span class="text-cyan-300">Social</span>
-                            </div>
+                                </div>
                             <div class="flex items-center">
                                 <div class="w-2 h-2 bg-emerald-500 rounded-full mr-1"></div>
                                 <span class="text-emerald-300">Email</span>
-                            </div>
+                                </div>
                             <div class="flex items-center">
                                 <div class="w-2 h-2 bg-yellow-500 rounded-full mr-1"></div>
                                 <span class="text-yellow-300">Referral</span>
                             </div>
-                        </div>
-                    </div>
-                </div>
+            </div>
+        </div>
+    </div>
 
                 <!-- Campaign Performance & Visitors Row -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -549,25 +549,25 @@
                                 <span>Oct</span>
                                 <span>Nov</span>
                                 <span>Dec</span>
-                            </div>
+            </div>
                         </div>
                         
                         <!-- Legend -->
                         <div class="flex justify-center space-x-6 text-xs mt-4">
-                            <div class="flex items-center">
+                                    <div class="flex items-center">
                                 <div class="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
                                 <span class="text-blue-300">Email Campaign</span>
-                            </div>
+                                        </div>
                             <div class="flex items-center">
                                 <div class="w-3 h-3 bg-violet-500 rounded-full mr-2"></div>
                                 <span class="text-violet-300">Social Media</span>
-                            </div>
+                                        </div>
                             <div class="flex items-center">
                                 <div class="w-3 h-3 bg-cyan-500 rounded-full mr-2"></div>
                                 <span class="text-cyan-300">Direct Traffic</span>
-                            </div>
+                                    </div>
+                                </div>
                         </div>
-                    </div>
 
                     <!-- Visitors Analytics -->
                     <div class="bg-gradient-to-br from-teal-500/15 to-green-500/15 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
@@ -607,249 +607,58 @@
                         
                         <!-- Stats -->
                         <div class="grid grid-cols-3 gap-4 text-center text-xs">
-                            <div>
+                        <div>
                                 <div class="text-lg font-bold text-teal-400">2021</div>
                                 <div class="text-teal-300">Year</div>
-                            </div>
-                            <div>
+                                        </div>
+                                        <div>
                                 <div class="text-lg font-bold text-green-400">45.2k</div>
                                 <div class="text-green-300">Unique</div>
-                            </div>
+                                        </div>
                             <div>
                                 <div class="text-lg font-bold text-emerald-400">89.1k</div>
                                 <div class="text-emerald-300">Total</div>
-                            </div>
+                                    </div>
+                                </div>
                         </div>
-                    </div>
                 </div>
 
                 <!-- Live Registration Map -->
-                <!-- Global Registration Map -->
                 <div class="bg-gradient-to-br from-slate-500/10 to-gray-500/10 backdrop-blur-xl border border-white/10 rounded-2xl p-6 relative overflow-hidden">
-                    <!-- Background decorative elements -->
-                    <div class="absolute top-0 left-0 w-40 h-40 bg-gradient-to-br from-blue-400/5 to-cyan-400/5 rounded-full blur-2xl"></div>
-                    <div class="absolute bottom-0 right-0 w-32 h-32 bg-gradient-to-tr from-emerald-400/5 to-green-400/5 rounded-full blur-2xl"></div>
+                    <!-- Leaflet CSS -->
+                    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+                    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+                    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
                     
                     <div class="relative z-10">
+                        <!-- Header -->
                         <div class="flex items-center justify-between mb-6">
                             <div>
                                 <h3 class="text-white font-bold text-xl mb-2">Live Registration Map</h3>
-                                <p class="text-slate-300 text-sm">Real-time global registration activity</p>
+                                <p class="text-slate-300 text-sm">Interactive world map showing vendor & client registrations</p>
                             </div>
                             <div class="flex items-center space-x-2 bg-white/5 rounded-lg p-2">
                                 <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                                 <span class="text-green-400 text-xs font-medium">Live Updates</span>
                             </div>
                         </div>
+
+                        <!-- Map Container -->
+                        <div id="registrationMap" class="h-96 rounded-xl border border-white/10 bg-slate-900/50"></div>
                         
-                        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 items-center">
-                            
-                            <!-- World Map -->
-                            <div class="lg:col-span-3">
-                                <div class="rounded-2xl p-6 border border-slate-700/30 relative overflow-hidden shadow-2xl">
-                                    <!-- Modern Header with Controls -->
-                                    <div class="flex items-center justify-between mb-4 relative z-20">
-                                        <div class="flex items-center space-x-4">
-                                            <h3 class="text-white font-bold text-lg">Global Registration Activity</h3>
-                                            <div class="flex items-center space-x-2 bg-slate-800/50 rounded-lg px-3 py-1">
-                                                <div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
-                                                <span class="text-emerald-400 text-xs font-medium">Real-time</span>
-                                            </div>
-                                        </div>
-                                        <div class="flex items-center space-x-2">
-                                            <button class="bg-slate-800/50 hover:bg-slate-700/50 transition-colors px-3 py-1 rounded-md text-slate-300 text-xs">
-                                                Today
-                                            </button>
-                                            <button class="bg-blue-600/20 hover:bg-blue-500/30 transition-colors px-3 py-1 rounded-md text-blue-300 text-xs">
-                                                This Week
-                                            </button>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Stylized World Map -->
-                                    <div class="relative h-64 rounded-xl overflow-hidden">
-                                        <svg class="w-full h-full" viewBox="0 0 800 400" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);">
-                                            <defs>
-                                                <filter id="markerGlow" x="-50%" y="-50%" width="200%" height="200%">
-                                                    <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-                                                    <feMerge> 
-                                                        <feMergeNode in="coloredBlur"/>
-                                                        <feMergeNode in="SourceGraphic"/>
-                                                    </feMerge>
-                                                </filter>
-                                                <radialGradient id="pulseGradient" cx="50%" cy="50%" r="50%">
-                                                    <stop offset="0%" style="stop-color:white;stop-opacity:0.8"/>
-                                                    <stop offset="100%" style="stop-color:white;stop-opacity:0"/>
-                                                </radialGradient>
-                                            </defs>
-                                            
-                                            <!-- Continents (simplified outlines) -->
-                                            <g fill="#334155" stroke="#475569" stroke-width="0.5" opacity="0.7">
-                                                <!-- North America -->
-                                                <path d="M 50 80 Q 100 60 150 80 L 180 120 Q 160 150 120 140 L 80 160 Q 40 140 50 80 Z"/>
-                                                <!-- Europe -->
-                                                <path d="M 350 70 Q 380 60 400 80 L 420 100 Q 400 120 380 110 L 360 120 Q 340 100 350 70 Z"/>
-                                                <!-- Asia -->
-                                                <path d="M 450 60 Q 550 50 650 80 L 700 120 Q 680 160 620 150 L 500 140 Q 430 120 450 60 Z"/>
-                                                <!-- Africa -->
-                                                <path d="M 380 140 Q 420 130 450 160 L 460 220 Q 440 280 400 270 L 370 250 Q 360 200 380 140 Z"/>
-                                                <!-- South America -->
-                                                <path d="M 200 180 Q 230 170 250 200 L 260 280 Q 240 320 210 310 L 190 280 Q 180 230 200 180 Z"/>
-                                                <!-- Australia -->
-                                                <path d="M 620 280 Q 660 270 680 290 L 690 310 Q 670 330 640 320 L 610 310 Q 600 290 620 280 Z"/>
-                                            </g>
-                                            
-                                            <!-- Registration markers with pulsing animation -->
-                                            <!-- Dubai, UAE -->
-                                            <g class="live-marker">
-                                                <circle cx="480" cy="150" r="2" fill="white" opacity="0.2" filter="url(#markerGlow)">
-                                                    <animate attributeName="r" values="2;8;2" dur="2s" repeatCount="indefinite"/>
-                                                </circle>
-                                                <circle cx="480" cy="150" r="3" fill="white" opacity="1"/>
-                                            </g>
-                                            
-                                            <!-- Mumbai, India -->
-                                            <g class="live-marker">
-                                                <circle cx="520" cy="160" r="2" fill="white" opacity="0.2" filter="url(#markerGlow)">
-                                                    <animate attributeName="r" values="2;6;2" dur="1.5s" repeatCount="indefinite"/>
-                                                </circle>
-                                                <circle cx="520" cy="160" r="2" fill="white" opacity="1"/>
-                                            </g>
-                                            
-                                            <!-- New York, USA -->
-                                            <g class="live-marker">
-                                                <circle cx="120" cy="100" r="2" fill="white" opacity="0.2" filter="url(#markerGlow)">
-                                                    <animate attributeName="r" values="2;7;2" dur="1.8s" repeatCount="indefinite"/>
-                                                </circle>
-                                                <circle cx="120" cy="100" r="2" fill="white" opacity="1"/>
-                                            </g>
-                                            
-                                            <!-- London, UK -->
-                                            <g class="live-marker">
-                                                <circle cx="370" cy="90" r="2" fill="white" opacity="0.2" filter="url(#markerGlow)">
-                                                    <animate attributeName="r" values="2;5;2" dur="2.2s" repeatCount="indefinite"/>
-                                                </circle>
-                                                <circle cx="370" cy="90" r="2" fill="white" opacity="1"/>
-                                            </g>
-                                            
-                                            <!-- Tokyo, Japan -->
-                                            <g class="live-marker">
-                                                <circle cx="680" cy="110" r="2" fill="white" opacity="0.2" filter="url(#markerGlow)">
-                                                    <animate attributeName="r" values="2;6;2" dur="1.7s" repeatCount="indefinite"/>
-                                                </circle>
-                                                <circle cx="680" cy="110" r="2" fill="white" opacity="1"/>
-                                            </g>
-                                            
-                                            <!-- Sydney, Australia -->
-                                            <g class="live-marker">
-                                                <circle cx="670" cy="300" r="2" fill="white" opacity="0.2" filter="url(#markerGlow)">
-                                                    <animate attributeName="r" values="2;5;2" dur="2.1s" repeatCount="indefinite"/>
-                                                </circle>
-                                                <circle cx="670" cy="300" r="2" fill="white" opacity="1"/>
-                                            </g>
-                                            
-                                            <!-- São Paulo, Brazil -->
-                                            <g class="live-marker">
-                                                <circle cx="230" cy="250" r="2" fill="white" opacity="0.2" filter="url(#markerGlow)">
-                                                    <animate attributeName="r" values="2;6;2" dur="1.6s" repeatCount="indefinite"/>
-                                                </circle>
-                                                <circle cx="230" cy="250" r="2" fill="white" opacity="1"/>
-                                            </g>
-                                            
-                                            <!-- Lagos, Nigeria -->
-                                            <g class="live-marker">
-                                                <circle cx="400" cy="180" r="2" fill="white" opacity="0.2" filter="url(#markerGlow)">
-                                                    <animate attributeName="r" values="2;6;2" dur="1.9s" repeatCount="indefinite"/>
-                                                </circle>
-                                                <circle cx="400" cy="180" r="2" fill="white" opacity="1"/>
-                                            </g>
-                                        </svg>
-                                    </div>
-                                </div>
+                        <!-- Map Statistics -->
+                        <div class="mt-4 grid grid-cols-3 gap-4">
+                            <div class="bg-white/5 rounded-lg p-3 text-center">
+                                <div class="text-2xl font-bold text-blue-400" id="totalClients">0</div>
+                                <div class="text-xs text-slate-300">Total Clients</div>
                             </div>
-
-                            <!-- Location Statistics -->
-                            <div class="lg:col-span-1 space-y-4">
-                                <div class="bg-white/5 rounded-lg p-4 border border-white/10">
-                                    <h4 class="text-white font-semibold mb-3">Top Locations</h4>
-                                    
-                                    <!-- Location list -->
-                                    <div class="space-y-3">
-                                        <div class="flex items-center justify-between">
-                                            <div class="flex items-center space-x-2">
-                                                <div class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-                                                <span class="text-white text-sm">UAE</span>
-                                            </div>
-                                            <span class="text-blue-400 font-semibold text-sm">342</span>
-                                        </div>
-                                        
-                                        <div class="flex items-center justify-between">
-                                            <div class="flex items-center space-x-2">
-                                                <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-                                                <span class="text-white text-sm">India</span>
-                                            </div>
-                                            <span class="text-emerald-400 font-semibold text-sm">298</span>
-                                        </div>
-                                        
-                                        <div class="flex items-center justify-between">
-                                            <div class="flex items-center space-x-2">
-                                                <div class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-                                                <span class="text-white text-sm">USA</span>
-                                            </div>
-                                            <span class="text-blue-400 font-semibold text-sm">156</span>
-                                        </div>
-                                        
-                                        <div class="flex items-center justify-between">
-                                            <div class="flex items-center space-x-2">
-                                                <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-                                                <span class="text-white text-sm">Canada</span>
-                                            </div>
-                                            <span class="text-emerald-400 font-semibold text-sm">89</span>
-                                        </div>
-
-                                        <div class="flex items-center justify-between">
-                                            <div class="flex items-center space-x-2">
-                                                <div class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-                                                <span class="text-white text-sm">UK</span>
-                                            </div>
-                                            <span class="text-blue-400 font-semibold text-sm">67</span>
-                                        </div>
-                                        
-                                        <div class="flex items-center justify-between">
-                                            <div class="flex items-center space-x-2">
-                                                <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-                                                <span class="text-white text-sm">Australia</span>
-                                            </div>
-                                            <span class="text-emerald-400 font-semibold text-sm">43</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- Legend -->
-                                <div class="bg-white/5 rounded-lg p-4 border border-white/10">
-                                    <h4 class="text-white font-semibold mb-3">Legend</h4>
-                                    <div class="space-y-2">
-                                        <div class="flex items-center space-x-2">
-                                            <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
-                                            <span class="text-blue-300 text-xs">Client Registrations</span>
-                                        </div>
-                                        <div class="flex items-center space-x-2">
-                                            <div class="w-3 h-3 bg-emerald-500 rounded-full"></div>
-                                            <span class="text-emerald-300 text-xs">Vendor Registrations</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- Live Activity Status -->
-                                <div class="bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-lg p-4 border border-green-500/20">
-                                    <div class="flex items-center justify-between mb-2">
-                                        <h4 class="text-white font-semibold text-sm">Live Activity</h4>
-                                        <div class="flex items-center space-x-1">
-                                            <div class="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                                            <span class="text-slate-300 text-xs">Live Activity</span>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="bg-white/5 rounded-lg p-3 text-center">
+                                <div class="text-2xl font-bold text-green-400" id="totalVendors">0</div>
+                                <div class="text-xs text-slate-300">Total Vendors</div>
+                            </div>
+                            <div class="bg-white/5 rounded-lg p-3 text-center">
+                                <div class="text-2xl font-bold text-purple-400" id="totalRegistrations">0</div>
+                                <div class="text-xs text-slate-300">Total Registrations</div>
                             </div>
                         </div>
                     </div>
@@ -864,8 +673,8 @@
                             <span>Name</span>
                             <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </div>
+                        </svg>
+                    </div>
                     </div>
 
                     <!-- Table Header -->
@@ -874,7 +683,7 @@
                         <div>Type</div>
                         <div>Status</div>
                         <div>Date</div>
-                    </div>
+                </div>
 
                     <!-- Table Rows -->
                     <div class="space-y-2">
@@ -913,9 +722,9 @@
                             </div>
                             <div class="text-purple-300">02/16/2024</div>
                         </div>
-                    </div>
-                </div>
-                
+            </div>
+        </div>
+
             </div>
             
             <!-- Right Sidebar -->
@@ -967,32 +776,32 @@
                                     'registration' => 'text-yellow-300',
                                     default => 'text-purple-300'
                                 };
-                            @endphp
-                            
+            @endphp
+
                             <div class="bg-white/5 border border-white/10 rounded-lg p-3 hover:bg-white/10 transition-colors">
                                 <div class="flex items-start space-x-2">
                                     <div class="w-8 h-8 rounded-full bg-gradient-to-br {{ $selectedColor[0] }} {{ $selectedColor[1] }} flex items-center justify-center overflow-hidden">
                                         <img src="https://ui-avatars.com/api/?name={{ urlencode($entityName) }}&background={{ substr(md5($entityName), 0, 6) }}&color=fff&size=32" 
                                              alt="{{ $entityName }}" 
                                              class="w-full h-full object-cover">
-                                    </div>
+                        </div>
                                     <div class="flex-1">
                                         <div class="flex items-center justify-between mb-1">
                                             <div class="text-white font-medium text-xs">{{ $entityName }}</div>
                                             <div class="text-purple-200 text-xs">{{ $timeAgo }}</div>
-                                        </div>
+                    </div>
                                         <div class="text-purple-100 text-xs leading-tight mb-1">
                                             <span class="{{ $typeColor }} text-xs">{{ $typeIcon }} {{ $entityType }}:</span>
                                             @if($conversation->type === 'email' && isset($conversation->subject))
                                                 <span class="font-medium">{{ $conversation->subject }}</span> - 
                                             @endif
                                             {{ Str::limit($conversation->last_message_preview ?? 'No message preview available', 50) }}
-                                        </div>
+                        </div>
                                         @if($conversation->unread_count_admin > 0)
                                             <div class="mb-2">
                                                 <span class="bg-red-500/20 text-red-300 px-2 py-1 rounded-full text-xs">
                                                     {{ $conversation->unread_count_admin }} unread
-                                                </span>
+                            </span>
                                             </div>
                                         @endif
                                         <div class="flex items-center justify-end">
@@ -1002,11 +811,11 @@
                                                 </svg>
                                                 <span>Reply</span>
                                             </button>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
-                        @empty
+                        </div>
+                    </div>
+                </div>
+            @empty
                             <!-- Show recent clients/vendors if no conversations exist -->
                             @if($recentClients->isNotEmpty() || $recentVendors->isNotEmpty())
                                 <div class="space-y-3">
@@ -1046,12 +855,12 @@
                                                         <button class="bg-blue-500/20 hover:bg-blue-500/40 transition-colors px-2 py-1 rounded text-blue-300 text-xs flex items-center space-x-1">
                                                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-                                                            </svg>
+                        </svg>
                                                             <span>Start Chat</span>
                                                         </button>
-                                                    </div>
-                                                </div>
-                                            </div>
+                    </div>
+                </div>
+        </div>
                                         </div>
                                     @endforeach
                                     
@@ -1072,23 +881,23 @@
                                                     <img src="https://ui-avatars.com/api/?name={{ urlencode($vendorName) }}&background={{ substr(md5($vendorName), 0, 6) }}&color=fff&size=32" 
                                                          alt="{{ $vendorName }}" 
                                                          class="w-full h-full object-cover">
-                                                </div>
+                    </div>
                                                 <div class="flex-1">
                                                     <div class="flex items-center justify-between mb-1">
                                                         <div class="text-white font-medium text-xs">{{ $vendorName }}</div>
                                                         <div class="text-purple-200 text-xs">{{ $vendor->created_at->diffForHumans() }}</div>
-                                                    </div>
+                </div>
                                                     <div class="text-purple-100 text-xs leading-tight mb-2">
                                                         <span class="text-orange-300 text-xs">Vendor:</span>
                                                         New registration - no messages yet
-                                                    </div>
+                </div>
                                                     <div class="flex items-center justify-end">
                                                         <button class="bg-orange-500/20 hover:bg-orange-500/40 transition-colors px-2 py-1 rounded text-orange-300 text-xs flex items-center space-x-1">
                                                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-                                                            </svg>
+                    </svg>
                                                             <span>Start Chat</span>
-                                                        </button>
+                </button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1102,8 +911,8 @@
                                 </div>
                             @endif
                         @endforelse
-                    </div>
-                </div>
+            </div>
+        </div>
 
                 <!-- AI Assistant Box -->
                 <div class="bg-gradient-to-br from-indigo-500/15 to-blue-500/15 backdrop-blur-xl border border-white/10 rounded-xl p-4">
@@ -1112,14 +921,14 @@
                         <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
-                            </svg>
+                    </svg>
                         </div>
                         <h3 class="text-white font-bold text-sm">AI Assistant</h3>
                         <div class="ml-auto">
                             <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                         </div>
-                    </div>
-                    
+            </div>
+            
                     <!-- AI Response -->
                     <div class="bg-gradient-to-r from-indigo-500/20 to-purple-500/20 rounded-lg p-3 border border-indigo-400/20 mb-3">
                         <div class="text-purple-100 text-sm leading-relaxed">
@@ -1131,10 +940,10 @@
                     <div class="flex items-center space-x-2">
                         <button class="bg-blue-500/20 hover:bg-blue-500/30 transition-colors px-3 py-1 rounded-md text-blue-300 text-xs">
                             Ask Question
-                        </button>
+                </button>
                         <button class="bg-purple-500/20 hover:bg-purple-500/30 transition-colors px-3 py-1 rounded-md text-purple-300 text-xs">
                             Get Help
-                        </button>
+                </button>
                     </div>
                 </div>
                 
@@ -1205,8 +1014,8 @@
                     <button type="submit" id="dashboardSendEmailBtn"
                             class="px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl hover:from-green-600 hover:to-emerald-600 text-sm transition-all">
                         Send Email
-                    </button>
-                </div>
+                </button>
+            </div>
             </form>
         </div>
     </div>
@@ -1215,7 +1024,108 @@
 @endsection
 
 @push('scripts')
+<!-- Leaflet JavaScript -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+
 <script>
+    // Initialize Leaflet Map
+    let registrationMap;
+    let markerCluster;
+
+    function initializeRegistrationMap() {
+        // Initialize the map
+        registrationMap = L.map('registrationMap', {
+            center: [20, 0],
+            zoom: 2,
+            zoomControl: true,
+            scrollWheelZoom: true,
+            doubleClickZoom: true,
+            boxZoom: true,
+            keyboard: true,
+            dragging: true,
+            touchZoom: true
+        });
+
+        // Add dark theme tile layer
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '© OpenStreetMap contributors © CARTO',
+            subdomains: 'abcd',
+            maxZoom: 19
+        }).addTo(registrationMap);
+
+        // Initialize marker cluster group
+        markerCluster = L.markerClusterGroup({
+            chunkedLoading: true,
+            maxClusterRadius: 50
+        });
+
+        // Add sample registration data
+        addSampleRegistrations();
+
+        // Add marker cluster to map
+        registrationMap.addLayer(markerCluster);
+    }
+
+    function addSampleRegistrations() {
+        const registrations = [
+            // Clients
+            { lat: 25.2048, lng: 55.2708, type: 'client', name: 'Ahmed Al-Rashid', location: 'Dubai, UAE' },
+            { lat: 19.0760, lng: 72.8777, type: 'client', name: 'Priya Sharma', location: 'Mumbai, India' },
+            { lat: 40.7128, lng: -74.0060, type: 'client', name: 'John Smith', location: 'New York, USA' },
+            { lat: 51.5074, lng: -0.1278, type: 'client', name: 'Emma Wilson', location: 'London, UK' },
+            { lat: 35.6762, lng: 139.6503, type: 'client', name: 'Hiroshi Tanaka', location: 'Tokyo, Japan' },
+            
+            // Vendors
+            { lat: -33.8688, lng: 151.2093, type: 'vendor', name: 'Sydney Tech Solutions', location: 'Sydney, Australia' },
+            { lat: -23.5505, lng: -46.6333, type: 'vendor', name: 'Brasil Logistics', location: 'São Paulo, Brazil' },
+            { lat: 6.5244, lng: 3.3792, type: 'vendor', name: 'Lagos Industries', location: 'Lagos, Nigeria' },
+            { lat: 43.6532, lng: -79.3832, type: 'vendor', name: 'Toronto Services', location: 'Toronto, Canada' },
+            { lat: 52.5200, lng: 13.4050, type: 'vendor', name: 'Berlin GmbH', location: 'Berlin, Germany' }
+        ];
+
+        let clientCount = 0;
+        let vendorCount = 0;
+
+        registrations.forEach(reg => {
+            const isClient = reg.type === 'client';
+            const iconColor = isClient ? '#3b82f6' : '#10b981';
+            const iconHtml = isClient ? '👤' : '🏢';
+            
+            if (isClient) clientCount++;
+            else vendorCount++;
+
+            const marker = L.marker([reg.lat, reg.lng], {
+                icon: L.divIcon({
+                    className: 'custom-marker',
+                    html: `<div style="background-color: ${iconColor}; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 10px; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">${iconHtml}</div>`,
+                    iconSize: [24, 24],
+                    iconAnchor: [12, 12]
+                })
+            });
+
+            marker.bindPopup(`
+                <div style="color: #1f2937; font-size: 12px;">
+                    <strong>${reg.name}</strong><br>
+                    <span style="color: ${iconColor};">${reg.type.charAt(0).toUpperCase() + reg.type.slice(1)}</span><br>
+                    📍 ${reg.location}
+                </div>
+            `);
+
+            markerCluster.addLayer(marker);
+        });
+
+        // Update statistics
+        document.getElementById('totalClients').textContent = clientCount;
+        document.getElementById('totalVendors').textContent = vendorCount;
+        document.getElementById('totalRegistrations').textContent = clientCount + vendorCount;
+    }
+
+    // Initialize map when DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(initializeRegistrationMap, 500); // Small delay to ensure container is ready
+    });
+
     let dashboardCurrentEntityType = null;
     let dashboardCurrentEntityId = null;
     let dashboardUploadedFiles = [];
@@ -1431,27 +1341,27 @@
             : `/admin/vendors/${dashboardCurrentEntityId}/send-email`;
         
         fetch(endpoint, {
-            method: 'POST',
+                    method: 'POST',
             body: formData,
-            headers: {
+                    headers: {
                 'X-Requested-With': 'XMLHttpRequest',
                 'Accept': 'application/json'
             }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
                 alert('Email sent successfully!');
                 closeDashboardEmailModal();
                 // Refresh the page to update the conversations
                 window.location.reload();
-            } else {
+                    } else {
                 alert(data.message || 'Failed to send email');
                 submitBtn.disabled = false;
                 submitBtn.textContent = originalText;
-            }
-        })
-        .catch(error => {
+                    }
+                })
+                .catch(error => {
             console.error('Email sending error:', error);
             alert('An error occurred while sending the email');
             submitBtn.disabled = false;
