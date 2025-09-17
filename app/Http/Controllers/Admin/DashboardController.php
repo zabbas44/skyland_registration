@@ -64,6 +64,9 @@ class DashboardController extends Controller
             // Get recent conversations for dashboard (both chat and email communications)
             $recentConversations = $this->getRecentCommunications();
             
+            // Get map registration data
+            $mapRegistrations = $this->getMapRegistrations();
+            
             // Prepare status distribution for charts
             $statusDistributionChart = [
                 'approved' => ($statusDistribution['clients']['approved'] ?? 0) + ($statusDistribution['vendors']['approved'] ?? 0),
@@ -90,7 +93,8 @@ class DashboardController extends Controller
                 'recentVendors',
                 'approvedClients',
                 'approvedVendors',
-                'recentConversations'
+                'recentConversations',
+                'mapRegistrations'
             ))->with('statusDistribution', $statusDistributionChart);
         } catch (\Exception $e) {
             // Log the error and provide fallback data
@@ -162,7 +166,8 @@ class DashboardController extends Controller
                 'recentVendors',
                 'approvedClients',
                 'approvedVendors',
-                'recentConversations'
+                'recentConversations',
+                'mapRegistrations'
             ))->with('statusDistribution', $statusDistributionChart);
         }
     }
@@ -512,5 +517,127 @@ class DashboardController extends Controller
             'weekly' => $weeklyData,
             'hourly' => $hourlyData,
         ];
+    }
+
+    /**
+     * Get map registration data with locations
+     */
+    private function getMapRegistrations()
+    {
+        $registrations = [];
+
+        try {
+            // Get clients with location data
+            $clients = Client::select(['id', 'full_name', 'email', 'address', 'physical_address', 'emirate', 'community', 'created_at'])
+                ->whereNotNull('address')
+                ->orWhereNotNull('physical_address')
+                ->limit(50)
+                ->get();
+
+            foreach ($clients as $client) {
+                $location = $this->parseLocationString($client->address ?? $client->physical_address ?? '');
+                if ($location) {
+                    $registrations[] = [
+                        'id' => $client->id,
+                        'type' => 'client',
+                        'name' => $client->full_name ?? 'Client #' . $client->id,
+                        'email' => $client->email,
+                        'location' => $this->getDisplayLocation($client),
+                        'lat' => $location['lat'],
+                        'lng' => $location['lng'],
+                        'created_at' => $client->created_at->format('M d, Y')
+                    ];
+                }
+            }
+
+            // Get vendors with location data
+            $vendors = Vendor::select(['id', 'first_name', 'last_name', 'company_name', 'contact_email', 'address', 'created_at'])
+                ->whereNotNull('address')
+                ->limit(50)
+                ->get();
+
+            foreach ($vendors as $vendor) {
+                $location = $this->parseLocationString($vendor->address ?? '');
+                if ($location) {
+                    $registrations[] = [
+                        'id' => $vendor->id,
+                        'type' => 'vendor',
+                        'name' => $vendor->company_name ?? ($vendor->first_name . ' ' . $vendor->last_name) ?? 'Vendor #' . $vendor->id,
+                        'email' => $vendor->contact_email,
+                        'location' => $vendor->address,
+                        'lat' => $location['lat'],
+                        'lng' => $location['lng'],
+                        'created_at' => $vendor->created_at->format('M d, Y')
+                    ];
+                }
+            }
+
+        } catch (\Exception $e) {
+            \Log::error('Map registrations error: ' . $e->getMessage());
+        }
+
+        return $registrations;
+    }
+
+    /**
+     * Parse location string to get coordinates
+     */
+    private function parseLocationString($address)
+    {
+        if (empty($address)) {
+            return null;
+        }
+
+        // Common UAE locations with coordinates
+        $uaeLocations = [
+            'dubai' => ['lat' => 25.2048, 'lng' => 55.2708],
+            'abu dhabi' => ['lat' => 24.4539, 'lng' => 54.3773],
+            'sharjah' => ['lat' => 25.3463, 'lng' => 55.4209],
+            'ajman' => ['lat' => 25.4052, 'lng' => 55.5136],
+            'fujairah' => ['lat' => 25.1288, 'lng' => 56.3264],
+            'ras al khaimah' => ['lat' => 25.7889, 'lng' => 55.9758],
+            'umm al quwain' => ['lat' => 25.5641, 'lng' => 55.6550],
+            'al ain' => ['lat' => 24.2075, 'lng' => 55.7447],
+            'deira' => ['lat' => 25.2677, 'lng' => 55.3099],
+            'bur dubai' => ['lat' => 25.2532, 'lng' => 55.2972],
+            'jumeirah' => ['lat' => 25.2285, 'lng' => 55.2708],
+            'downtown dubai' => ['lat' => 25.1972, 'lng' => 55.2744],
+            'marina' => ['lat' => 25.0804, 'lng' => 55.1398],
+            'jlt' => ['lat' => 25.0693, 'lng' => 55.1434],
+            'jbr' => ['lat' => 25.0785, 'lng' => 55.1378]
+        ];
+
+        $address = strtolower($address);
+        
+        // Check for UAE locations
+        foreach ($uaeLocations as $location => $coords) {
+            if (strpos($address, $location) !== false) {
+                // Add some random variation for better map display
+                return [
+                    'lat' => $coords['lat'] + (rand(-100, 100) / 10000), // ±0.01 degree variation
+                    'lng' => $coords['lng'] + (rand(-100, 100) / 10000)
+                ];
+            }
+        }
+
+        // Default to Dubai if no specific location found but address exists
+        return [
+            'lat' => 25.2048 + (rand(-500, 500) / 10000), // ±0.05 degree variation around Dubai
+            'lng' => 55.2708 + (rand(-500, 500) / 10000)
+        ];
+    }
+
+    /**
+     * Get display location for client
+     */
+    private function getDisplayLocation($client)
+    {
+        if ($client->emirate) {
+            $emirate = str_replace('_', ' ', ucwords($client->emirate, '_'));
+            $community = $client->community ? str_replace('_', ' ', ucwords($client->community, '_')) : '';
+            return $community ? "$community, $emirate, UAE" : "$emirate, UAE";
+        }
+        
+        return $client->address ?? $client->physical_address ?? 'UAE';
     }
 }

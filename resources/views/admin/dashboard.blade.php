@@ -827,42 +827,85 @@
 
                     <!-- Table Rows -->
                     <div class="space-y-2">
-                        <div class="grid grid-cols-4 gap-4 items-center py-2 text-sm">
-                            <div class="text-white font-medium">Tom Smith</div>
-                            <div class="text-purple-300">Client</div>
-                            <div><span class="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-xs">Approved</span></div>
-                            <div class="text-purple-300">02/14/2024</div>
-                        </div>
-                        <div class="grid grid-cols-4 gap-4 items-center py-2 text-sm">
-                            <div class="text-white font-medium">Acme Corp</div>
-                            <div class="text-purple-300">Vendor</div>
-                            <div><span class="px-3 py-1 bg-orange-500/20 text-orange-300 rounded-full text-xs">Pending</span></div>
-                            <div class="text-purple-300">02/16/2024</div>
-                        </div>
-                        <div class="grid grid-cols-4 gap-4 items-center py-2 text-sm">
-                            <div class="text-white font-medium">Jane Williams</div>
-                            <div class="text-purple-300">Vendor</div>
-                            <div><span class="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-xs">Approved</span></div>
-                            <div class="text-purple-300">02/15/2024</div>
-                        </div>
-                        <div class="grid grid-cols-4 gap-4 items-center py-2 text-sm">
-                            <div class="text-white font-medium">Sarah Brown</div>
-                            <div class="text-purple-300">Build-It LLC</div>
-                            <div><span class="px-3 py-1 bg-blue-500/20 text-blue-300 rounded-full text-xs">View</span></div>
-                            <div class="text-purple-300">02/13/2024</div>
-                        </div>
-                        <div class="grid grid-cols-4 gap-4 items-center py-2 text-sm">
-                            <div class="text-white font-medium">Sarah Brown</div>
-                            <div class="text-purple-300">Vendor</div>
-                            <div class="flex items-center">
-                                <span class="text-white font-medium text-xs">A</span>
-                                <svg class="w-3 h-3 text-purple-300 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                </svg>
+                        @php
+                            // Get recent registrations (both clients and vendors)
+                            $recentRegistrations = collect();
+                            
+                            // Get recent clients
+                            $recentClients = \App\Models\Client::select(['id', 'full_name', 'company_name', 'status', 'created_at'])
+                                ->orderBy('created_at', 'desc')
+                                ->take(5)
+                                ->get()
+                                ->map(function($client) {
+                                    return [
+                                        'id' => $client->id,
+                                        'name' => $client->full_name ?? $client->company_name ?? 'Client #' . $client->id,
+                                        'type' => 'Client',
+                                        'status' => $client->status ?? 'pending',
+                                        'date' => $client->created_at,
+                                        'entity_type' => 'client'
+                                    ];
+                                });
+                            
+                            // Get recent vendors
+                            $recentVendors = \App\Models\Vendor::select(['id', 'first_name', 'last_name', 'company_name', 'status', 'created_at'])
+                                ->orderBy('created_at', 'desc')
+                                ->take(5)
+                                ->get()
+                                ->map(function($vendor) {
+                                    $name = $vendor->company_name ?? ($vendor->first_name . ' ' . $vendor->last_name) ?? 'Vendor #' . $vendor->id;
+                                    return [
+                                        'id' => $vendor->id,
+                                        'name' => $name,
+                                        'type' => 'Vendor',
+                                        'status' => $vendor->status ?? 'pending',
+                                        'date' => $vendor->created_at,
+                                        'entity_type' => 'vendor'
+                                    ];
+                                });
+                            
+                            // Merge and sort by date
+                            $recentRegistrations = $recentClients->concat($recentVendors)
+                                ->sortByDesc('date')
+                                ->take(10);
+                        @endphp
+                        
+                        @forelse($recentRegistrations as $registration)
+                            <div class="grid grid-cols-4 gap-4 items-center py-2 text-sm hover:bg-white/5 rounded-lg px-2 transition-colors">
+                                <div class="text-white font-medium">{{ Str::limit($registration['name'], 20) }}</div>
+                                <div class="text-purple-300">{{ $registration['type'] }}</div>
+                                <div>
+                                    @php
+                                        $statusConfig = [
+                                            'approved' => ['bg' => 'bg-green-500/20', 'text' => 'text-green-300', 'label' => 'Approved'],
+                                            'pending' => ['bg' => 'bg-orange-500/20', 'text' => 'text-orange-300', 'label' => 'Pending'],
+                                            'rejected' => ['bg' => 'bg-red-500/20', 'text' => 'text-red-300', 'label' => 'Rejected'],
+                                            'under_review' => ['bg' => 'bg-blue-500/20', 'text' => 'text-blue-300', 'label' => 'Under Review'],
+                                        ];
+                                        $status = $registration['status'];
+                                        $config = $statusConfig[$status] ?? $statusConfig['pending'];
+                                    @endphp
+                                    <span class="px-3 py-1 {{ $config['bg'] }} {{ $config['text'] }} rounded-full text-xs">
+                                        {{ $config['label'] }}
+                                    </span>
+                                </div>
+                                <div class="text-purple-300">{{ $registration['date']->format('m/d/Y') }}</div>
                             </div>
-                            <div class="text-purple-300">02/16/2024</div>
-                        </div>
-            </div>
+                        @empty
+                            <!-- Fallback content if no registrations -->
+                            <div class="grid grid-cols-4 gap-4 items-center py-8 text-sm">
+                                <div class="col-span-4 text-center text-purple-400">
+                                    <div class="mb-2">
+                                        <svg class="w-8 h-8 mx-auto text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="text-sm">No recent registrations found</div>
+                                    <div class="text-xs text-purple-500 mt-1">New registrations will appear here</div>
+                                </div>
+                            </div>
+                        @endforelse
+                    </div>
         </div>
 
             </div>
@@ -1200,65 +1243,75 @@
             maxClusterRadius: 50
         });
 
-        // Add sample registration data
-        addSampleRegistrations();
+        // Add real registration data
+        addRealRegistrations();
 
         // Add marker cluster to map
         registrationMap.addLayer(markerCluster);
     }
 
-    function addSampleRegistrations() {
-        const registrations = [
-            // Clients
-            { lat: 25.2048, lng: 55.2708, type: 'client', name: 'Ahmed Al-Rashid', location: 'Dubai, UAE' },
-            { lat: 19.0760, lng: 72.8777, type: 'client', name: 'Priya Sharma', location: 'Mumbai, India' },
-            { lat: 40.7128, lng: -74.0060, type: 'client', name: 'John Smith', location: 'New York, USA' },
-            { lat: 51.5074, lng: -0.1278, type: 'client', name: 'Emma Wilson', location: 'London, UK' },
-            { lat: 35.6762, lng: 139.6503, type: 'client', name: 'Hiroshi Tanaka', location: 'Tokyo, Japan' },
-            
-            // Vendors
-            { lat: -33.8688, lng: 151.2093, type: 'vendor', name: 'Sydney Tech Solutions', location: 'Sydney, Australia' },
-            { lat: -23.5505, lng: -46.6333, type: 'vendor', name: 'Brasil Logistics', location: 'São Paulo, Brazil' },
-            { lat: 6.5244, lng: 3.3792, type: 'vendor', name: 'Lagos Industries', location: 'Lagos, Nigeria' },
-            { lat: 43.6532, lng: -79.3832, type: 'vendor', name: 'Toronto Services', location: 'Toronto, Canada' },
-            { lat: 52.5200, lng: 13.4050, type: 'vendor', name: 'Berlin GmbH', location: 'Berlin, Germany' }
-        ];
-
+    function addRealRegistrations() {
+        // Get real data from PHP
+        const registrations = @json($mapRegistrations ?? []);
+        
         let clientCount = 0;
         let vendorCount = 0;
 
-        registrations.forEach(reg => {
-            const isClient = reg.type === 'client';
-            const iconColor = isClient ? '#3b82f6' : '#10b981';
-            const iconHtml = isClient ? '👤' : '🏢';
+        // If no real data, use sample data for demonstration
+        if (registrations.length === 0) {
+            const sampleRegistrations = [
+                // Sample UAE locations (more relevant to the business)
+                { lat: 25.2048, lng: 55.2708, type: 'client', name: 'Ahmed Al-Rashid', location: 'Dubai, UAE' },
+                { lat: 25.0343, lng: 55.3750, type: 'client', name: 'Sarah Al-Mansoori', location: 'Sharjah, UAE' },
+                { lat: 24.4539, lng: 54.3773, type: 'client', name: 'Mohammed Al-Nahyan', location: 'Abu Dhabi, UAE' },
+                { lat: 25.3382, lng: 55.4966, type: 'vendor', name: 'Emirates Construction LLC', location: 'Ajman, UAE' },
+                { lat: 24.3700, lng: 54.4300, type: 'vendor', name: 'Gulf Engineering Services', location: 'Abu Dhabi, UAE' },
+                { lat: 25.2000, lng: 55.2500, type: 'vendor', name: 'Dubai MEP Solutions', location: 'Dubai, UAE' }
+            ];
             
-            if (isClient) clientCount++;
-            else vendorCount++;
-
-            const marker = L.marker([reg.lat, reg.lng], {
-                icon: L.divIcon({
-                    className: 'custom-marker',
-                    html: `<div style="background-color: ${iconColor}; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 10px; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">${iconHtml}</div>`,
-                    iconSize: [24, 24],
-                    iconAnchor: [12, 12]
-                })
+            sampleRegistrations.forEach(reg => addMarkerToMap(reg));
+            clientCount = sampleRegistrations.filter(r => r.type === 'client').length;
+            vendorCount = sampleRegistrations.filter(r => r.type === 'vendor').length;
+        } else {
+            // Use real data
+            registrations.forEach(reg => {
+                addMarkerToMap(reg);
+                if (reg.type === 'client') clientCount++;
+                else vendorCount++;
             });
-
-            marker.bindPopup(`
-                <div style="color: #1f2937; font-size: 12px;">
-                    <strong>${reg.name}</strong><br>
-                    <span style="color: ${iconColor};">${reg.type.charAt(0).toUpperCase() + reg.type.slice(1)}</span><br>
-                    📍 ${reg.location}
-                </div>
-            `);
-
-            markerCluster.addLayer(marker);
-        });
+        }
 
         // Update statistics
         document.getElementById('totalClients').textContent = clientCount;
         document.getElementById('totalVendors').textContent = vendorCount;
         document.getElementById('totalRegistrations').textContent = clientCount + vendorCount;
+    }
+
+    function addMarkerToMap(reg) {
+        const isClient = reg.type === 'client';
+        const iconColor = isClient ? '#3b82f6' : '#10b981';
+        const iconHtml = isClient ? '👤' : '🏢';
+
+        const marker = L.marker([reg.lat, reg.lng], {
+            icon: L.divIcon({
+                className: 'custom-marker',
+                html: `<div style="background-color: ${iconColor}; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 10px; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">${iconHtml}</div>`,
+                iconSize: [24, 24],
+                iconAnchor: [12, 12]
+            })
+        });
+
+        marker.bindPopup(`
+            <div style="color: #1f2937; font-size: 12px;">
+                <strong>${reg.name}</strong><br>
+                <span style="color: ${iconColor};">${reg.type.charAt(0).toUpperCase() + reg.type.slice(1)}</span><br>
+                📍 ${reg.location}
+                ${reg.email ? '<br>📧 ' + reg.email : ''}
+                ${reg.created_at ? '<br>📅 ' + reg.created_at : ''}
+            </div>
+        `);
+
+        markerCluster.addLayer(marker);
     }
 
     // Initialize map when DOM is ready
