@@ -12,6 +12,33 @@
             <div class="bg-white/5 backdrop-blur-sm rounded-lg px-4 py-2 border border-white/10">
                 <div class="text-white text-sm font-medium">Last Updated: Just now</div>
             </div>
+            
+            <!-- Add Client Button -->
+            <a href="{{ route('admin.clients.create') }}" class="bg-blue-500/20 hover:bg-blue-500/30 backdrop-blur-sm rounded-lg px-4 py-2 border border-blue-400/20 text-blue-300 hover:text-blue-200 transition-all duration-200 flex items-center space-x-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                <span class="text-sm font-medium">Add Client</span>
+            </a>
+            
+            <!-- Add Vendor Button -->
+            <a href="{{ route('admin.vendors.create') }}" class="bg-green-500/20 hover:bg-green-500/30 backdrop-blur-sm rounded-lg px-4 py-2 border border-green-400/20 text-green-300 hover:text-green-200 transition-all duration-200 flex items-center space-x-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                <span class="text-sm font-medium">Add Vendor</span>
+            </a>
+            
+            <!-- Logout Button -->
+            <form method="POST" action="{{ route('logout') }}" class="inline">
+                @csrf
+                <button type="submit" class="bg-red-500/20 hover:bg-red-500/30 backdrop-blur-sm rounded-lg px-4 py-2 border border-red-400/20 text-red-300 hover:text-red-200 transition-all duration-200 flex items-center space-x-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                    </svg>
+                    <span class="text-sm font-medium">Logout</span>
+                </button>
+            </form>
         </div>
     </div>
 </header>

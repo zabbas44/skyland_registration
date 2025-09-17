@@ -139,7 +139,7 @@
                                 <div class="flex items-center space-x-2">
                                     <a href="{{ route('admin.vendors.show', $vendor) }}" class="px-3 py-1 bg-green-500/20 text-green-400 rounded-lg hover:bg-green-500/30 transition-colors">View</a>
                                     <a href="{{ route('admin.vendors.edit', $vendor) }}" class="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-lg hover:bg-purple-500/30 transition-colors">Edit</a>
-                                    <button onclick="openEmailModal({{ $vendor->id }}, '{{ ($vendor->first_name ?? '') . ' ' . ($vendor->last_name ?? '') }}', '{{ $vendor->email }}')" class="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30 transition-colors">Email</button>
+                                    <button onclick="openEmailModal({{ $vendor->id }}, '{{ ($vendor->first_name ?? '') . ' ' . ($vendor->last_name ?? '') }}', '{{ $vendor->contact_email ?? $vendor->company_email ?? 'N/A' }}')" class="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30 transition-colors">Email</button>
                                 </div>
                             </td>
                         </tr>
