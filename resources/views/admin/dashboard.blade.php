@@ -14,19 +14,13 @@
             </div>
             
             <!-- Add Client Button -->
-            <a href="{{ route('admin.clients.create') }}" class="bg-blue-500/20 hover:bg-blue-500/30 backdrop-blur-sm rounded-lg px-4 py-2 border border-blue-400/20 text-blue-300 hover:text-blue-200 transition-all duration-200 flex items-center space-x-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                </svg>
-                <span class="text-sm font-medium">Add Client</span>
+            <a href="{{ route('admin.clients.create') }}" class="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl font-medium hover:from-blue-600 hover:to-purple-600 transition-all">
+                + Add Client
             </a>
             
             <!-- Add Vendor Button -->
-            <a href="{{ route('admin.vendors.create') }}" class="bg-green-500/20 hover:bg-green-500/30 backdrop-blur-sm rounded-lg px-4 py-2 border border-green-400/20 text-green-300 hover:text-green-200 transition-all duration-200 flex items-center space-x-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                </svg>
-                <span class="text-sm font-medium">Add Vendor</span>
+            <a href="{{ route('admin.vendors.create') }}" class="px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl font-medium hover:from-green-600 hover:to-emerald-600 transition-all">
+                + Add Vendor
             </a>
             
             <!-- Logout Button -->
@@ -816,15 +810,15 @@
                         <!-- Map Statistics -->
                         <div class="mt-4 grid grid-cols-3 gap-4">
                             <div class="bg-white/5 rounded-lg p-3 text-center">
-                                <div class="text-2xl font-bold text-blue-400" id="totalClients">0</div>
+                                <div class="text-2xl font-bold text-blue-400 glow-signal-blue" id="totalClients">0</div>
                                 <div class="text-xs text-slate-300">Total Clients</div>
                             </div>
                             <div class="bg-white/5 rounded-lg p-3 text-center">
-                                <div class="text-2xl font-bold text-green-400" id="totalVendors">0</div>
+                                <div class="text-2xl font-bold text-green-400 glow-signal-green" id="totalVendors">0</div>
                                 <div class="text-xs text-slate-300">Total Vendors</div>
                             </div>
                             <div class="bg-white/5 rounded-lg p-3 text-center">
-                                <div class="text-2xl font-bold text-purple-400" id="totalRegistrations">0</div>
+                                <div class="text-2xl font-bold text-purple-400 glow-signal-purple" id="totalRegistrations">0</div>
                                 <div class="text-xs text-slate-300">Total Registrations</div>
                             </div>
                         </div>
@@ -1234,6 +1228,66 @@
 @endsection
 
 @push('scripts')
+<!-- Custom Glowing Signal Animation Styles -->
+<style>
+    @keyframes glowSignalBlue {
+        0% {
+            text-shadow: 0 0 5px #3b82f6, 0 0 10px #3b82f6, 0 0 15px #3b82f6, 0 0 20px #3b82f6;
+            transform: scale(1);
+        }
+        50% {
+            text-shadow: 0 0 10px #3b82f6, 0 0 20px #3b82f6, 0 0 30px #3b82f6, 0 0 40px #3b82f6, 0 0 50px #3b82f6;
+            transform: scale(1.05);
+        }
+        100% {
+            text-shadow: 0 0 5px #3b82f6, 0 0 10px #3b82f6, 0 0 15px #3b82f6, 0 0 20px #3b82f6;
+            transform: scale(1);
+        }
+    }
+    
+    @keyframes glowSignalGreen {
+        0% {
+            text-shadow: 0 0 5px #10b981, 0 0 10px #10b981, 0 0 15px #10b981, 0 0 20px #10b981;
+            transform: scale(1);
+        }
+        50% {
+            text-shadow: 0 0 10px #10b981, 0 0 20px #10b981, 0 0 30px #10b981, 0 0 40px #10b981, 0 0 50px #10b981;
+            transform: scale(1.05);
+        }
+        100% {
+            text-shadow: 0 0 5px #10b981, 0 0 10px #10b981, 0 0 15px #10b981, 0 0 20px #10b981;
+            transform: scale(1);
+        }
+    }
+    
+    @keyframes glowSignalPurple {
+        0% {
+            text-shadow: 0 0 5px #8b5cf6, 0 0 10px #8b5cf6, 0 0 15px #8b5cf6, 0 0 20px #8b5cf6;
+            transform: scale(1);
+        }
+        50% {
+            text-shadow: 0 0 10px #8b5cf6, 0 0 20px #8b5cf6, 0 0 30px #8b5cf6, 0 0 40px #8b5cf6, 0 0 50px #8b5cf6;
+            transform: scale(1.05);
+        }
+        100% {
+            text-shadow: 0 0 5px #8b5cf6, 0 0 10px #8b5cf6, 0 0 15px #8b5cf6, 0 0 20px #8b5cf6;
+            transform: scale(1);
+        }
+    }
+    
+    .glow-signal-blue {
+        animation: glowSignalBlue 2s ease-in-out infinite;
+    }
+    
+    .glow-signal-green {
+        animation: glowSignalGreen 2.5s ease-in-out infinite;
+    }
+    
+    .glow-signal-purple {
+        animation: glowSignalPurple 3s ease-in-out infinite;
+    }
+</style>
+
 <!-- Leaflet JavaScript -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
